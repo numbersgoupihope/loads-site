@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track your load | Loads</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#183a2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11.5' fill='%23183a2e'/%3E%3Ccircle cx='12' cy='12' r='6.6' fill='%23b9d6bb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#183a2e;--muted:#4d5b54;--base:#fbf7f1;--mint:#d3e6d4;--mint2:#b9d6bb;--cta:#c4235f;--line:#e2e3dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;background-color:var(--mint);background-image:linear-gradient(rgba(255,255,255,.6) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(255,255,255,.6) 1.5px,transparent 1.5px);background-size:46px 46px}
+a{color:var(--ink)}
+.top{display:flex;align-items:center;justify-content:space-between;max-width:640px;margin:0 auto;padding:18px 20px}
+.wordmark{display:inline-flex;align-items:baseline;font-weight:800;font-size:28px;letter-spacing:-.8px;text-decoration:none;color:var(--ink)}
+.wordmark svg{margin:0 1px 0 1.5px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+main{max-width:640px;margin:0 auto;padding:0 16px 48px}
+.card{background:var(--base);border-radius:24px;padding:28px 24px;box-shadow:0 2px 4px rgba(24,58,46,.06),0 18px 44px rgba(24,58,46,.14)}
+.demo{background:#fff0a0;border:1px dashed #8a6d00;border-radius:12px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+.order-id{font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.icon{width:76px;height:76px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;margin:18px 0 16px}
+.icon svg{width:40px;height:40px}
+.spin svg{animation:spin 2.4s linear infinite}
+.bob svg{animation:bob 1.2s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{50%{transform:translateY(-3px)}}
+h1{margin:0;font-weight:700;font-stretch:85%;font-size:clamp(38px,9vw,54px);line-height:.98;letter-spacing:-.035em}
+.detail{margin:10px 0 0;color:var(--muted);font-size:18px}
+.bar{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin:26px 0 8px}
+.bar i{height:9px;border-radius:5px;background:#e3e7e2}
+.bar i.done{background:var(--ink)}
+.bar i.now{background:var(--cta);animation:pulse 1.8s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(196,35,95,.5)}70%{box-shadow:0 0 0 8px rgba(196,35,95,0)}100%{box-shadow:0 0 0 0 rgba(196,35,95,0)}}
+.bar-meta{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.weight{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:22px;padding:14px 18px;border-radius:14px;background:#fff}
+.weight b{font-weight:700;font-stretch:85%;font-size:26px;letter-spacing:-.02em}
+ol{list-style:none;margin:26px 0 0;padding:0}
+li{position:relative;display:flex;justify-content:space-between;gap:12px;padding:0 0 18px 30px}
+li::before{content:'';position:absolute;left:5px;top:22px;bottom:-2px;width:2px;background:#dfe2da}
+li:last-child::before{display:none}
+li .dot{position:absolute;left:0;top:5px;width:12px;height:12px;border-radius:50%;border:2px solid #c9cfc8;background:var(--base)}
+li.done .dot{background:var(--ink);border-color:var(--ink)}
+li.done::before{background:var(--ink)}
+li.now .dot{background:var(--cta);border-color:var(--cta);animation:pulse 1.8s ease-out infinite}
+li span{font-weight:600}
+li.todo span{font-weight:400;color:#7d8a83}
+li time{font-size:14px;color:var(--muted);white-space:nowrap}
+.btn{display:flex;align-items:center;justify-content:center;min-height:54px;margin-top:22px;border-radius:14px;background:var(--cta);color:#fff;font-weight:650;font-size:17px;text-decoration:none}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;margin:16px 6px 0;font-size:14px;color:var(--muted)}
+.todo-chip{background:#fff0a0;border:1px dashed #8a6d00;border-radius:4px;padding:0 6px;font-weight:600}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.spin svg,.bob svg,.bar i.now,li.now .dot{animation:none}}
+</style>
+</head>
+<body>
+<header class="top">
+<a href="index.html" class="wordmark"><span aria-hidden="true">L</span><svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#183a2e"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></a>
+<span style="font-size:14px;color:var(--muted)">Order tracker</span>
+</header>
+<main>
+<div class="card" aria-live="polite">
+<p class="demo" id="demo" hidden><strong>Preview.</strong> This is a demo order. Once the site is connected, customers see their real order here.</p>
+<div id="loading">Finding your load...</div>
+<div id="notfound" hidden>
+<h1>We can't find that load.</h1>
+<p class="detail">Check the tracking link in your text, or text us and we'll look it up.</p>
+</div>
+<div id="order" hidden>
+<div class="order-id" id="orderId"></div>
+<div class="icon" id="icon"></div>
+<h1 id="headline"></h1>
+<p class="detail" id="detail"></p>
+<div class="bar" id="bar" aria-hidden="true"></div>
+<div class="bar-meta"><span id="stageLabel"></span><span id="stepCount"></span></div>
+<div class="weight" id="weight" hidden><span>Weighed in at <b id="lbs"></b></span><span>Total <b id="total"></b></span></div>
+<ol id="timeline"></ol>
+<a class="btn" id="review" href="#" hidden>Leave us a Google review</a>
+</div>
+</div>
+<div class="foot"><span>Questions? Text <a id="sms" href="#"><span id="phone"></span></a></span><span id="updated"></span></div>
+</main>
+
+<script src="config.js"></script>
+<script src="preview-nav.js"></script>
+<script>
+(function () {
+  'use strict';
+  const CONFIG = window.LOADS_CONFIG, STAGES = window.LOADS_STAGES;
+  const $ = s => document.querySelector(s);
+  const ICONS = {
+    booked: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    picked_up: '<path d="M6.5 9h11l1 11h-13z"/><path d="M9.5 9V7.5a2.5 2.5 0 0 1 5 0V9"/>',
+    at_store: '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/>',
+    washing: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3.5v4"/>',
+    drying: '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 11c1.2-1.2 2.3 1.2 3.5 0s2.3 1.2 3.5 0M8.5 14c1.2-1.2 2.3 1.2 3.5 0s2.3 1.2 3.5 0"/>',
+    folding: '<rect x="4" y="14" width="16" height="5" rx="1.5"/><rect x="5" y="9" width="14" height="5" rx="1.5"/><rect x="6" y="4" width="12" height="5" rx="1.5"/>',
+    out_for_delivery: '<path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+    delivered: '<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M9.5 15l2 2 3.5-4"/>'
+  };
+  const MOTION = { washing: 'spin', drying: 'spin', picked_up: 'bob', out_for_delivery: 'bob' };
+  const when = new Intl.DateTimeFormat('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+  const clock = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' });
+
+  if (CONFIG.phoneDisplay) { $('#phone').textContent = CONFIG.phoneDisplay; $('#sms').href = 'sms:' + CONFIG.phoneSms; }
+  else { $('#phone').textContent = '[PHONE]'; $('#phone').className = 'todo-chip'; }
+
+  function render(o) {
+    const idx = Math.max(0, STAGES.findIndex(s => s.key === o.stage));
+    const st = STAGES[idx];
+    $('#loading').hidden = true; $('#notfound').hidden = true; $('#order').hidden = false;
+    $('#orderId').textContent = 'Order ' + o.id + (o.pickup_label ? ' · pickup ' + o.pickup_label.replace('Tomorrow, ', '') : '');
+    $('#icon').className = 'icon ' + (MOTION[st.key] || '');
+    $('#icon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[st.key] + '</svg>';
+    $('#headline').textContent = (o.first_name && idx === STAGES.length - 1 ? o.first_name + ', y' + st.headline.slice(1) : st.headline);
+    $('#detail').textContent = st.key === 'booked' && o.pickup_label ? "We'll pick it up " + o.pickup_label.replace('Tomorrow, ', 'tomorrow, ') + '.' : st.detail;
+    $('#bar').innerHTML = STAGES.map((s, i) => '<i class="' + (i < idx ? 'done' : i === idx ? (idx === STAGES.length - 1 ? 'done' : 'now') : '') + '"></i>').join('');
+    $('#stageLabel').textContent = st.label;
+    $('#stepCount').textContent = 'Step ' + (idx + 1) + ' of ' + STAGES.length;
+    const hasWeight = o.weight_lbs !== '' && o.weight_lbs != null && !isNaN(o.weight_lbs);
+    $('#weight').hidden = !hasWeight;
+    if (hasWeight) {
+      $('#lbs').textContent = Number(o.weight_lbs).toFixed(1) + ' lbs';
+      $('#total').textContent = o.order_total !== '' && o.order_total != null ? '$' + Number(o.order_total).toFixed(2) : '—';
+    }
+    $('#timeline').innerHTML = STAGES.map((s, i) => {
+      const t = o.times && o.times[s.key];
+      const cls = i < idx || (i === idx && i === STAGES.length - 1) ? 'done' : i === idx ? 'now' : 'todo';
+      return '<li class="' + cls + '"><i class="dot"></i><span>' + s.label + '</span>' + (t && i <= idx ? '<time datetime="' + t + '">' + when.format(new Date(t)) + '</time>' : '') + '</li>';
+    }).join('');
+    const showReview = st.key === 'delivered' && CONFIG.googleReviewUrl;
+    $('#review').hidden = !showReview;
+    if (showReview) $('#review').href = CONFIG.googleReviewUrl;
+    $('#updated').textContent = 'Updated ' + clock.format(new Date()) + (st.key === 'delivered' ? '' : ' · refreshes every minute');
+    document.title = st.label + ' | Track your load | Loads';
+  }
+
+  function notFound() { $('#loading').hidden = true; $('#order').hidden = true; $('#notfound').hidden = false; }
+
+  const qs = new URLSearchParams(location.search), id = qs.get('id'), token = qs.get('t');
+
+  if (!CONFIG.endpoint) {                       // preview: a demo order that moves through the stages
+    $('#demo').hidden = false;
+    const start = Date.now() - 3 * 3600e3;
+    let i = 0;
+    const demo = () => {
+      const times = {};
+      STAGES.forEach((s, n) => { if (n <= i) times[s.key] = new Date(start + n * 40 * 60e3).toISOString(); });
+      render({ id: id || 'DEMO', first_name: 'Sam', stage: STAGES[i].key, pickup_label: 'Mon, Nov 17', weight_lbs: i >= 2 ? 14.2 : '', order_total: i >= 2 ? 31.95 : '', times });
+      i = (i + 1) % STAGES.length;
+    };
+    demo(); setInterval(demo, 3500);
+    return;
+  }
+
+  if (!id || !token) return notFound();
+  let last = '';
+  async function load() {
+    try {
+      const res = await fetch(CONFIG.endpoint + '?action=track&id=' + encodeURIComponent(id) + '&t=' + encodeURIComponent(token));
+      const data = await res.json();
+      if (!data.ok) return notFound();
+      render(data.order); last = data.order.stage;
+    } catch (e) {
+      $('#updated').textContent = "Couldn't refresh. Trying again in a minute.";
+      if (!last) { $('#loading').textContent = "We couldn't reach the tracker. Check your connection and refresh."; }
+    }
+  }
+  load();
+  setInterval(() => { if (last !== 'delivered' && !document.hidden) load(); }, 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && last !== 'delivered') load(); });
+})();
+</script>
+</body>
+</html>

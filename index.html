@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laundry Pickup &amp; Delivery in Los Angeles | Loads</title>
+<meta name="description" content="Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Washed and folded at our own laundromats. $2.25 a pound, no subscription.">
+<meta property="og:title" content="Loads | Laundry pickup and delivery in Los Angeles">
+<meta property="og:description" content="Leave a bag at your door. It comes back washed, dried and folded from our own laundromats. $2.25 a pound.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/share.jpg">
+<meta name="theme-color" content="#183a2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11.5' fill='%23183a2e'/%3E%3Ccircle cx='12' cy='12' r='6.6' fill='%23b9d6bb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/laundromat-1600.webp" imagesrcset="img/laundromat-900.webp 900w, img/laundromat-1600.webp 1600w" imagesizes="(max-width: 900px) 100vw, 1240px">
+<style>
+:root{--ink:#183a2e;--muted:#4d5b54;--base:#fbf7f1;--mint:#d3e6d4;--mint2:#b9d6bb;--blush:#f2e2d5;--cream:#f3ede2;--cta:#c4235f;--line:#e2e3dc;--field:#d5ddd6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--base);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--ink)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.01em;font-stretch:normal}
+.display{font-weight:700;font-stretch:85%;letter-spacing:-.035em;line-height:.95;margin:0}
+.muted{color:var(--muted)}
+.todo{background:#fff0a0;border:1px dashed #8a6d00;border-radius:4px;padding:0 6px;color:var(--ink);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:12px 28px;border:none;border-radius:14px;background:var(--cta);color:#fff;font:inherit;font-weight:650;font-size:18px;text-decoration:none;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn-pill{border-radius:999px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* top bar + nav */
+.offer{background:var(--ink);color:var(--cream);text-align:center;padding:10px 24px;font-size:14px;font-weight:500}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;min-height:84px;padding:14px 0}
+.logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;color:var(--ink)}
+.wordmark{position:relative;display:inline-flex;align-items:baseline;font-weight:800;font-size:32px;letter-spacing:-.9px}
+.wordmark svg{margin:0 1px 0 1.5px}
+.logo small{margin-top:4px;font-size:12px;font-weight:500;letter-spacing:.4px;color:var(--muted)}
+.nav-right{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;font-size:15px}
+.nav-right .btn{min-height:46px;padding:10px 22px;border-radius:999px;font-size:16px}
+/* hero */
+.hero-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px 56px;margin:24px 0 40px}
+.hero-top h1{flex:1 1 620px;min-width:0;font-size:clamp(64px,10vw,150px);line-height:.9;letter-spacing:-.04em}
+.hero-side{flex:0 1 360px;min-width:0;padding-bottom:14px}
+.kicker{margin:0 0 10px;font-size:30px;line-height:1;color:var(--cta)}
+.price{display:flex;align-items:baseline;gap:10px}
+.price b{font-weight:700;font-stretch:85%;font-size:44px;line-height:1;letter-spacing:-.03em}
+.hero-img{width:100%;height:clamp(340px,50vw,640px);object-fit:cover;object-position:50% 58%;border-radius:28px}
+/* booking panel */
+.panel-wrap{position:relative;z-index:2;padding:0 24px}
+.panel{max-width:1040px;margin:-84px auto 0;background:#fff;border-radius:22px;padding:24px 26px 22px;box-shadow:0 2px 4px rgba(24,58,46,.06),0 24px 60px rgba(24,58,46,.16)}
+.panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;margin-bottom:16px}
+.panel-head h2{margin:0;font-weight:650;font-size:20px;letter-spacing:-.3px}
+.steps{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--muted)}
+.steps i{display:inline-block;width:28px;height:5px;border-radius:3px;background:#e4e9e4}
+.steps i.on{background:var(--cta)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
+.field{flex:1 1 220px;min-width:0}
+.field.wide{flex:2 1 300px}
+label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=tel],input[type=email],select,textarea{width:100%;min-height:56px;padding:12px 16px;border:1.5px solid var(--field);border-radius:14px;font:inherit;font-size:17px;color:var(--ink);background:var(--base)}
+textarea{min-height:0;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);margin:0;font-weight:400}
+.check input{width:20px;height:20px;margin:2px 0 0;flex:none;accent-color:var(--ink)}
+.consents{display:flex;flex-direction:column;gap:10px;margin:16px 0 4px}
+.panel-foot{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;padding-top:14px;border-top:1px solid #edf0ec;font-size:14px;color:var(--muted)}
+.msg{margin:12px 0 0;font-size:15px;font-weight:600}
+.msg.err{color:#a3123f}
+.link-btn{min-height:44px;padding:8px 0;border:none;background:none;cursor:pointer;font:inherit;font-size:14px;font-weight:600;color:var(--muted);text-decoration:underline}
+.done{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px;padding:6px 0}
+.done .tick{flex:none;width:52px;height:52px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.done h2{margin:0 0 2px;font-weight:700;font-stretch:85%;font-size:30px;letter-spacing:-.03em}
+.hp{position:absolute;left:-9999px}
+[hidden]{display:none!important}
+/* proof row */
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));padding:56px 24px 88px}
+.proof>div{padding:8px 28px;border-left:1px solid var(--line)}
+.proof>div:first-child{border-left:none;padding-left:0}
+.proof b{display:block;font-weight:700;font-stretch:85%;font-size:34px;letter-spacing:-.03em;line-height:1.1}
+.proof span{display:block;margin-top:6px;font-size:15px;color:var(--muted)}
+/* sections */
+.tile{background-color:var(--mint);background-image:linear-gradient(rgba(255,255,255,.6) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(255,255,255,.6) 1.5px,transparent 1.5px);background-size:46px 46px}
+.terrazzo{background-color:var(--blush);background-image:radial-gradient(circle at 12% 18%,#c98a6c 0 2.5px,transparent 3px),radial-gradient(circle at 63% 41%,#8aa48f 0 2px,transparent 2.6px),radial-gradient(circle at 37% 77%,#e2b49a 0 3.5px,transparent 4.2px),radial-gradient(circle at 84% 69%,#6e7f74 0 1.6px,transparent 2.1px),radial-gradient(circle at 25% 52%,#fff 0 2.2px,transparent 2.8px),radial-gradient(circle at 74% 12%,#b97a5e 0 1.8px,transparent 2.3px);background-size:140px 140px,110px 110px,170px 170px,90px 90px,120px 120px,150px 150px}
+.sec{padding:100px 0}
+.h2{font-size:clamp(42px,5.4vw,76px)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px;margin-top:52px}
+.card{background:var(--base);border-radius:22px;overflow:hidden;box-shadow:0 1px 2px rgba(24,58,46,.06),0 12px 32px rgba(24,58,46,.08)}
+.crop{height:220px;overflow:hidden}
+.crop img{width:100%;height:100%;object-fit:cover}
+.card-body{padding:24px 26px 28px}
+.num{font-size:30px;line-height:1;color:var(--cta);margin-bottom:10px}
+.card h3{margin:0 0 8px;font-weight:650;font-size:23px;letter-spacing:-.4px}
+.card p{margin:0;color:var(--muted)}
+.split{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:48px 72px}
+.split>*{flex:1 1 440px;min-width:0}
+/* ticket */
+.ticket{flex:1 1 400px;max-width:470px;background:var(--base);border-radius:22px;box-shadow:0 2px 4px rgba(24,58,46,.06),0 24px 50px rgba(24,58,46,.14)}
+.ticket-top{padding:28px 30px 24px}
+.ticket-label{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.big-price{display:flex;align-items:baseline;gap:8px;margin-top:12px}
+.big-price b{font-weight:700;font-stretch:85%;font-size:84px;line-height:.9;letter-spacing:-.04em}
+.perf{position:relative;height:0;border-top:2px dashed #ddd3c8;margin:0 24px}
+.perf::before,.perf::after{content:'';position:absolute;top:-15px;width:28px;height:28px;border-radius:50%;background:var(--blush)}
+.perf::before{left:-38px}.perf::after{right:-38px}
+.ticket-bottom{padding:22px 30px 30px}
+input[type=range]{width:100%;height:44px;accent-color:var(--ink);cursor:pointer}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0 6px;border-top:1px solid #e8e0d6}
+.total b{font-weight:700;font-stretch:85%;font-size:42px;line-height:1;letter-spacing:-.03em}
+.ticket .btn{width:100%}
+/* why */
+.why-img{border-radius:28px;overflow:hidden;aspect-ratio:4/5;max-height:640px}
+.why-img img{width:100%;height:100%;object-fit:cover;object-position:80% 50%}
+.points{margin-top:32px}
+.points p{display:flex;gap:18px;align-items:baseline;margin:0;padding:18px 0;border-top:1px solid var(--line)}
+.points p:last-child{border-bottom:1px solid var(--line)}
+.points .serif{flex:none;width:28px;font-size:22px;color:var(--cta)}
+/* areas */
+.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:20px;margin:36px 0 40px}
+.zone{background:var(--ink);color:var(--cream);border-radius:22px;padding:32px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;min-height:190px}
+.zone small{display:block;font-size:13px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--mint2);margin-bottom:8px}
+.zone b{display:block;font-weight:700;font-stretch:85%;font-size:48px;line-height:1;letter-spacing:-.03em}
+.zone .serif{display:block;margin-top:8px;font-size:30px;line-height:1;color:#dfe7df}
+.zone a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border-radius:999px;border:1.5px solid rgba(243,237,226,.5);color:var(--cream);font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap}
+.wait{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px}
+.wait form{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
+.wait input{min-height:50px;border-radius:999px;background:#fff}
+.wait .btn{min-height:50px;background:var(--ink);color:var(--cream);font-size:16px;border-radius:999px}
+/* faq */
+.faq{max-width:900px;margin:0 auto;background:var(--base);border-radius:28px;padding:48px 44px;box-shadow:0 12px 32px rgba(24,58,46,.08)}
+details{border-top:1px solid #dfe2da}
+details:last-of-type{border-bottom:1px solid #dfe2da}
+summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;padding:18px 0;cursor:pointer;font-weight:600;font-size:19px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';flex:none;width:32px;height:32px;border-radius:50%;background:#e7ece6;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1}
+details[open] summary::after{content:'\2212';background:var(--ink);color:var(--base)}
+details p{margin:0 0 22px;color:var(--muted);max-width:40em}
+/* final cta */
+.final{position:relative;overflow:hidden;background:var(--ink);color:var(--cream)}
+.final>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.final::after{content:'';position:absolute;inset:0;background:rgba(18,44,35,.78)}
+.final .wrap{position:relative;z-index:1;padding-top:120px;padding-bottom:120px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:32px 56px}
+.final h2{font-size:clamp(52px,7.4vw,108px);line-height:.92;margin:0 0 16px}
+footer{background:var(--ink);color:#c9d6cc;padding:56px 0 104px;border-top:1px solid rgba(243,237,226,.12);font-size:15px}
+footer .wrap>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px 48px}
+footer a{color:#c9d6cc}
+footer h3{margin:0 0 8px;font-size:15px;color:var(--cream)}
+footer .wordmark{color:var(--cream)}
+.mbar{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fff;border-radius:18px;padding:10px 10px 10px 18px;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 10px 30px rgba(24,58,46,.22)}
+.mbar b{display:block;font-weight:700;font-stretch:85%;font-size:22px;line-height:1.1}
+.mbar small{font-size:13px;color:var(--muted)}
+.mbar .btn{min-height:48px;padding:10px 22px;border-radius:12px;font-size:16px}
+.mbar.away{display:none!important}
+@media (max-width:760px){.mbar{display:flex}.panel{padding:20px 18px;margin-top:-40px}.faq{padding:32px 22px}.proof>div{border-left:none;padding:8px 0}.sec{padding:72px 0}.offer{font-size:13px;padding:8px 16px}.nav{min-height:0;padding:14px 0 6px}.nav-right{display:none}.hero-top{margin:12px 0 24px;gap:16px}.hero-side{padding-bottom:0}.hero-side p.muted{font-size:17px!important}.kicker{font-size:26px}.price b{font-size:38px}.hero-img{height:240px;border-radius:20px}}
+</style>
+</head>
+<body>
+
+<div class="offer" data-offer>First load? Delivery's on us. Now picking up in Koreatown, Downtown LA, Van Nuys and Sherman Oaks.</div>
+
+<header class="wrap">
+<nav class="nav" aria-label="Main">
+<a href="#top" class="logo">
+<span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#183a2e"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
+<small>Laundry pickup &amp; delivery</small>
+</a>
+<div class="nav-right">
+<span class="muted">Questions? Text <a data-sms href="#"><span data-fill="phone"></span></a></span>
+<a href="#book" class="btn">Book a pickup</a>
+</div>
+</nav>
+</header>
+
+<main id="top">
+<section class="wrap">
+<div class="hero-top">
+<h1 class="display">Take a <span class="serif">load</span> off.</h1>
+<div class="hero-side">
+<p class="kicker serif">We do loads.</p>
+<p class="muted" style="margin:0 0 18px;font-size:19px">Pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. We wash and fold every load at our own laundromats and bring it back to your door.</p>
+<div class="price"><b>$2.25</b><span class="muted">a pound, wash, dry and fold</span></div>
+</div>
+</div>
+<img class="hero-img" src="img/laundromat-1600.webp" srcset="img/laundromat-900.webp 900w, img/laundromat-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 1240px" width="1600" height="1067" fetchpriority="high" alt="A sunlit laundromat with stainless washers along one wall and palm trees outside the windows">
+</section>
+
+<section class="panel-wrap">
+<div class="panel" id="book">
+
+<form id="step1" novalidate>
+<div class="panel-head"><h2>Send us a load</h2><div class="steps">Step 1 of 2 <span><i class="on"></i> <i></i></span></div></div>
+<div class="row">
+<div class="field"><label for="zip">Your zip code</label><input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="90005" required></div>
+<div class="field"><label for="day">Pickup day</label><select id="day" name="day" required><option value="">Choose a day</option></select></div>
+<button class="btn field" type="submit">See pickup times</button>
+</div>
+<p class="msg" id="msg1" role="status" aria-live="polite" hidden></p>
+<div id="outzone" hidden>
+<p class="msg">We're not picking up in <span id="outzip"></span> yet. Leave a number and we'll text you when we get there.</p>
+<div class="row" style="margin-top:10px">
+<div class="field"><label for="outphone">Mobile number</label><input id="outphone" type="tel" autocomplete="tel" placeholder="(213) 555-0123"></div>
+<button class="btn field" type="button" id="outjoin" style="background:var(--ink)">Text me when you're here</button>
+</div>
+</div>
+</form>
+
+<form id="step2" novalidate hidden>
+<div class="panel-head"><h2>Where should we pick up?</h2><div class="steps">Step 2 of 2 <span><i class="on"></i> <i class="on"></i></span></div></div>
+<div class="row">
+<div class="field"><label for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+<div class="field"><label for="phone">Mobile</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
+<div class="field wide"><label for="street">Pickup address</label><input id="street" name="address" type="text" autocomplete="street-address" placeholder="Street and unit number" required></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field wide"><label for="notes">Pickup notes (optional)</label><input id="notes" name="notes" type="text" placeholder="Gate code, where the bag will be"></div>
+<div class="field"><label for="heard">How did you hear about us?</label><select id="heard" name="heard"><option value="">Pick one</option><option>Google search</option><option>Instagram or Facebook</option><option>TikTok</option><option>Flyer or door hanger</option><option>Saw your laundromat</option><option>A friend</option><option>Nextdoor</option><option>Other</option></select></div>
+</div>
+<div class="consents">
+<label class="check"><input type="checkbox" id="consentOrder" required><span>Text me about this order (confirmation, pickup and delivery updates). Reply STOP anytime. Msg &amp; data rates may apply.</span></label>
+<label class="check"><input type="checkbox" id="consentMarketing"><span>Also text me reminders and offers, up to 4 a month. Optional. Reply STOP anytime.</span></label>
+</div>
+<input class="hp" type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+<p class="muted" style="margin:6px 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
+<div class="row"><button class="btn" type="submit" id="bookBtn">Pick up my load</button><button class="link-btn" type="button" id="back">Back</button></div>
+<p class="msg" id="msg2" role="status" aria-live="polite" hidden></p>
+</form>
+
+<div id="step3" hidden>
+<div class="done">
+<div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+<div style="flex:1 1 300px"><h2>Your load's on the schedule.</h2><p class="muted" style="margin:0" id="doneText">We'll text you to confirm your pickup window. Leave your bag by the door.</p></div>
+<a class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
+<button class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
+</div>
+</div>
+
+<div class="panel-foot"><span>No subscription</span><span>Pay by the pound</span><span>Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
+</div>
+</section>
+
+<section class="wrap proof" aria-label="Why people trust us">
+<div><b><span data-fill="rating"></span></b><span>Google rating at our laundromats</span></div>
+<div><b>Our own stores</b><span>Every load washed in laundromats we run</span></div>
+<div><b>Our own drivers</b><span>On our team, not a gig app</span></div>
+<div><b>Twice a day</b><span>One pickup run and one drop-off run, daily</span></div>
+</section>
+
+<section class="sec tile" id="how">
+<div class="wrap">
+<h2 class="display h2" style="max-width:14ch">We do loads. <span class="serif">You do one thing.</span></h2>
+<div class="cards">
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:6% 26%"></div><div class="card-body"><div class="num serif">01</div><h3>Book a pickup</h3><p>Pick a day here or text us, then leave any bag by your door. That's your whole part.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:92% 64%"></div><div class="card-body"><div class="num serif">02</div><h3>We wash your load at our store</h3><p>Our driver brings it to our laundromat, where our own staff wash, dry and fold it.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2.4);transform-origin:17% 55%"></div><div class="card-body"><div class="num serif">03</div><h3>Back at your door</h3><p>Folded, bagged and dropped off <span data-fill="turnaround"></span>.</p></div></article>
+</div>
+</div>
+</section>
+
+<section class="sec terrazzo" id="pricing">
+<div class="wrap split">
+<div>
+<h2 class="display h2" style="max-width:12ch;margin-bottom:22px">Priced by the pound, <span class="serif">not the load.</span></h2>
+<p class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">You pay for what you send. No subscription and no membership. Washing, drying, folding, bagging and the ride both ways are all included.</p>
+<p class="muted" style="font-size:15px;margin:0">Comforters and bulky items: <span data-fill="bulky"></span></p>
+</div>
+<div class="ticket">
+<div class="ticket-top">
+<div class="ticket-label"><span>Wash and fold</span><span>Load No. 0001</span></div>
+<div class="big-price"><b>$<span data-price></span></b><span class="serif muted" style="font-size:26px">per lb</span></div>
+<p class="muted" style="margin:12px 0 0">+ $<span data-fee></span> pickup and delivery per order</p>
+<p data-offer style="margin:4px 0 0;font-weight:600;color:var(--cta)">First order: delivery is on us</p>
+</div>
+<div class="perf" aria-hidden="true"></div>
+<div class="ticket-bottom">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><label for="lbs" style="font-size:16px;color:var(--ink)">How big is your load?</label><span class="muted" style="font-size:15px" id="lbsText"></span></div>
+<input id="lbs" type="range" min="5" max="50" step="1" value="15">
+<div class="total"><span style="font-weight:600">Estimated total</span><b id="total"></b></div>
+<p class="muted" style="margin:0 0 20px;font-size:14px" id="totalNote"></p>
+<a href="#book" class="btn">Book my pickup</a>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="wrap split" style="gap:48px 80px">
+<div class="why-img"><img src="img/laundromat-900.webp" alt="Rows of stainless steel washers under pendant lights" loading="lazy" decoding="async"></div>
+<div>
+<h2 class="display h2" style="max-width:12ch;margin-bottom:22px">Your load <span class="serif">never leaves</span> our hands.</h2>
+<p class="muted" style="font-size:19px;max-width:30em;margin:0">A lot of delivery services hand your laundry to third-party cleaners or independent contractors. We own the laundromats and our drivers work for us, so one team takes care of every load, door to door.</p>
+<div class="points">
+<p><span class="serif">a.</span><span><strong>Commercial machines in our own stores.</strong> <span class="muted">Not someone's apartment washer.</span></span></p>
+<p><span class="serif">b.</span><span><strong>The same local drivers.</strong> <span class="muted">Not whoever happens to be free on an app tonight.</span></span></p>
+<p><span class="serif">c.</span><span><strong>A real person when you text.</strong> <a data-sms href="#"><span data-fill="phone"></span></a></span></p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="wrap" id="areas" style="padding-bottom:104px">
+<h2 class="display h2">Now taking loads in <span class="serif">four</span> neighborhoods.</h2>
+<div class="zones">
+<div class="zone"><div><small>Picking up daily</small><b>Koreatown</b><span class="serif">+ Downtown LA</span></div><a href="#book">Book here</a></div>
+<div class="zone"><div><small>Picking up daily</small><b>Van Nuys</b><span class="serif">+ Sherman Oaks</span></div><a href="#book">Book here</a></div>
+</div>
+<div class="wait">
+<p class="muted" style="margin:0;font-size:18px;max-width:30em;flex:1 1 320px">Somewhere else in LA? Leave your zip and number and we'll text you when we get to your neighborhood.</p>
+<form id="waitlist" novalidate>
+<div><label for="wzip">Zip code</label><input id="wzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" style="width:130px"></div>
+<div><label for="wphone">Mobile number</label><input id="wphone" type="tel" autocomplete="tel" style="width:190px"></div>
+<button class="btn" type="submit">Let me know</button>
+</form>
+<p class="msg" id="msgw" role="status" aria-live="polite" hidden style="flex-basis:100%"></p>
+</div>
+</section>
+
+<section class="sec tile">
+<div class="wrap">
+<div class="faq">
+<h2 class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
+<details open><summary>Do I need to be home?</summary><p>Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
+<details><summary>When do I get it back?</summary><p>Back <span data-fill="turnaround"></span>. We run one pickup route and one drop-off route every day.</p></details>
+<details><summary>How do you charge?</summary><p>We weigh your laundry at the store and charge $<span data-price></span> a pound, plus $<span data-fee></span> for pickup and delivery. A full hamper usually comes in around 10 lbs.</p></details>
+<details><summary>What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
+<details><summary>What areas do you serve?</summary><p>Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Enter your zip in the booking form to check, or join the waitlist above.</p></details>
+</div>
+</div>
+</section>
+
+<section class="final">
+<img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async">
+<div class="wrap">
+<div style="flex:1 1 560px;min-width:0">
+<h2 class="display">Drop the load. <span class="serif">Keep the weekend.</span></h2>
+<p style="margin:0;font-size:19px;color:#dfe7df">Book in about a minute, or text PICKUP to <a data-sms href="#" style="color:#fff"><span data-fill="phone"></span></a>.</p>
+</div>
+<a href="#book" class="btn btn-pill" style="min-height:60px;padding:14px 34px;font-size:19px">Book my pickup</a>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+<div>
+<div style="flex:1 1 320px">
+<span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#f3ede2"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
+<p style="margin:14px 0 0;max-width:26em">Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks, washed and folded at our own laundromats.</p>
+</div>
+<div><h3>Our laundromats</h3><div data-fill="store1"></div><div data-fill="store2" style="margin-top:6px"></div></div>
+<div><h3>Contact</h3><div><a data-sms href="#"><span data-fill="phone"></span></a></div><div style="margin-top:6px"><span data-fill="email"></span></div><div style="margin-top:14px"><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></div></div>
+</div>
+<p style="margin:36px 0 0;font-size:14px;color:#93a89b">&copy; <span id="year">2026</span> Loads Laundry Co. We do loads.</p>
+</div>
+</footer>
+
+<div class="mbar"><div><b>$<span data-price></span>/lb</b><small>K-town to Sherman Oaks</small></div><a href="#book" class="btn">Book a pickup</a></div>
+
+<script src="config.js"></script>
+<script src="preview-nav.js"></script>
+<script>
+const CONFIG = window.LOADS_CONFIG;
+
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const show = (el, on) => { if (el) el.hidden = !on; };
+
+  /* ---------- fill business details ---------- */
+  const fills = {
+    phone: CONFIG.phoneDisplay, email: CONFIG.email, turnaround: CONFIG.turnaround,
+    window: CONFIG.pickupWindow, guarantee: CONFIG.guarantee, bulky: CONFIG.bulkyPrice,
+    rating: CONFIG.googleRating ? CONFIG.googleRating + ' stars' : '',
+    store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || ''
+  };
+  const missing = new Set();
+  $$('[data-fill]').forEach(el => {
+    const key = el.dataset.fill, val = fills[key];
+    if (val) { el.textContent = val; el.classList.remove('todo'); }
+    else { el.textContent = '[' + key.toUpperCase() + ']'; el.classList.add('todo'); missing.add(key); }
+  });
+  if (missing.size) console.warn('Loads: fill these in CONFIG before launch:', Array.from(missing).join(', '));
+  if (!CONFIG.endpoint) console.warn('Loads: no endpoint set. Preview mode: bookings are not saved.');
+  const smsHref = CONFIG.phoneSms ? 'sms:' + CONFIG.phoneSms + '?&body=PICKUP' : '#';
+  $$('[data-sms]').forEach(a => { a.href = smsHref; a.addEventListener('click', () => track('text_click')); });
+  $$('[data-price]').forEach(el => { el.textContent = CONFIG.pricePerLb.toFixed(2); });
+  $$('[data-fee]').forEach(el => { el.textContent = CONFIG.deliveryFee.toFixed(2); });
+  $$('[data-offer]').forEach(el => show(el, CONFIG.firstOrderOffer));
+  $('#year').textContent = new Date().getFullYear();
+
+  /* ---------- structured data for Google ---------- */
+  const ld = {
+    '@context': 'https://schema.org', '@type': 'DryCleaningOrLaundry', name: 'Loads Laundry Co.',
+    description: 'Laundry pickup and delivery, washed and folded at our own laundromats.',
+    areaServed: ['Koreatown, Los Angeles', 'Downtown Los Angeles', 'Van Nuys', 'Sherman Oaks'],
+    priceRange: '$$', url: location.origin + location.pathname
+  };
+  if (CONFIG.phoneSms) ld.telephone = CONFIG.phoneSms;
+  const ldEl = document.createElement('script');
+  ldEl.type = 'application/ld+json'; ldEl.textContent = JSON.stringify(ld);
+  document.head.appendChild(ldEl);
+
+  /* ---------- tracking tags (load only when IDs are set) ---------- */
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  const gId = CONFIG.ga4Id || CONFIG.googleAdsId;
+  if (gId) {
+    const s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gId);
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    if (CONFIG.ga4Id) gtag('config', CONFIG.ga4Id);
+    if (CONFIG.googleAdsId) gtag('config', CONFIG.googleAdsId);
+  }
+  if (CONFIG.metaPixelId) {
+    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', CONFIG.metaPixelId); fbq('track', 'PageView');
+  }
+  const META = { begin_booking: ['trackCustom', 'BeginBooking'], booking_completed: ['track', 'Schedule'], waitlist_join: ['track', 'Lead'], text_click: ['track', 'Contact'] };
+  function track(name, params, eventId) {
+    params = params || {};
+    try {
+      window.dataLayer.push({ event: name, ...params });
+      if (gId) gtag('event', name, params);
+      if (name === 'booking_completed' && CONFIG.googleAdsId && CONFIG.googleAdsBookingLabel) {
+        gtag('event', 'conversion', { send_to: CONFIG.googleAdsId + '/' + CONFIG.googleAdsBookingLabel, value: params.value, currency: 'USD', transaction_id: eventId });
+      }
+      if (window.fbq && META[name]) fbq(META[name][0], META[name][1], params, eventId ? { eventID: eventId } : undefined);
+    } catch (e) { console.warn('track failed', e); }
+  }
+
+  /* ---------- where did this visitor come from ---------- */
+  const KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'ttclid'];
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const qs = new URLSearchParams(location.search), now = new Date().toISOString();
+  const visit = { landing_page: location.pathname + location.search, referrer: document.referrer || '', seen_at: now };
+  KEYS.forEach(k => { if (qs.get(k)) visit[k] = qs.get(k); });
+  const hasTags = KEYS.some(k => visit[k]);
+  if (!store.get('loads_first')) store.set('loads_first', visit);
+  if (hasTags || !store.get('loads_last')) store.set('loads_last', visit);
+  function attribution() {
+    const first = store.get('loads_first') || visit, last = store.get('loads_last') || visit, out = {};
+    KEYS.forEach(k => { out[k] = last[k] || ''; out['first_' + k] = first[k] || ''; });
+    out.landing_page = last.landing_page; out.referrer = last.referrer; out.first_seen = first.seen_at;
+    return out;
+  }
+
+  /* ---------- helpers ---------- */
+  const zipZone = zip => Object.keys(CONFIG.zones).find(z => CONFIG.zones[z].includes(zip)) || '';
+  const digits = v => (v || '').replace(/\D/g, '');
+  const validPhone = v => { const d = digits(v); return d.length === 10 || (d.length === 11 && d[0] === '1'); };
+  function msg(el, text, isErr) { el.textContent = text; el.classList.toggle('err', !!isErr); show(el, !!text); }
+  async function send(payload) {
+    if (!CONFIG.endpoint) { console.info('Loads preview mode, not sent:', payload); return true; }
+    const body = new URLSearchParams();
+    Object.keys(payload).forEach(k => body.append(k, payload[k] == null ? '' : String(payload[k])));
+    await fetch(CONFIG.endpoint, { method: 'POST', mode: 'no-cors', body });
+    return true;
+  }
+
+  /* ---------- pickup days ---------- */
+  const daySel = $('#day');
+  const fmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  let added = 0;
+  for (let i = 1; added < CONFIG.daysAhead && i < 30; i++) {
+    const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + i);
+    if (CONFIG.closedDays.includes(d.getDay())) continue;
+    const o = document.createElement('option');
+    o.value = d.toISOString().slice(0, 10); o.textContent = (i === 1 ? 'Tomorrow, ' : '') + fmt.format(d);
+    daySel.appendChild(o); added++;
+  }
+
+  /* ---------- booking flow ---------- */
+  const s1 = $('#step1'), s2 = $('#step2'), s3 = $('#step3');
+  const booking = {};
+  s1.addEventListener('submit', e => {
+    e.preventDefault();
+    const zip = digits($('#zip').value).slice(0, 5);
+    show($('#outzone'), false);
+    if (zip.length !== 5) return msg($('#msg1'), 'Enter a 5-digit zip code.', true);
+    if (!daySel.value) return msg($('#msg1'), 'Choose a pickup day.', true);
+    const zone = zipZone(zip);
+    if (!zone) { msg($('#msg1'), ''); $('#outzip').textContent = zip; return show($('#outzone'), true); }
+    msg($('#msg1'), '');
+    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: daySel.options[daySel.selectedIndex].text.replace('Tomorrow, ', '') });
+    track('begin_booking', { zone });
+    show(s1, false); show(s2, true); $('#name').focus();
+  });
+  $('#outjoin').addEventListener('click', async () => {
+    const phone = $('#outphone').value;
+    if (!validPhone(phone)) return msg($('#msg1'), 'Enter a 10-digit mobile number.', true);
+    await joinWaitlist(digits($('#zip').value).slice(0, 5), phone, $('#msg1'));
+    show($('#outzone'), false);
+  });
+  $('#back').addEventListener('click', () => { show(s2, false); show(s1, true); });
+  s2.addEventListener('submit', async e => {
+    e.preventDefault();
+    const m = $('#msg2');
+    if ($('#company').value) return;
+    if (!$('#name').value.trim()) return msg(m, 'Add your name.', true);
+    if (!validPhone($('#phone').value)) return msg(m, 'Enter a 10-digit mobile number.', true);
+    if (!$('#street').value.trim()) return msg(m, 'Add your pickup address.', true);
+    if (!$('#consentOrder').checked) return msg(m, 'Check the box so we can text you about this order.', true);
+    const btn = $('#bookBtn'); btn.disabled = true; msg(m, 'Booking...');
+    const id = 'L' + Date.now().toString(36).toUpperCase();
+    const letters = 'abcdefghjkmnpqrstuvwxyz';
+    const token = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(n => letters[n % letters.length]).join('');
+    const trackUrl = new URL('track.html?id=' + id + '&t=' + token, location.href).href;
+    const payload = Object.assign({
+      type: 'booking', booking_id: id, submitted_at: new Date().toISOString(),
+      name: $('#name').value.trim(), phone: $('#phone').value.trim(), address: $('#street').value.trim(),
+      notes: $('#notes').value.trim(), heard: $('#heard').value,
+      sms_order_consent: 'yes', sms_marketing_consent: $('#consentMarketing').checked ? 'yes' : 'no',
+      first_order_offer: CONFIG.firstOrderOffer ? 'yes' : 'no', user_agent: navigator.userAgent,
+      track_token: token, track_url: trackUrl
+    }, booking, attribution());
+    try {
+      await send(payload);
+      track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
+      $('#doneText').textContent = "We'll text you at " + payload.phone + ' to confirm your pickup on ' + booking.pickup_label + '. Leave your bag by the door.';
+      $('#trackLink').href = trackUrl;
+      show(s2, false); show(s3, true); msg(m, '');
+    } catch (err) {
+      msg(m, "Something went wrong. Text PICKUP to " + (CONFIG.phoneDisplay || 'us') + " and we'll book you by text.", true);
+    } finally { btn.disabled = false; }
+  });
+  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); show(s3, false); show(s1, true); });
+
+  /* ---------- waitlist ---------- */
+  async function joinWaitlist(zip, phone, m) {
+    try {
+      await send(Object.assign({ type: 'waitlist', submitted_at: new Date().toISOString(), zip, phone }, attribution()));
+      track('waitlist_join', { zip });
+      msg(m, "You're on the list. We'll text you when we get to " + zip + '.');
+    } catch (e) { msg(m, 'Something went wrong. Try again in a minute.', true); }
+  }
+  $('#waitlist').addEventListener('submit', async e => {
+    e.preventDefault();
+    const zip = digits($('#wzip').value).slice(0, 5), phone = $('#wphone').value, m = $('#msgw');
+    if (zip.length !== 5) return msg(m, 'Enter a 5-digit zip code.', true);
+    if (zipZone(zip)) return msg(m, "Good news: we already pick up in " + zip + '. Book above.');
+    if (!validPhone(phone)) return msg(m, 'Enter a 10-digit mobile number.', true);
+    await joinWaitlist(zip, phone, m); e.target.reset();
+  });
+
+  /* ---------- price estimator ---------- */
+  const lbs = $('#lbs');
+  function estimate() {
+    const n = Number(lbs.value), h = Math.round(n / 5) / 2;
+    const hamper = h <= 0.5 ? 'about half a hamper' : h === 1 ? 'about 1 hamper' : 'about ' + h + ' hampers';
+    $('#lbsText').textContent = n + ' lbs, ' + hamper;
+    $('#total').textContent = '$' + (n * CONFIG.pricePerLb + CONFIG.deliveryFee).toFixed(2);
+    $('#totalNote').textContent = CONFIG.firstOrderOffer ? 'First order? Take off the $' + CONFIG.deliveryFee.toFixed(2) + '. You pay for the actual weight.' : 'You pay for the actual weight. A full hamper is usually around 10 lbs.';
+  }
+  lbs.addEventListener('input', estimate); estimate();
+
+  /* ---------- hide the phone booking bar while the form is on screen ---------- */
+  const bar = $('.mbar');
+  if (bar && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => bar.classList.toggle('away', es[0].isIntersecting), { threshold: 0.15 }).observe($('#book'));
+  }
+})();
+</script>
+</body>
+</html>
