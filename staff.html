@@ -125,6 +125,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     const msgs = {
       booked: 'Hi ' + first + ", it's Loads. You're booked for pickup " + (o.pickup_label || '') + (CONFIG.pickupWindow ? ', ' + CONFIG.pickupWindow : '') + '. Leave your bag by the door.' + link,
       picked_up: 'Hi ' + first + ", we've got your load. It's on the way to our laundromat." + link,
+      at_store: o.order_total ? 'Hi ' + first + ', your load weighed in at ' + o.weight_lbs + ' lbs, so your total is $' + Number(o.order_total).toFixed(2) + ". You'll get a payment link from Square in a minute. We'll deliver as soon as it's paid." + link : 'Hi ' + first + ', your load made it to our laundromat.' + link,
       out_for_delivery: 'Hi ' + first + ', your load is out for delivery and headed back to you.' + link,
       delivered: 'Hi ' + first + ', your load is back at your door. Thanks for using Loads!' + (CONFIG.googleReviewUrl ? ' If you have a sec, a quick review helps a lot: ' + CONFIG.googleReviewUrl : '')
     };

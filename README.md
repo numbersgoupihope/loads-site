@@ -86,6 +86,9 @@ Every booking row also stores UTM tags, Google and Meta click IDs, landing page 
 3. As each step happens, tap the big button: **Picked up > At the laundromat > Washing > Drying > Folding > Out for delivery > Delivered**. A wrong tap? **Undo** steps back one.
 4. At the laundromat, type the weight. The total fills in automatically ($2.25/lb, plus delivery unless it's a first order). Tap **Save**. The customer sees both on their tracker.
 5. **Text update** opens the phone's Messages app with a ready-made text for the current stage and the customer's tracking link. Send it at pickup, out for delivery and delivered.
+6. **Getting paid (Square Invoices).** After you save the weight, tap **Text update**: it sends the customer their weight and total. Then, in the Square app, go to **Invoices > Create invoice**, add the customer by name and mobile number, enter the same total, and send it by text. Do not mark the order **Out for delivery** until Square shows the invoice as paid.
+
+Square setup (once): the business owner creates a free Square account in the business's name, links the business bank account, and installs the Square app on each store phone. Online and invoice payments on the free plan cost 3.3% + 30¢ each.
 
 Customers get their tracking link on the booking confirmation screen, in the first text, and in the booking email Dimitri receives. Their tracker refreshes every minute on its own.
 
