@@ -22,6 +22,7 @@ window.LOADS_CONFIG = {
 
   pricePerLb: 2.25,
   deliveryFee: 6.99,
+  minOrder: 30,                // smallest wash & fold charge per order, before the delivery fee
   firstOrderOffer: true,       // "First load? Delivery's on us."
   estOrderValue: 40,           // average order value sent to ad platforms with each booking
   daysAhead: 7,                // how many days of pickup dates to offer

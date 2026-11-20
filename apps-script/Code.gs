@@ -20,8 +20,8 @@ const STAGES = ['booked', 'picked_up', 'at_store', 'washing', 'drying', 'folding
 const BOOKING_HEADERS = [
   'received_at', 'booking_id', 'stage', 'stage_updated_at', 'pickup_date', 'pickup_label', 'zone', 'zip',
   'name', 'phone', 'address', 'notes', 'heard',
-  'sms_order_consent', 'sms_marketing_consent', 'first_order_offer',
-  'weight_lbs', 'order_total',
+  'sms_order_consent', 'sms_marketing_consent', 'first_order_offer', 'first_order',
+  'weight_lbs', 'order_total', 'paid_at',
   'picked_up_at', 'at_store_at', 'washing_at', 'drying_at', 'folding_at', 'out_for_delivery_at', 'delivered_at',
   'track_token', 'track_url',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
@@ -63,6 +63,7 @@ function saveForm_(p) {
     if (p.company) return json_({ ok: true });            // spam trap field
     const isWaitlist = p.type === 'waitlist';
     const sheet = sheet_(isWaitlist ? 'Waitlist' : 'Bookings', isWaitlist ? WAITLIST_HEADERS : BOOKING_HEADERS);
+    if (!isWaitlist) p.first_order = isFirstOrder_(p.phone) ? 'yes' : 'no';
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const now = new Date();
     const row = headers.map(function (h) {
@@ -88,7 +89,7 @@ function notify_(p) {
     'Address: ' + (p.address || '') + '  ' + (p.zip || ''),
     'Notes: ' + (p.notes || '-'),
     'Heard about us: ' + (p.heard || '-'),
-    'First-order offer: ' + (p.first_order_offer || ''),
+    'First order: ' + (p.first_order || ''),
     'Reminder texts OK: ' + (p.sms_marketing_consent || 'no'),
     'Source: ' + [p.utm_source, p.utm_medium, p.utm_campaign].filter(String).join(' / '),
     '',
@@ -119,6 +120,7 @@ function track_(id, token) {
       zone: r.zone || '',
       weight_lbs: r.weight_lbs === '' ? '' : Number(r.weight_lbs),
       order_total: r.order_total === '' ? '' : Number(r.order_total),
+      paid: !!r.paid_at,
       times: times_(r)
     }
   };
@@ -137,20 +139,27 @@ function staff_(req) {
   const lock = LockService.getScriptLock();
   lock.tryLock(10000);
   try {
-    if (req.action === 'set_stage') setStage_(req.id, req.stage);
+    sheet_('Bookings', BOOKING_HEADERS);                  // adds any new columns to an older sheet
+    let error = '';
+    if (req.action === 'set_stage') error = setStage_(req.id, req.stage) || '';
     if (req.action === 'set_weight') setWeight_(req.id, req.weight_lbs, req.order_total);
-    return { ok: true, orders: list_() };
+    if (req.action === 'set_paid') setPaid_(req.id, req.paid);
+    const out = { ok: !error, orders: list_() };
+    if (error) out.error = error;
+    return out;
   } finally {
     lock.releaseLock();
   }
 }
 
+// Returns 'unpaid' when an order would go out for delivery before it's marked paid.
 function setStage_(id, stage) {
   const i = STAGES.indexOf(stage);
   if (i < 0) return;
   const t = table_('Bookings');
   const r = t && find_(t, id);
   if (!r) return;
+  if (i >= STAGES.indexOf('out_for_delivery') && !r.paid_at) return 'unpaid';
   const now = new Date();
   const updates = { stage: stage, stage_updated_at: now };
   if (i > 0 && !r[stage + '_at']) updates[stage + '_at'] = now;
@@ -164,6 +173,22 @@ function setWeight_(id, weight, total) {
   if (!r) return;
   const w = Number(weight), tot = Number(total);
   write_(t, r, { weight_lbs: isFinite(w) && w > 0 ? w : '', order_total: isFinite(tot) && tot > 0 ? tot : '' });
+}
+
+function setPaid_(id, paid) {
+  const t = table_('Bookings');
+  const r = t && find_(t, id);
+  if (!r) return;
+  write_(t, r, { paid_at: paid === true || paid === 'true' ? new Date() : '' });
+}
+
+// A booking is a first order when no earlier booking has the same mobile number.
+function isFirstOrder_(phone) {
+  const d = String(phone || '').replace(/\D/g, '').slice(-10);
+  if (d.length < 10) return true;
+  const t = table_('Bookings');
+  if (!t) return true;
+  return !t.rows.some(function (r) { return String(r.phone || '').replace(/\D/g, '').slice(-10) === d; });
 }
 
 function list_() {
@@ -183,7 +208,8 @@ function list_() {
         address: String(r.address || ''), zip: String(r.zip || ''), notes: String(r.notes || ''),
         zone: String(r.zone || ''), pickup_date: day_(r.pickup_date, tz), pickup_label: String(r.pickup_label || ''),
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,
-        first_order_offer: String(r.first_order_offer || ''), track_url: String(r.track_url || ''),
+        first_order_offer: String(r.first_order_offer || ''), first_order: String(r.first_order || ''),
+        paid: !!r.paid_at, track_url: String(r.track_url || ''),
         updated: iso_(r.stage_updated_at)
       };
     })
@@ -200,7 +226,11 @@ function sheet_(name, headers) {
     sh.appendRow(headers);
     sh.setFrozenRows(1);
     sh.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    return sh;
   }
+  const have = sh.getRange(1, 1, 1, Math.max(1, sh.getLastColumn())).getValues()[0].map(String).filter(String);
+  const missing = headers.filter(function (h) { return have.indexOf(h) < 0; });
+  if (missing.length) sh.getRange(1, have.length + 1, 1, missing.length).setValues([missing]).setFontWeight('bold');
   return sh;
 }
 

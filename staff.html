@@ -44,6 +44,12 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 .weigh input{width:110px;min-height:44px;padding:8px 10px;border:1.5px solid #d5ddd6;border-radius:10px;background:var(--base)}
 .weigh button{min-height:44px;padding:8px 16px;border:none;border-radius:10px;background:var(--ink);color:#f3ede2;font-weight:600;cursor:pointer}
 .weigh small{flex-basis:100%;color:var(--muted);font-size:13px}
+.pay{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;padding:12px;border-radius:12px;background:#fff6dd}
+.pay.ok{background:#e6f2e7}
+.pay b{font-size:15px}
+.pay button{min-height:44px;padding:8px 16px;border:none;border-radius:10px;background:var(--ink);color:#f3ede2;font-weight:600;cursor:pointer}
+.pay p{flex-basis:100%;margin:0;font-size:13px;color:var(--muted)}
+.pay button.undo{min-height:40px;padding:4px 0;background:none;color:var(--muted);font-weight:400;text-decoration:underline}
 .empty{text-align:center;color:var(--muted);padding:48px 16px}
 .pin{max-width:360px;margin:72px auto;background:#fff;border-radius:20px;padding:28px 24px;text-align:center}
 .pin input{width:100%;min-height:56px;margin:16px 0 12px;padding:10px;border:1.5px solid #d5ddd6;border-radius:14px;text-align:center;font-size:24px;letter-spacing:8px}
@@ -97,6 +103,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     try {
       const data = await api(req);
       if (!data.ok && data.error === 'pin') { pin = ''; try { sessionStorage.removeItem('loads_pin'); } catch (e) {} return showPin('That PIN didn’t work.'); }
+      if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'Mark that order paid before it goes out for delivery.'; return; }
       if (!data.ok) throw new Error(data.error || 'failed');
       orders = data.orders || []; showApp(); render();
     } catch (e) {
@@ -106,26 +113,45 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 
   /* ---------- preview data ---------- */
   const demoOrders = [
-    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', track_url: 'track.html?id=LDEMO1&t=demo' },
-    { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 12.4, order_total: 27.9, first_order_offer: 'yes', track_url: 'track.html?id=LDEMO2&t=demo' },
-    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'no', track_url: 'track.html?id=LDEMO3&t=demo' }
+    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
+    { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
+    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' }
   ];
   function demoApi(req) {
     const o = demoOrders.find(x => x.id === req.id);
-    if (o && req.action === 'set_stage') o.stage = req.stage;
+    const copy = () => demoOrders.map(x => Object.assign({}, x));
+    if (o && req.action === 'set_stage') {
+      if (idxOf(req.stage) >= idxOf('out_for_delivery') && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
+      o.stage = req.stage;
+    }
     if (o && req.action === 'set_weight') { o.weight_lbs = Number(req.weight_lbs) || ''; o.order_total = Number(req.order_total) || ''; }
-    return Promise.resolve({ ok: true, orders: demoOrders.map(x => Object.assign({}, x)) });
+    if (o && req.action === 'set_paid') o.paid = req.paid === true;
+    return Promise.resolve({ ok: true, orders: copy() });
   }
+
+  /* ---------- pricing ---------- */
+  const isFirst = o => (o.first_order ? o.first_order : o.first_order_offer) === 'yes';
+  const freeDelivery = o => CONFIG.firstOrderOffer && isFirst(o);
+  const minOrder = Number(CONFIG.minOrder) || 0;
+  const totalFor = (o, lbs) => Math.max(lbs * CONFIG.pricePerLb, minOrder) + (freeDelivery(o) ? 0 : CONFIG.deliveryFee);
+  const underMin = o => minOrder && Number(o.weight_lbs) * CONFIG.pricePerLb < minOrder;
 
   /* ---------- texts to the customer ---------- */
   function smsBody(o) {
     const first = (o.name || '').trim().split(/\s+/)[0] || 'there';
     const link = o.track_url ? ' Track it here: ' + o.track_url : '';
     const st = STAGES[idxOf(o.stage)];
+    const atStore = idxOf(o.stage) >= idxOf('at_store') && idxOf(o.stage) < idxOf('out_for_delivery');
+    if (atStore && o.order_total && !o.paid) {
+      const total = 'Hi ' + first + ', your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached), so your total is $' + Number(o.order_total).toFixed(2) + (underMin(o) ? ', which includes our $' + minOrder + ' minimum' : '') + '. ';
+      return total + (isFirst(o)
+        ? "You'll get a payment link from Square in a minute. Tick “save card” when you pay and next time we'll just charge it. We'll deliver as soon as it's paid."
+        : "We'll charge the card you saved with us and text you the receipt. No card saved? You'll get a Square payment link instead.") + link;
+    }
     const msgs = {
       booked: 'Hi ' + first + ", it's Loads. You're booked for pickup " + (o.pickup_label || '') + (CONFIG.pickupWindow ? ', ' + CONFIG.pickupWindow : '') + '. Leave your bag by the door.' + link,
       picked_up: 'Hi ' + first + ", we've got your load. It's on the way to our laundromat." + link,
-      at_store: o.order_total ? 'Hi ' + first + ', your load weighed in at ' + o.weight_lbs + ' lbs, so your total is $' + Number(o.order_total).toFixed(2) + ". You'll get a payment link from Square in a minute. We'll deliver as soon as it's paid." + link : 'Hi ' + first + ', your load made it to our laundromat.' + link,
+      at_store: 'Hi ' + first + ', your load made it to our laundromat.' + link,
       out_for_delivery: 'Hi ' + first + ', your load is out for delivery and headed back to you.' + link,
       delivered: 'Hi ' + first + ', your load is back at your door. Thanks for using Loads!' + (CONFIG.googleReviewUrl ? ' If you have a sec, a quick review helps a lot: ' + CONFIG.googleReviewUrl : '')
     };
@@ -151,13 +177,25 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
       const chip = o.stage === 'delivered' ? 'done' : o.stage === 'out_for_delivery' ? 'out' : '';
       const weighed = i >= idxOf('at_store');
       const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address + ' ' + o.zip);
+      const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
+      const howToPay = isFirst(o)
+        ? 'First order: send a Square invoice from the <b>Loads</b> location and tick “Allow customer to save card on file.”'
+        : 'Repeat customer: charge their saved card in Square (Loads location). No saved card? Send an invoice.';
+      const pay = weighed && o.order_total
+        ? (o.paid
+          ? '<div class="pay ok"><b>Paid</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>'
+          : '<div class="pay"><b>Not paid yet · $' + Number(o.order_total).toFixed(2) + '</b><button type="button" data-act="paid">Mark paid</button><p>' + howToPay + ' Tap <b>Text update</b> and attach a photo of the scale.</p></div>')
+        : '';
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div><p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (o.first_order_offer === 'yes' ? ' · first order' : '') + '</p></div><span class="chip ' + chip + '">' + esc(st.label) + '</span></div>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div><p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><span class="chip ' + chip + '">' + esc(st.label) + '</span></div>' +
         '<p class="meta"><a href="' + maps + '" target="_blank" rel="noopener">' + esc(o.address) + ', ' + esc(o.zip) + '</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">Text update</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
-        (nxt ? '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>' : '') +
+        (nxt ? (needsPay
+          ? '<button class="next" type="button" disabled>Waiting on payment</button>'
+          : '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>') : '') +
         '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span>' + (i > 0 ? '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</div>' +
-        (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Total fills in as $' + CONFIG.pricePerLb.toFixed(2) + '/lb' + (o.first_order_offer === 'yes' ? ', delivery free (first order)' : ' + $' + CONFIG.deliveryFee.toFixed(2) + ' delivery') + '. Edit it if needed.</small></div>' : '') +
+        (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as $' + CONFIG.pricePerLb.toFixed(2) + '/lb' + (minOrder ? ' ($' + minOrder + ' minimum)' : '') + (freeDelivery(o) ? ', delivery free (first order)' : ' + $' + CONFIG.deliveryFee.toFixed(2) + ' delivery') + '. Edit it if needed.</small></div>' : '') +
+        pay +
         '</article>';
     }).join('');
   }
@@ -167,12 +205,13 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   $('#list').addEventListener('input', e => {
     if (!e.target.matches('[data-w]')) return;
     const card = e.target.closest('.order'), o = orders.find(x => x.id === card.dataset.id), w = Number(e.target.value);
-    if (o && w > 0) card.querySelector('[data-t]').value = (w * CONFIG.pricePerLb + (o.first_order_offer === 'yes' ? 0 : CONFIG.deliveryFee)).toFixed(2);
+    if (o && w > 0) card.querySelector('[data-t]').value = totalFor(o, w).toFixed(2);
   });
   $('#list').addEventListener('click', e => {
     const b = e.target.closest('button[data-act]'); if (!b) return;
     const card = b.closest('.order'), id = card.dataset.id;
     if (b.dataset.act === 'weight') return run({ action: 'set_weight', id, weight_lbs: card.querySelector('[data-w]').value, order_total: card.querySelector('[data-t]').value });
+    if (b.dataset.act === 'paid' || b.dataset.act === 'unpaid') { b.disabled = true; return run({ action: 'set_paid', id, paid: b.dataset.act === 'paid' }); }
     b.disabled = true;
     run({ action: 'set_stage', id, stage: b.dataset.stage });
   });

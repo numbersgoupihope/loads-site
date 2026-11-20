@@ -39,6 +39,8 @@ h1{margin:0;font-weight:700;font-stretch:85%;font-size:clamp(38px,9vw,54px);line
 .bar-meta{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
 .weight{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:22px;padding:14px 18px;border-radius:14px;background:#fff}
 .weight b{font-weight:700;font-stretch:85%;font-size:26px;letter-spacing:-.02em}
+.weight{flex-wrap:wrap}
+.pay-state{flex-basis:100%;margin:0;font-size:14px;color:var(--muted)}
 ol{list-style:none;margin:26px 0 0;padding:0}
 li{position:relative;display:flex;justify-content:space-between;gap:12px;padding:0 0 18px 30px}
 li::before{content:'';position:absolute;left:5px;top:22px;bottom:-2px;width:2px;background:#dfe2da}
@@ -77,7 +79,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
 <p class="detail" id="detail"></p>
 <div class="bar" id="bar" aria-hidden="true"></div>
 <div class="bar-meta"><span id="stageLabel"></span><span id="stepCount"></span></div>
-<div class="weight" id="weight" hidden><span>Weighed in at <b id="lbs"></b></span><span>Total <b id="total"></b></span></div>
+<div class="weight" id="weight" hidden><span>Weighed in at <b id="lbs"></b></span><span>Total <b id="total"></b></span><p class="pay-state" id="payState"></p></div>
 <ol id="timeline"></ol>
 <a class="btn" id="review" href="#" hidden>Leave us a Google review</a>
 </div>
@@ -125,7 +127,9 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     $('#weight').hidden = !hasWeight;
     if (hasWeight) {
       $('#lbs').textContent = Number(o.weight_lbs).toFixed(1) + ' lbs';
-      $('#total').textContent = o.order_total !== '' && o.order_total != null ? '$' + Number(o.order_total).toFixed(2) : '—';
+      const hasTotal = o.order_total !== '' && o.order_total != null;
+      $('#total').textContent = hasTotal ? '$' + Number(o.order_total).toFixed(2) : '—';
+      $('#payState').textContent = !hasTotal ? '' : o.paid ? 'Paid. Thank you!' : 'Not paid yet. Check your texts for the payment link.';
     }
     $('#timeline').innerHTML = STAGES.map((s, i) => {
       const t = o.times && o.times[s.key];
@@ -150,7 +154,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     const demo = () => {
       const times = {};
       STAGES.forEach((s, n) => { if (n <= i) times[s.key] = new Date(start + n * 40 * 60e3).toISOString(); });
-      render({ id: id || 'DEMO', first_name: 'Sam', stage: STAGES[i].key, pickup_label: 'Mon, Nov 17', weight_lbs: i >= 2 ? 14.2 : '', order_total: i >= 2 ? 31.95 : '', times });
+      render({ id: id || 'DEMO', first_name: 'Sam', stage: STAGES[i].key, pickup_label: 'Mon, Nov 17', weight_lbs: i >= 2 ? 14.2 : '', order_total: i >= 2 ? 31.95 : '', paid: i >= 5, times });
       i = (i + 1) % STAGES.length;
     };
     demo(); setInterval(demo, 3500);

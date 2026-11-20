@@ -84,17 +84,20 @@ Every booking row also stores UTM tags, Google and Meta click IDs, landing page 
 1. Staff open `yoursite.com/staff.html` on their phone and enter the PIN. Add it to the home screen so it opens like an app.
 2. Each open order shows the customer, address (tap for directions), notes and current stage.
 3. As each step happens, tap the big button: **Picked up > At the laundromat > Washing > Drying > Folding > Out for delivery > Delivered**. A wrong tap? **Undo** steps back one.
-4. At the laundromat, type the weight. The total fills in automatically ($2.25/lb, plus delivery unless it's a first order). Tap **Save**. The customer sees both on their tracker.
-5. **Text update** opens the phone's Messages app with a ready-made text for the current stage and the customer's tracking link. Send it at pickup, out for delivery and delivered.
-6. **Getting paid (Square Invoices).** After you save the weight, tap **Text update**: it sends the customer their weight and total. Then, in the Square app, go to **Invoices > Create invoice**, add the customer by name and mobile number, enter the same total, and send it by text. Do not mark the order **Out for delivery** until Square shows the invoice as paid.
+4. At the laundromat, weigh the bag **dry, before washing**, and take a photo of the scale. Type the weight. The total fills in automatically: $2.25/lb with a $30 minimum, plus $6.99 delivery (free on a customer's first order). Tap **Save**. The customer sees both on their tracker.
+5. **Text update** opens the phone's Messages app with a ready-made text for the current stage and the customer's tracking link. Send it at pickup, after weighing, out for delivery and delivered.
+6. **Getting paid.** Each order says **first order** or **repeat customer**.
+   - **First order:** tap **Text update** (it has the weight and total), attach the scale photo, send. Then in the Square Invoices app or Dashboard, switch to the **Loads** location, tap **Create invoice**, add the customer by name and mobile, enter the same total, tick **Allow customer to save card on file**, and send it by text.
+   - **Repeat customer:** tap **Text update**, attach the scale photo, send. In Square (Loads location), open the customer and charge their saved card for the total. No saved card? Send an invoice like a first order.
+   - When Square shows it paid, tap **Mark paid** on the staff page. **Out for delivery** stays locked until you do.
 
-Square setup (once): the business owner creates a free Square account in the business's name, links the business bank account, and installs the Square app on each store phone. Online and invoice payments on the free plan cost 3.3% + 30¢ each.
+Square setup: invoices go out from the **Loads** location on Dimitri's Square account (added Nov 2026, $49/month). Install the Square Invoices app on each store phone and sign in with a login that can use the Loads location. Use the Invoices app rather than the register, so the register stays on the store's own location.
 
 Customers get their tracking link on the booking confirmation screen, in the first text, and in the booking email Dimitri receives. Their tracker refreshes every minute on its own.
 
 The tracker is only as live as the taps: if staff skip a step, the customer won't see it. Delivered orders stay on the staff list until the end of the day.
 
-**Privacy:** every tracking link has a random 16-letter code, so nobody can look up someone else's order by guessing. The tracker shows only the customer's first name, stage, times, weight and total, never the address or phone.
+**Privacy:** every tracking link has a random 16-letter code, so nobody can look up someone else's order by guessing. The tracker shows only the customer's first name, stage, times, weight, total and whether it's paid, never the address or phone.
 
 ## 5. Swap in real photos
 

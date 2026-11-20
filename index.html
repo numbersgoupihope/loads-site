@@ -271,6 +271,7 @@ footer .wordmark{color:var(--cream)}
 <div class="ticket-label"><span>Wash and fold</span><span>Load No. 0001</span></div>
 <div class="big-price"><b>$<span data-price></span></b><span class="serif muted" style="font-size:26px">per lb</span></div>
 <p class="muted" style="margin:12px 0 0">+ $<span data-fee></span> pickup and delivery per order</p>
+<p class="muted" data-minline style="margin:4px 0 0;font-size:15px">$<span data-min></span> minimum per order, before delivery</p>
 <p data-offer style="margin:4px 0 0;font-weight:600;color:var(--cta)">First order: delivery is on us</p>
 </div>
 <div class="perf" aria-hidden="true"></div>
@@ -323,7 +324,7 @@ footer .wordmark{color:var(--cream)}
 <h2 class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
 <details open><summary>Do I need to be home?</summary><p>Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
 <details><summary>When do I get it back?</summary><p>Back <span data-fill="turnaround"></span>. We run one pickup route and one drop-off route every day.</p></details>
-<details><summary>How do you charge?</summary><p>We weigh your laundry at the store and charge $<span data-price></span> a pound, plus $<span data-fee></span> for pickup and delivery. A full hamper usually comes in around 10 lbs. Once it's weighed, we text you the total and a secure payment link from Square so you can pay by card. Your laundry comes back as soon as it's paid.</p></details>
+<details><summary>How do you charge?</summary><p>No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> for pickup and delivery. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p>First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
 <details><summary>What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
 <details><summary>What areas do you serve?</summary><p>Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Enter your zip in the booking form to check, or join the waitlist above.</p></details>
 </div>
@@ -388,6 +389,8 @@ const CONFIG = window.LOADS_CONFIG;
   $$('[data-sms]').forEach(a => { a.href = smsHref; a.addEventListener('click', () => track('text_click')); });
   $$('[data-price]').forEach(el => { el.textContent = CONFIG.pricePerLb.toFixed(2); });
   $$('[data-fee]').forEach(el => { el.textContent = CONFIG.deliveryFee.toFixed(2); });
+  $$('[data-min]').forEach(el => { el.textContent = Number(CONFIG.minOrder) || 0; });
+  $$('[data-minline]').forEach(el => show(el, Number(CONFIG.minOrder) > 0));
   $$('[data-offer]').forEach(el => show(el, CONFIG.firstOrderOffer));
   $('#year').textContent = new Date().getFullYear();
 
@@ -555,8 +558,10 @@ const CONFIG = window.LOADS_CONFIG;
     const n = Number(lbs.value), h = Math.round(n / 5) / 2;
     const hamper = h <= 0.5 ? 'about half a hamper' : h === 1 ? 'about 1 hamper' : 'about ' + h + ' hampers';
     $('#lbsText').textContent = n + ' lbs, ' + hamper;
-    $('#total').textContent = '$' + (n * CONFIG.pricePerLb + CONFIG.deliveryFee).toFixed(2);
-    $('#totalNote').textContent = CONFIG.firstOrderOffer ? 'First order? Take off the $' + CONFIG.deliveryFee.toFixed(2) + '. You pay for the actual weight.' : 'You pay for the actual weight. A full hamper is usually around 10 lbs.';
+    const laundry = n * CONFIG.pricePerLb, min = Number(CONFIG.minOrder) || 0;
+    $('#total').textContent = '$' + (Math.max(laundry, min) + CONFIG.deliveryFee).toFixed(2);
+    const minNote = min && laundry < min ? 'Includes the $' + min + ' order minimum. ' : '';
+    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? 'First order? Take off the $' + CONFIG.deliveryFee.toFixed(2) + '. You pay for the actual weight.' : 'You pay for the actual weight. A full hamper is usually around 10 lbs.');
   }
   lbs.addEventListener('input', estimate); estimate();
 
