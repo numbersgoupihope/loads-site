@@ -9,16 +9,16 @@ window.LOADS_CONFIG = {
   googleAdsBookingLabel: '',   // Conversion label for "Booking completed", e.g. 'AbC-D_efG-h12'
   metaPixelId: '',             // Meta (Facebook) Pixel ID, e.g. '123456789012345'
 
-  phoneDisplay: '',            // e.g. '(213) 555-0123'
-  phoneSms: '',                // same number for texting links, e.g. '+12135550123'
-  email: '',                   // e.g. 'hello@loadslaundry.com'
-  turnaround: '',              // finishes the sentence "Back ___", e.g. 'the next evening'
-  pickupWindow: '',            // e.g. '8 to 11am'
-  guarantee: '',               // e.g. "If something comes back wrong, we'll rewash it free. Just text us within 48 hours."
-  bulkyPrice: '',              // e.g. '$8 per comforter'
-  googleRating: '',            // e.g. '4.7'
+  phoneDisplay: '(805) 407-3309',            // e.g. '(213) 555-0123'
+  phoneSms: '+18054073309',                // same number for texting links, e.g. '+12135550123'
+  email: 'dimitri@dpzwest.com', // e.g. 'hello@loadslaundry.com'
+  turnaround: 'the next day',              // finishes the sentence "Back ___", e.g. 'the next evening'
+  pickupWindow: '8 to 11am',            // e.g. '8 to 11am'
+  guarantee: "If something comes back wrong, text us within 48 hours and we'll rewash it free.",               // e.g. "If something comes back wrong, we'll rewash it free. Just text us within 48 hours."
+  bulkyPrice: '',              // e.g. '$8 per comforter'. Leave empty to hide the line.
+  googleRating: '',            // e.g. '4.7'. Leave empty to hide it.
   googleReviewUrl: '',         // link customers get after delivery to leave a Google review
-  stores: ['', ''],            // full street addresses of the two laundromats
+  stores: ['3658 W 3rd St, Los Angeles, CA 90020', '6839 Lennox Ave, Van Nuys, CA'],            // full street addresses of the two laundromats
 
   pricePerLb: 2.25,
   deliveryFee: 6.99,

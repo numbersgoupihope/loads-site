@@ -242,7 +242,7 @@ footer .wordmark{color:var(--cream)}
 </section>
 
 <section class="wrap proof" aria-label="Why people trust us">
-<div><b><span data-fill="rating"></span></b><span>Google rating at our laundromats</span></div>
+<div data-optional><b><span data-fill="rating"></span></b><span>Google rating at our laundromats</span></div>
 <div><b>Our own stores</b><span>Every load washed in laundromats we run</span></div>
 <div><b>Our own drivers</b><span>On our team, not a gig app</span></div>
 <div><b>Twice a day</b><span>One pickup run and one drop-off run, daily</span></div>
@@ -264,7 +264,7 @@ footer .wordmark{color:var(--cream)}
 <div>
 <h2 class="display h2" style="max-width:12ch;margin-bottom:22px">Priced by the pound, <span class="serif">not the load.</span></h2>
 <p class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">You pay for what you send. No subscription and no membership. Washing, drying, folding, bagging and the ride both ways are all included.</p>
-<p class="muted" style="font-size:15px;margin:0">Comforters and bulky items: <span data-fill="bulky"></span></p>
+<p class="muted" data-optional style="font-size:15px;margin:0">Comforters and bulky items: <span data-fill="bulky"></span></p>
 </div>
 <div class="ticket">
 <div class="ticket-top">
@@ -380,7 +380,9 @@ const CONFIG = window.LOADS_CONFIG;
   const missing = new Set();
   $$('[data-fill]').forEach(el => {
     const key = el.dataset.fill, val = fills[key];
-    if (val) { el.textContent = val; el.classList.remove('todo'); }
+    const optional = el.closest('[data-optional]');
+    if (val) { el.textContent = val; el.classList.remove('todo'); show(optional, true); }
+    else if (optional) show(optional, false);
     else { el.textContent = '[' + key.toUpperCase() + ']'; el.classList.add('todo'); missing.add(key); }
   });
   if (missing.size) console.warn('Loads: fill these in CONFIG before launch:', Array.from(missing).join(', '));
