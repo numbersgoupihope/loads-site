@@ -70,7 +70,7 @@ function saveForm_(p) {
     const row = headers.map(function (h) {
       if (h === 'received_at' || h === 'stage_updated_at') return now;
       if (h === 'stage') return 'booked';
-      return clean_(p[h]);
+      return TEXT_FIELDS.indexOf(h) >= 0 ? text_(p[h]) : clean_(p[h]);
     });
     sheet.appendRow(row);
     if (!isWaitlist && NOTIFY_EMAIL) notify_(p);
@@ -117,7 +117,7 @@ function track_(id, token) {
       id: r.booking_id,
       first_name: String(r.name || '').trim().split(/\s+/)[0],
       stage: r.stage || 'booked',
-      pickup_label: r.pickup_label || '',
+      pickup_label: label_(r.pickup_label, Session.getScriptTimeZone()),
       zone: r.zone || '',
       weight_lbs: r.weight_lbs === '' ? '' : Number(r.weight_lbs),
       order_total: r.order_total === '' ? '' : Number(r.order_total),
@@ -207,7 +207,7 @@ function list_() {
       return {
         id: String(r.booking_id), name: String(r.name || ''), phone: String(r.phone || ''),
         address: String(r.address || ''), zip: String(r.zip || ''), notes: String(r.notes || ''),
-        zone: String(r.zone || ''), pickup_date: day_(r.pickup_date, tz), pickup_label: String(r.pickup_label || ''),
+        zone: String(r.zone || ''), pickup_date: day_(r.pickup_date, tz), pickup_label: label_(r.pickup_label, tz),
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,
         first_order_offer: String(r.first_order_offer || ''), first_order: String(r.first_order || ''),
         paid: !!r.paid_at, track_url: String(r.track_url || ''),
@@ -263,6 +263,18 @@ function write_(t, r, updates) {
 function clean_(v) {
   v = v == null ? '' : String(v).slice(0, 1000);
   return /^[=+\-@]/.test(v) ? "'" + v : v;
+}
+
+// Sheets turns text like "2026-11-23" or "Mon, Nov 23" into dates. These columns are saved as plain text.
+const TEXT_FIELDS = ['pickup_date', 'pickup_label', 'zip'];
+
+function text_(v) {
+  v = clean_(v);
+  return v && v.charAt(0) !== "'" ? "'" + v : v;
+}
+
+function label_(v, tz) {
+  return v instanceof Date ? Utilities.formatDate(v, tz, 'EEE, MMM d') : String(v || '');
 }
 
 function iso_(v) {
