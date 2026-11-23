@@ -1,3 +1,4 @@
+/** @OnlyCurrentDoc */
 /**
  * Loads backend (Google Apps Script, attached to the "Loads bookings" Google Sheet).
  *  - Saves bookings and waitlist sign-ups from the website.

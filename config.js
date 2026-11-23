@@ -3,7 +3,7 @@
    Every page (booking, tracker, staff) reads it. See README.md.
    ============================================================ */
 window.LOADS_CONFIG = {
-  endpoint: '',                // Google Apps Script web app URL (README step 1). Empty = preview mode, nothing is saved.
+  endpoint: 'https://script.google.com/macros/s/AKfycbwE669toBO5Qjbx4_5TN1iqjZmKM2HcJBGdLaF-l9Im2il55UaZKWuT4x1NFo64lC3z/exec', // Google Apps Script web app URL (README step 1). Empty = preview mode.
   ga4Id: '',                   // Google Analytics 4 measurement ID, e.g. 'G-ABC123XYZ'
   googleAdsId: '',             // Google Ads tag ID, e.g. 'AW-123456789'
   googleAdsBookingLabel: '',   // Conversion label for "Booking completed", e.g. 'AbC-D_efG-h12'
