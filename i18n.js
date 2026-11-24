@@ -156,7 +156,8 @@
     contactH3: 'Contacto',
     legalLinks: '<a href="privacy.html">Privacidad</a> &middot; <a href="terms.html">Términos</a>',
     copyright: '&copy; <span id="year">2026</span> Loads Laundry Co. Nosotros nos encargamos.',
-    mbarSmall: 'De K-town a Sherman Oaks',
+    mbarSmall: 'K-town a Sherman Oaks',
+    bookShort: 'Agendar',
 
     /* ---------- built on the fly ---------- */
     tomorrow: 'Mañana, ',
