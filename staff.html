@@ -121,8 +121,11 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   /* ---------- talking to the Sheet ---------- */
   async function api(req) {
     if (PREVIEW) return demoApi(req);
-    const res = await fetch(CONFIG.endpoint, { method: 'POST', body: JSON.stringify(Object.assign({ pin }, req)) });
-    return res.json();
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), req.action === 'send_bill' ? 45000 : 25000);
+    try {
+      const res = await fetch(CONFIG.endpoint, { method: 'POST', body: JSON.stringify(Object.assign({ pin }, req)), signal: ctl.signal });
+      return await res.json();
+    } finally { clearTimeout(timer); }
   }
   async function run(req) {
     if (busy) return; busy = true; $('#err').textContent = '';
@@ -281,7 +284,8 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     const counts = {};
     orders.forEach(o => { counts[o.stage] = (counts[o.stage] || 0) + 1; });
     const parts = STAGES.filter(s => counts[s.key]).map(s => counts[s.key] + ' ' + s.label.toLowerCase());
-    $('#summary').textContent = orders.length ? parts.join(' · ') : 'No open orders';
+    const stamp = 'Updated ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    $('#summary').textContent = (orders.length ? parts.join(' · ') : 'No open orders') + ' · ' + stamp;
     const shown = orders.filter(o => filter === 'all' || o.zone === filter);
     if (!shown.length) { $('#list').innerHTML = '<p class="empty">Nothing here right now.</p>'; return; }
     $('#list').innerHTML = shown.map(o => {
@@ -341,7 +345,17 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     savePin(pin);
     run({ action: 'list' });
   });
+  // When a new version of this page goes live, reload so every phone is on the latest.
+  const PAGE_VERSION = '2026-11-23e';
+  async function checkVersion() {
+    try {
+      const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
+      const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest('#list input');
+      if (v && v !== PAGE_VERSION && !busy && !typing) location.reload();
+    } catch (e) {}
+  }
   setInterval(() => {
+    checkVersion();
     const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest('#list input');
     if (!document.hidden && !$('#app').hidden && !typing) run({ action: 'list' });
   }, 30000);
