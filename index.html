@@ -10,6 +10,11 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="img/share.jpg">
 <meta name="theme-color" content="#183a2e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/loads-180.png">
+<meta name="apple-mobile-web-app-title" content="Loads">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11.5' fill='%23183a2e'/%3E%3Ccircle cx='12' cy='12' r='6.6' fill='%23b9d6bb'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -235,6 +240,7 @@ footer .wordmark{color:var(--cream)}
 <a class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
 <button class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
 </div>
+<p class="muted" id="homeTip" style="margin:16px 0 0;font-size:14px">Next time, skip the browser. Add Loads to your home screen: on iPhone tap Share, then Add to Home Screen. On Android tap the ⋮ menu, then Add to Home screen.</p>
 </div>
 
 <div class="panel-foot"><span>No subscription</span><span>Pay by the pound</span><span>Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
@@ -530,6 +536,7 @@ const CONFIG = window.LOADS_CONFIG;
       track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
       $('#doneText').textContent = "We'll text you at " + payload.phone + ' to confirm your pickup on ' + booking.pickup_label + '. Leave your bag by the door.';
       $('#trackLink').href = trackUrl;
+      $('#homeTip').hidden = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
       show(s2, false); show(s3, true); msg(m, '');
     } catch (err) {
       msg(m, "Something went wrong. Text PICKUP to " + (CONFIG.phoneDisplay || 'us') + " and we'll book you by text.", true);
