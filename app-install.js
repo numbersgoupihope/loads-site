@@ -5,6 +5,8 @@
 (function () {
   var QR = {"customer": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 33 33\"><path fill=\"#fff\" d=\"M0 0h33v33h-33z\"/><path stroke=\"#183a2e\" d=\"M2 2.5h7m3 0h1m3 0h1m3 0h1m3 0h7m-29 1h1m5 0h1m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h5m2 0h2m4 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m3 0h2m1 0h1m3 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h6m4 0h2m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-15 1h4m1 0h1m-19 1h3m1 0h2m4 0h1m1 0h2m5 0h1m5 0h2m-28 1h3m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h8m2 0h1m-28 1h1m1 0h4m2 0h1m2 0h1m1 0h1m1 0h3m1 0h1m1 0h1m1 0h4m-27 1h1m9 0h1m2 0h2m3 0h1m3 0h2m3 0h1m-27 1h1m3 0h1m4 0h3m2 0h2m3 0h1m1 0h1m1 0h4m-28 1h1m5 0h1m1 0h1m3 0h4m1 0h2m2 0h2m1 0h4m-28 1h2m1 0h1m1 0h1m1 0h1m1 0h2m2 0h2m1 0h3m1 0h1m1 0h3m1 0h2m-29 1h3m1 0h1m3 0h1m1 0h1m1 0h3m2 0h2m1 0h1m3 0h2m2 0h1m-29 1h1m1 0h3m1 0h3m2 0h1m4 0h4m3 0h3m2 0h1m-27 1h1m1 0h2m1 0h1m3 0h3m2 0h1m3 0h1m2 0h1m1 0h1m-26 1h1m5 0h2m1 0h1m1 0h2m1 0h5m1 0h1m1 0h2m-22 1h2m5 0h1m3 0h2m2 0h2m1 0h4m2 0h3m-28 1h1m4 0h2m3 0h4m1 0h11m-19 1h2m1 0h4m1 0h1m3 0h1m3 0h2m1 0h2m-29 1h7m3 0h1m1 0h2m2 0h2m1 0h2m1 0h1m1 0h1m1 0h2m-28 1h1m5 0h1m1 0h4m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m2 0h1m2 0h3m3 0h1m1 0h8m-28 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m4 0h2m1 0h1m-28 1h1m1 0h3m1 0h1m1 0h1m1 0h3m2 0h2m3 0h1m2 0h1m1 0h2m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m1 0h1m-28 1h7m2 0h1m2 0h4m2 0h6m3 0h1\"/></svg>\n", "staff": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 33 33\"><path fill=\"#fff\" d=\"M0 0h33v33h-33z\"/><path stroke=\"#183a2e\" d=\"M2 2.5h7m2 0h2m2 0h2m3 0h1m3 0h7m-29 1h1m5 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m2 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h5m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m3 0h2m2 0h1m1 0h5m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m3 0h1m3 0h1m1 0h2m2 0h1m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h5m2 0h1m3 0h1m-20 1h1m5 0h1m1 0h2m1 0h5m1 0h1m3 0h2m2 0h3m-26 1h1m2 0h1m4 0h1m3 0h3m2 0h1m1 0h1m1 0h2m1 0h2m-28 1h1m4 0h4m1 0h2m3 0h1m1 0h2m2 0h1m2 0h1m-25 1h2m1 0h3m1 0h3m1 0h2m1 0h1m1 0h1m2 0h7m-26 1h2m1 0h2m1 0h2m1 0h1m1 0h2m3 0h1m3 0h1m1 0h2m4 0h1m-25 1h1m3 0h1m1 0h2m2 0h3m2 0h1m1 0h4m2 0h2m-29 1h1m3 0h3m1 0h1m3 0h1m2 0h2m4 0h1m1 0h4m-27 1h1m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m-28 1h4m1 0h1m4 0h4m2 0h1m2 0h1m4 0h2m-27 1h1m2 0h3m4 0h2m2 0h3m1 0h3m1 0h3m1 0h3m-29 1h2m3 0h3m1 0h2m2 0h7m1 0h1m3 0h1m2 0h1m-29 1h1m2 0h2m3 0h1m1 0h2m4 0h1m3 0h2m1 0h1m-24 1h1m2 0h1m2 0h1m1 0h4m3 0h3m2 0h5m1 0h3m-21 1h1m2 0h2m1 0h2m2 0h3m3 0h2m-26 1h7m2 0h1m1 0h2m2 0h1m1 0h1m1 0h2m1 0h1m1 0h3m-27 1h1m5 0h1m2 0h1m2 0h1m5 0h3m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m2 0h2m2 0h2m1 0h1m2 0h7m1 0h1m-28 1h1m1 0h3m1 0h1m2 0h2m2 0h1m1 0h2m1 0h4m3 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m5 0h1m2 0h1m1 0h1m2 0h8m-28 1h1m5 0h1m2 0h3m1 0h3m2 0h1m3 0h1m1 0h3m1 0h1m-29 1h7m1 0h1m1 0h1m1 0h2m3 0h3m2 0h2m2 0h1\"/></svg>\n"};
   var kind = document.documentElement.getAttribute('data-app') === 'staff' ? 'staff' : 'customer';
+  var es = function () { return kind === 'customer' && window.LOADS_I18N && window.LOADS_I18N.lang === 'es'; };
+  var L = function (en, sp) { return es() ? sp : en; };
   var name = kind === 'staff' ? 'Loads Staff' : 'Loads';
   var icon = kind === 'staff' ? 'icons/staff-180.png' : 'icons/loads-180.png';
   var btns = [].slice.call(document.querySelectorAll('[data-get-app]'));
@@ -20,15 +22,22 @@
 
   var shareIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/></svg>';
   var steps;
+  function buildSteps() {
   if (isIOS) {
-    steps = '<ol><li>Tap the Share button ' + shareIcon + ' at the bottom of Safari. In Chrome it is at the top, next to the address.</li>' +
-      '<li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. The ' + name + ' icon shows up with your other apps.</li></ol>';
+    steps = L('<ol><li>Tap the Share button ' + shareIcon + ' at the bottom of Safari. In Chrome it is at the top, next to the address.</li>' +
+      '<li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. The ' + name + ' icon shows up with your other apps.</li></ol>',
+      '<ol><li>Toca el botón Compartir ' + shareIcon + ' abajo en Safari. En Chrome está arriba, junto a la dirección.</li>' +
+      '<li>Baja y toca <b>Agregar a pantalla de inicio</b>.</li><li>Toca <b>Agregar</b>. El ícono de ' + name + ' aparece con tus otras apps.</li></ol>');
   } else if (isAndroid) {
-    steps = '<button type="button" class="appsheet-go" hidden>Install ' + name + '</button><ol><li>Tap the <b>&#8942;</b> menu at the top right of Chrome.</li>' +
-      '<li>Tap <b>Add to Home screen</b> or <b>Install app</b>.</li><li>Tap <b>Install</b>. The ' + name + ' icon shows up with your other apps.</li></ol>';
+    steps = '<button type="button" class="appsheet-go" hidden>' + L('Install ', 'Instalar ') + name + '</button>' + L('<ol><li>Tap the <b>&#8942;</b> menu at the top right of Chrome.</li>' +
+      '<li>Tap <b>Add to Home screen</b> or <b>Install app</b>.</li><li>Tap <b>Install</b>. The ' + name + ' icon shows up with your other apps.</li></ol>',
+      '<ol><li>Toca el menú <b>&#8942;</b> arriba a la derecha en Chrome.</li>' +
+      '<li>Toca <b>Agregar a la pantalla principal</b> o <b>Instalar app</b>.</li><li>Toca <b>Instalar</b>. El ícono de ' + name + ' aparece con tus otras apps.</li></ol>');
   } else {
-    steps = '<div class="appsheet-qr">' + QR[kind] + '</div><p class="appsheet-c">Scan this with your phone\'s camera. The steps to add it open right on your phone.</p>';
+    steps = '<div class="appsheet-qr">' + QR[kind] + '</div><p class="appsheet-c">' + L("Scan this with your phone's camera. The steps to add it open right on your phone.", 'Escanea esto con la cámara de tu celular. Los pasos se abren ahí mismo en tu celular.') + '</p>';
   }
+  }
+  buildSteps();
 
   var css = document.createElement('style');
   css.textContent =
@@ -48,17 +57,23 @@
   var d = document.createElement('dialog');
   d.className = 'appsheet';
   d.setAttribute('aria-labelledby', 'appsheet-t');
-  d.innerHTML = '<form method="dialog"><button class="appsheet-x" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></form>' +
+  function fillDialog() {
+  buildSteps();
+  d.innerHTML = '<form method="dialog"><button class="appsheet-x" aria-label="' + L('Close', 'Cerrar') + '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></form>' +
     '<img class="appsheet-i" src="' + icon + '" alt="">' +
-    '<h2 id="appsheet-t">Get the ' + name + ' app</h2>' +
-    '<p>' + (kind === 'staff' ? 'Opens straight to today\'s loads.' : 'Free, and no App Store needed. Book your next pickup in two taps.') + '</p>' + steps;
+    '<h2 id="appsheet-t">' + L('Get the ' + name + ' app', 'Descarga la app de ' + name) + '</h2>' +
+    '<p>' + (kind === 'staff' ? 'Opens straight to today\'s loads.' : L('Free, and no App Store needed. Book your next pickup in two taps.', 'Gratis y sin App Store. Agenda tu próxima recogida en dos toques.')) + '</p>' + steps;
+  }
+  fillDialog();
   d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
   document.body.appendChild(d);
-  var go = d.querySelector('.appsheet-go');
-  if (go) {
-    go.hidden = !deferred;
-    go.addEventListener('click', function () { install(); });
+  var go = null;
+  function wireGo() {
+    go = d.querySelector('.appsheet-go');
+    if (go) { go.hidden = !deferred; go.addEventListener('click', function () { install(); }); }
   }
+  wireGo();
+  document.addEventListener('loads:lang', function () { fillDialog(); wireGo(); });
 
   function install() {
     if (!deferred) return;

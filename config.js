@@ -16,6 +16,11 @@ window.LOADS_CONFIG = {
   pickupWindow: '8 to 11am',            // e.g. '8 to 11am'
   guarantee: "If something comes back wrong, text us within 48 hours and we'll rewash it free.",               // e.g. "If something comes back wrong, we'll rewash it free. Just text us within 48 hours."
   bulkyPrice: '',              // e.g. '$8 per comforter'. Leave empty to hide the line.
+  // Spanish versions of the lines above, used when a visitor switches to Español
+  turnaroundEs: 'al día siguiente',
+  pickupWindowEs: '8 a 11 de la mañana',
+  guaranteeEs: 'Si algo regresa mal, mándanos un texto dentro de 48 horas y lo volvemos a lavar gratis.',
+  bulkyPriceEs: '',
   googleRating: '',            // e.g. '4.7'. Leave empty to hide it.
   googleReviewUrl: '',         // link customers get after delivery to leave a Google review
   stores: ['3658 W 3rd St, Los Angeles, CA 90020', '6839 Lennox Ave, Van Nuys, CA'],            // full street addresses of the two laundromats

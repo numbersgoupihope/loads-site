@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Laundry Pickup &amp; Delivery in Los Angeles | Loads</title>
-<meta name="description" content="Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Washed and folded at our own laundromats. $2.25 a pound, no subscription.">
+<title data-i18n="docTitle">Laundry Pickup &amp; Delivery in Los Angeles | Loads</title>
+<meta data-i18n-attr="content:metaDesc" name="description" content="Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Washed and folded at our own laundromats. $2.25 a pound, no subscription.">
 <meta property="og:title" content="Loads | Laundry pickup and delivery in Los Angeles">
 <meta property="og:description" content="Leave a bag at your door. It comes back washed, dried and folded from our own laundromats. $2.25 a pound.">
 <meta property="og:type" content="website">
@@ -45,6 +45,7 @@ a{color:var(--ink)}
 .wordmark svg{margin:0 1px 0 1.5px}
 .logo small{margin-top:4px;font-size:12px;font-weight:500;letter-spacing:.4px;color:var(--muted)}
 .nav-right{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;font-size:15px}
+.mob-pills{display:none;gap:8px}
 .app-pill{display:none;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--ink);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
 .nav-right .btn{min-height:46px;padding:10px 22px;border-radius:999px;font-size:16px}
 /* hero */
@@ -160,24 +161,26 @@ footer .wordmark{color:var(--cream)}
 .mbar small{font-size:13px;color:var(--muted)}
 .mbar .btn{min-height:48px;padding:10px 22px;border-radius:12px;font-size:16px}
 .mbar.away{display:none!important}
-@media (max-width:760px){.mbar{display:flex}.panel{padding:20px 18px;margin-top:-40px}.faq{padding:32px 22px}.proof>div{border-left:none;padding:8px 0}.sec{padding:72px 0}.offer{font-size:13px;padding:8px 16px}.nav{min-height:0;padding:14px 0 6px}.nav-right{display:none}.app-pill{display:inline-flex;align-items:center}.hero-top{margin:12px 0 24px;gap:16px}.hero-side{padding-bottom:0}.hero-side p.muted{font-size:17px!important}.kicker{font-size:26px}.price b{font-size:38px}.hero-img{height:240px;border-radius:20px}}
+@media (max-width:440px){.logo small{display:none}}
+@media (max-width:760px){.mbar{display:flex}.panel{padding:20px 18px;margin-top:-40px}.faq{padding:32px 22px}.proof>div{border-left:none;padding:8px 0}.sec{padding:72px 0}.offer{font-size:13px;padding:8px 16px}.nav{min-height:0;padding:14px 0 6px}.nav-right{display:none}.mob-pills{display:flex}.app-pill{display:inline-flex;align-items:center}.hero-top{margin:12px 0 24px;gap:16px}.hero-side{padding-bottom:0}.hero-side p.muted{font-size:17px!important}.kicker{font-size:26px}.price b{font-size:38px}.hero-img{height:240px;border-radius:20px}}
 </style>
 </head>
 <body>
 
-<div class="offer" data-offer>First load? Delivery's on us. Now picking up in Koreatown, Downtown LA, Van Nuys and Sherman Oaks.</div>
+<div data-i18n="offer" class="offer" data-offer>First load? Delivery's on us. Now picking up in Koreatown, Downtown LA, Van Nuys and Sherman Oaks.</div>
 
 <header class="wrap">
 <nav class="nav" aria-label="Main">
 <a href="#top" class="logo">
 <span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#183a2e"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
-<small>Laundry pickup &amp; delivery</small>
+<small data-i18n="tagline">Laundry pickup &amp; delivery</small>
 </a>
-<button type="button" class="app-pill" data-get-app hidden>Get the app</button>
+<div class="mob-pills"><button type="button" class="app-pill" data-lang-toggle>Español</button><button type="button" class="app-pill" data-get-app data-i18n="getApp" hidden>Get the app</button></div>
 <div class="nav-right">
-<button type="button" class="link-btn" data-get-app hidden>Get the app</button>
-<span class="muted">Questions? Text <a data-sms href="#"><span data-fill="phone"></span></a></span>
-<a href="#book" class="btn">Book a pickup</a>
+<button type="button" class="link-btn" data-lang-toggle>Español</button>
+<button type="button" class="link-btn" data-get-app data-i18n="getApp" hidden>Get the app</button>
+<span data-i18n="questions" class="muted">Questions? Text <a data-sms href="#"><span data-fill="phone"></span></a></span>
+<a data-i18n="bookPickup" href="#book" class="btn">Book a pickup</a>
 </div>
 </nav>
 </header>
@@ -185,85 +188,85 @@ footer .wordmark{color:var(--cream)}
 <main id="top">
 <section class="wrap">
 <div class="hero-top">
-<h1 class="display">Take a <span class="serif">load</span> off.</h1>
+<h1 data-i18n="heroH1" class="display">Take a <span class="serif">load</span> off.</h1>
 <div class="hero-side">
-<p class="kicker serif">We do loads.</p>
-<p class="muted" style="margin:0 0 18px;font-size:19px">Pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. We wash and fold every load at our own laundromats and bring it back to your door.</p>
-<div class="price"><b>$2.25</b><span class="muted">a pound, wash, dry and fold</span></div>
+<p data-i18n="kicker" class="kicker serif">We do loads.</p>
+<p data-i18n="heroP" class="muted" style="margin:0 0 18px;font-size:19px">Pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. We wash and fold every load at our own laundromats and bring it back to your door.</p>
+<div class="price"><b>$2.25</b><span data-i18n="priceSub" class="muted">a pound, wash, dry and fold</span></div>
 </div>
 </div>
-<img class="hero-img" src="img/laundromat-1600.webp" srcset="img/laundromat-900.webp 900w, img/laundromat-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 1240px" width="1600" height="1067" fetchpriority="high" alt="A sunlit laundromat with stainless washers along one wall and palm trees outside the windows">
+<img data-i18n-attr="alt:heroAlt" class="hero-img" src="img/laundromat-1600.webp" srcset="img/laundromat-900.webp 900w, img/laundromat-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 1240px" width="1600" height="1067" fetchpriority="high" alt="A sunlit laundromat with stainless washers along one wall and palm trees outside the windows">
 </section>
 
 <section class="panel-wrap">
 <div class="panel" id="book">
 
 <form id="step1" novalidate>
-<div class="panel-head"><h2>Send us a load</h2><div class="steps">Step 1 of 2 <span><i class="on"></i> <i></i></span></div></div>
+<div class="panel-head"><h2 data-i18n="s1Title">Send us a load</h2><div data-i18n="s1Steps" class="steps">Step 1 of 2 <span><i class="on"></i> <i></i></span></div></div>
 <div class="row">
-<div class="field"><label for="zip">Your zip code</label><input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="90005" required></div>
-<div class="field"><label for="day">Pickup day</label><select id="day" name="day" required><option value="">Choose a day</option></select></div>
-<button class="btn field" type="submit">See pickup times</button>
+<div class="field"><label data-i18n="zipLabel" for="zip">Your zip code</label><input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="90005" required></div>
+<div class="field"><label data-i18n="dayLabel" for="day">Pickup day</label><select id="day" name="day" required><option value="">Choose a day</option></select></div>
+<button data-i18n="seeTimes" class="btn field" type="submit">See pickup times</button>
 </div>
 <p class="msg" id="msg1" role="status" aria-live="polite" hidden></p>
 <div id="outzone" hidden>
-<p class="msg">We're not picking up in <span id="outzip"></span> yet. Leave a number and we'll text you when we get there.</p>
+<p data-i18n="outzoneMsg" class="msg">We're not picking up in <span id="outzip"></span> yet. Leave a number and we'll text you when we get there.</p>
 <div class="row" style="margin-top:10px">
-<div class="field"><label for="outphone">Mobile number</label><input id="outphone" type="tel" autocomplete="tel" placeholder="(213) 555-0123"></div>
-<button class="btn field" type="button" id="outjoin" style="background:var(--ink)">Text me when you're here</button>
+<div class="field"><label data-i18n="mobileNumber" for="outphone">Mobile number</label><input id="outphone" type="tel" autocomplete="tel" placeholder="(213) 555-0123"></div>
+<button data-i18n="outjoin" class="btn field" type="button" id="outjoin" style="background:var(--ink)">Text me when you're here</button>
 </div>
 </div>
 </form>
 
 <form id="step2" novalidate hidden>
-<div class="panel-head"><h2>Where should we pick up?</h2><div class="steps">Step 2 of 2 <span><i class="on"></i> <i class="on"></i></span></div></div>
+<div class="panel-head"><h2 data-i18n="s2Title">Where should we pick up?</h2><div data-i18n="s2Steps" class="steps">Step 2 of 2 <span><i class="on"></i> <i class="on"></i></span></div></div>
 <div class="row">
-<div class="field"><label for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
-<div class="field"><label for="phone">Mobile</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
-<div class="field wide"><label for="street">Pickup address</label><input id="street" name="address" type="text" autocomplete="street-address" placeholder="Street and unit number" required></div>
+<div class="field"><label data-i18n="nameLabel" for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+<div class="field"><label data-i18n="mobileLabel" for="phone">Mobile</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
+<div class="field wide"><label data-i18n="addrLabel" for="street">Pickup address</label><input data-i18n-attr="placeholder:addrPh" id="street" name="address" type="text" autocomplete="street-address" placeholder="Street and unit number" required></div>
 </div>
 <div class="row" style="margin-top:12px">
-<div class="field wide"><label for="notes">Pickup notes (optional)</label><input id="notes" name="notes" type="text" placeholder="Gate code, where the bag will be"></div>
-<div class="field"><label for="heard">How did you hear about us?</label><select id="heard" name="heard"><option value="">Pick one</option><option>Google search</option><option>Instagram or Facebook</option><option>TikTok</option><option>Flyer or door hanger</option><option>Saw your laundromat</option><option>A friend</option><option>Nextdoor</option><option>Other</option></select></div>
+<div class="field wide"><label data-i18n="notesLabel" for="notes">Pickup notes (optional)</label><input data-i18n-attr="placeholder:notesPh" id="notes" name="notes" type="text" placeholder="Gate code, where the bag will be"></div>
+<div class="field"><label data-i18n="heardLabel" for="heard">How did you hear about us?</label><select id="heard" name="heard"><option value="" data-i18n="heard0">Pick one</option><option value="Google search" data-i18n="heard1">Google search</option><option value="Instagram or Facebook" data-i18n="heard2">Instagram or Facebook</option><option value="TikTok" data-i18n="heard3">TikTok</option><option value="Flyer or door hanger" data-i18n="heard4">Flyer or door hanger</option><option value="Saw your laundromat" data-i18n="heard5">Saw your laundromat</option><option value="A friend" data-i18n="heard6">A friend</option><option value="Nextdoor" data-i18n="heard7">Nextdoor</option><option value="Other" data-i18n="heard8">Other</option></select></div>
 </div>
 <div class="consents">
-<label class="check"><input type="checkbox" id="consentOrder" required><span>Text me about this order (confirmation, pickup and delivery updates). Reply STOP anytime. Msg &amp; data rates may apply.</span></label>
-<label class="check"><input type="checkbox" id="consentMarketing"><span>Also text me reminders and offers, up to 4 a month. Optional. Reply STOP anytime.</span></label>
+<label class="check"><input type="checkbox" id="consentOrder" required><span data-i18n="consentOrder">Text me about this order (confirmation, pickup and delivery updates). Reply STOP anytime. Msg &amp; data rates may apply.</span></label>
+<label class="check"><input type="checkbox" id="consentMarketing"><span data-i18n="consentMkt">Also text me reminders and offers, up to 4 a month. Optional. Reply STOP anytime.</span></label>
 </div>
 <input class="hp" type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-<p class="muted" style="margin:6px 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
-<div class="row"><button class="btn" type="submit" id="bookBtn">Pick up my load</button><button class="link-btn" type="button" id="back">Back</button></div>
+<p data-i18n="legal" class="muted" style="margin:6px 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
+<div class="row"><button data-i18n="bookBtn" class="btn" type="submit" id="bookBtn">Pick up my load</button><button data-i18n="back" class="link-btn" type="button" id="back">Back</button></div>
 <p class="msg" id="msg2" role="status" aria-live="polite" hidden></p>
 </form>
 
 <div id="step3" hidden>
 <div class="done">
 <div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-<div style="flex:1 1 300px"><h2>Your load's on the schedule.</h2><p class="muted" style="margin:0" id="doneText">We'll text you to confirm your pickup window. Leave your bag by the door.</p></div>
-<a class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
-<button class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
+<div style="flex:1 1 300px"><h2 data-i18n="s3Title">Your load's on the schedule.</h2><p data-i18n="doneDefault" class="muted" style="margin:0" id="doneText">We'll text you to confirm your pickup window. Leave your bag by the door.</p></div>
+<a data-i18n="trackLink" class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
+<button data-i18n="again" class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
 </div>
-<button type="button" class="link-btn" id="homeTip" data-get-app hidden style="margin-top:16px">Next time, skip the browser: add Loads to your home screen</button>
+<button data-i18n="homeTip" type="button" class="link-btn" id="homeTip" data-get-app hidden style="margin-top:16px">Next time, skip the browser: add Loads to your home screen</button>
 </div>
 
-<div class="panel-foot"><span>No subscription</span><span>Pay by the pound</span><span>Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
+<div class="panel-foot"><span data-i18n="foot1">No subscription</span><span data-i18n="foot2">Pay by the pound</span><span data-i18n="foot3">Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
 </div>
 </section>
 
-<section class="wrap proof" aria-label="Why people trust us">
-<div data-optional><b><span data-fill="rating"></span></b><span>Google rating at our laundromats</span></div>
-<div><b>Our own stores</b><span>Every load washed in laundromats we run</span></div>
-<div><b>Our own drivers</b><span>On our team, not a gig app</span></div>
-<div><b>Twice a day</b><span>One pickup run and one drop-off run, daily</span></div>
+<section data-i18n-attr="aria-label:proofAria" class="wrap proof" aria-label="Why people trust us">
+<div data-optional><b><span data-fill="rating"></span></b><span data-i18n="proof1">Google rating at our laundromats</span></div>
+<div><b data-i18n="proof2b">Our own stores</b><span data-i18n="proof2">Every load washed in laundromats we run</span></div>
+<div><b data-i18n="proof3b">Our own drivers</b><span data-i18n="proof3">On our team, not a gig app</span></div>
+<div><b data-i18n="proof4b">Twice a day</b><span data-i18n="proof4">One pickup run and one drop-off run, daily</span></div>
 </section>
 
 <section class="sec tile" id="how">
 <div class="wrap">
-<h2 class="display h2" style="max-width:14ch">We do loads. <span class="serif">You do one thing.</span></h2>
+<h2 data-i18n="howH2" class="display h2" style="max-width:14ch">We do loads. <span class="serif">You do one thing.</span></h2>
 <div class="cards">
-<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:6% 26%"></div><div class="card-body"><div class="num serif">01</div><h3>Book a pickup</h3><p>Pick a day here or text us, then leave any bag by your door. That's your whole part.</p></div></article>
-<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:92% 64%"></div><div class="card-body"><div class="num serif">02</div><h3>We wash your load at our store</h3><p>Our driver brings it to our laundromat, where our own staff wash, dry and fold it.</p></div></article>
-<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2.4);transform-origin:17% 55%"></div><div class="card-body"><div class="num serif">03</div><h3>Back at your door</h3><p>Folded, bagged and dropped off <span data-fill="turnaround"></span>.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:6% 26%"></div><div class="card-body"><div class="num serif">01</div><h3 data-i18n="c1h">Book a pickup</h3><p data-i18n="c1p">Pick a day here or text us, then leave any bag by your door. That's your whole part.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:92% 64%"></div><div class="card-body"><div class="num serif">02</div><h3 data-i18n="c2h">We wash your load at our store</h3><p data-i18n="c2p">Our driver brings it to our laundromat, where our own staff wash, dry and fold it.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2.4);transform-origin:17% 55%"></div><div class="card-body"><div class="num serif">03</div><h3 data-i18n="c3h">Back at your door</h3><p data-i18n="c3p">Folded, bagged and dropped off <span data-fill="turnaround"></span>.</p></div></article>
 </div>
 </div>
 </section>
@@ -271,25 +274,25 @@ footer .wordmark{color:var(--cream)}
 <section class="sec terrazzo" id="pricing">
 <div class="wrap split">
 <div>
-<h2 class="display h2" style="max-width:12ch;margin-bottom:22px">Priced by the pound, <span class="serif">not the load.</span></h2>
-<p class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">You pay for what you send. No subscription and no membership. Washing, drying, folding, bagging and the ride both ways are all included.</p>
-<p class="muted" data-optional style="font-size:15px;margin:0">Comforters and bulky items: <span data-fill="bulky"></span></p>
+<h2 data-i18n="priceH2" class="display h2" style="max-width:12ch;margin-bottom:22px">Priced by the pound, <span class="serif">not the load.</span></h2>
+<p data-i18n="priceP" class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">You pay for what you send. No subscription and no membership. Washing, drying, folding, bagging and the ride both ways are all included.</p>
+<p data-i18n="bulky" class="muted" data-optional style="font-size:15px;margin:0">Comforters and bulky items: <span data-fill="bulky"></span></p>
 </div>
 <div class="ticket">
 <div class="ticket-top">
-<div class="ticket-label"><span>Wash and fold</span><span>Load No. 0001</span></div>
-<div class="big-price"><b>$<span data-price></span></b><span class="serif muted" style="font-size:26px">per lb</span></div>
-<p class="muted" style="margin:12px 0 0">+ $<span data-fee></span> pickup and delivery per order</p>
-<p class="muted" data-minline style="margin:4px 0 0;font-size:15px">$<span data-min></span> minimum per order, before delivery</p>
-<p data-offer style="margin:4px 0 0;font-weight:600;color:var(--cta)">First order: delivery is on us</p>
+<div class="ticket-label"><span data-i18n="ticketWash">Wash and fold</span><span data-i18n="ticketNo">Load No. 0001</span></div>
+<div class="big-price"><b>$<span data-price></span></b><span data-i18n="perLb" class="serif muted" style="font-size:26px">per lb</span></div>
+<p data-i18n="feeLine" class="muted" style="margin:12px 0 0">+ $<span data-fee></span> pickup and delivery per order</p>
+<p data-i18n="minLine" class="muted" data-minline style="margin:4px 0 0;font-size:15px">$<span data-min></span> minimum per order, before delivery</p>
+<p data-i18n="offerLine" data-offer style="margin:4px 0 0;font-weight:600;color:var(--cta)">First order: delivery is on us</p>
 </div>
 <div class="perf" aria-hidden="true"></div>
 <div class="ticket-bottom">
-<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><label for="lbs" style="font-size:16px;color:var(--ink)">How big is your load?</label><span class="muted" style="font-size:15px" id="lbsText"></span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><label data-i18n="sizeLabel" for="lbs" style="font-size:16px;color:var(--ink)">How big is your load?</label><span class="muted" style="font-size:15px" id="lbsText"></span></div>
 <input id="lbs" type="range" min="5" max="50" step="1" value="15">
-<div class="total"><span style="font-weight:600">Estimated total</span><b id="total"></b></div>
+<div class="total"><span data-i18n="estTotal" style="font-weight:600">Estimated total</span><b id="total"></b></div>
 <p class="muted" style="margin:0 0 20px;font-size:14px" id="totalNote"></p>
-<a href="#book" class="btn">Book my pickup</a>
+<a data-i18n="bookMy" href="#book" class="btn">Book my pickup</a>
 </div>
 </div>
 </div>
@@ -297,31 +300,31 @@ footer .wordmark{color:var(--cream)}
 
 <section class="sec">
 <div class="wrap split" style="gap:48px 80px">
-<div class="why-img"><img src="img/laundromat-900.webp" alt="Rows of stainless steel washers under pendant lights" loading="lazy" decoding="async"></div>
+<div class="why-img"><img data-i18n-attr="alt:whyAlt" src="img/laundromat-900.webp" alt="Rows of stainless steel washers under pendant lights" loading="lazy" decoding="async"></div>
 <div>
-<h2 class="display h2" style="max-width:12ch;margin-bottom:22px">Your load <span class="serif">never leaves</span> our hands.</h2>
-<p class="muted" style="font-size:19px;max-width:30em;margin:0">A lot of delivery services hand your laundry to third-party cleaners or independent contractors. We own the laundromats and our drivers work for us, so one team takes care of every load, door to door.</p>
+<h2 data-i18n="whyH2" class="display h2" style="max-width:12ch;margin-bottom:22px">Your load <span class="serif">never leaves</span> our hands.</h2>
+<p data-i18n="whyP" class="muted" style="font-size:19px;max-width:30em;margin:0">A lot of delivery services hand your laundry to third-party cleaners or independent contractors. We own the laundromats and our drivers work for us, so one team takes care of every load, door to door.</p>
 <div class="points">
-<p><span class="serif">a.</span><span><strong>Commercial machines in our own stores.</strong> <span class="muted">Not someone's apartment washer.</span></span></p>
-<p><span class="serif">b.</span><span><strong>The same local drivers.</strong> <span class="muted">Not whoever happens to be free on an app tonight.</span></span></p>
-<p><span class="serif">c.</span><span><strong>A real person when you text.</strong> <a data-sms href="#"><span data-fill="phone"></span></a></span></p>
+<p data-i18n="pointA"><span class="serif">a.</span><span><strong>Commercial machines in our own stores.</strong> <span class="muted">Not someone's apartment washer.</span></span></p>
+<p data-i18n="pointB"><span class="serif">b.</span><span><strong>The same local drivers.</strong> <span class="muted">Not whoever happens to be free on an app tonight.</span></span></p>
+<p data-i18n="pointC"><span class="serif">c.</span><span><strong>A real person when you text.</strong> <a data-sms href="#"><span data-fill="phone"></span></a></span></p>
 </div>
 </div>
 </div>
 </section>
 
 <section class="wrap" id="areas" style="padding-bottom:104px">
-<h2 class="display h2">Now taking loads in <span class="serif">four</span> neighborhoods.</h2>
+<h2 data-i18n="areasH2" class="display h2">Now taking loads in <span class="serif">four</span> neighborhoods.</h2>
 <div class="zones">
-<div class="zone"><div><small>Picking up daily</small><b>Koreatown</b><span class="serif">+ Downtown LA</span></div><a href="#book">Book here</a></div>
-<div class="zone"><div><small>Picking up daily</small><b>Van Nuys</b><span class="serif">+ Sherman Oaks</span></div><a href="#book">Book here</a></div>
+<div class="zone"><div><small data-i18n="daily">Picking up daily</small><b>Koreatown</b><span class="serif">+ Downtown LA</span></div><a data-i18n="bookHere" href="#book">Book here</a></div>
+<div class="zone"><div><small data-i18n="daily">Picking up daily</small><b>Van Nuys</b><span class="serif">+ Sherman Oaks</span></div><a data-i18n="bookHere" href="#book">Book here</a></div>
 </div>
 <div class="wait">
-<p class="muted" style="margin:0;font-size:18px;max-width:30em;flex:1 1 320px">Somewhere else in LA? Leave your zip and number and we'll text you when we get to your neighborhood.</p>
+<p data-i18n="waitP" class="muted" style="margin:0;font-size:18px;max-width:30em;flex:1 1 320px">Somewhere else in LA? Leave your zip and number and we'll text you when we get to your neighborhood.</p>
 <form id="waitlist" novalidate>
-<div><label for="wzip">Zip code</label><input id="wzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" style="width:130px"></div>
-<div><label for="wphone">Mobile number</label><input id="wphone" type="tel" autocomplete="tel" style="width:190px"></div>
-<button class="btn" type="submit">Let me know</button>
+<div><label data-i18n="wzipLabel" for="wzip">Zip code</label><input id="wzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" style="width:130px"></div>
+<div><label data-i18n="mobileNumber" for="wphone">Mobile number</label><input id="wphone" type="tel" autocomplete="tel" style="width:190px"></div>
+<button data-i18n="letMeKnow" class="btn" type="submit">Let me know</button>
 </form>
 <p class="msg" id="msgw" role="status" aria-live="polite" hidden style="flex-basis:100%"></p>
 </div>
@@ -330,12 +333,12 @@ footer .wordmark{color:var(--cream)}
 <section class="sec tile">
 <div class="wrap">
 <div class="faq">
-<h2 class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
-<details open><summary>Do I need to be home?</summary><p>Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
-<details><summary>When do I get it back?</summary><p>Back <span data-fill="turnaround"></span>. We run one pickup route and one drop-off route every day.</p></details>
-<details><summary>How do you charge?</summary><p>No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> for pickup and delivery. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p>First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
-<details><summary>What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
-<details><summary>What areas do you serve?</summary><p>Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Enter your zip in the booking form to check, or join the waitlist above.</p></details>
+<h2 data-i18n="faqH2" class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
+<details open><summary data-i18n="q1">Do I need to be home?</summary><p data-i18n="a1">Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
+<details><summary data-i18n="q2">When do I get it back?</summary><p data-i18n="a2">Back <span data-fill="turnaround"></span>. We run one pickup route and one drop-off route every day.</p></details>
+<details><summary data-i18n="q3">How do you charge?</summary><p data-i18n="a3">No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> for pickup and delivery. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p data-i18n="a3b">First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
+<details><summary data-i18n="q4">What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
+<details><summary data-i18n="q5">What areas do you serve?</summary><p data-i18n="a5">Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Enter your zip in the booking form to check, or join the waitlist above.</p></details>
 </div>
 </div>
 </section>
@@ -344,10 +347,10 @@ footer .wordmark{color:var(--cream)}
 <img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async">
 <div class="wrap">
 <div style="flex:1 1 560px;min-width:0">
-<h2 class="display">Drop the load. <span class="serif">Keep the weekend.</span></h2>
-<p style="margin:0;font-size:19px;color:#dfe7df">Book in about a minute, or text PICKUP to <a data-sms href="#" style="color:#fff"><span data-fill="phone"></span></a>.</p>
+<h2 data-i18n="finalH2" class="display">Drop the load. <span class="serif">Keep the weekend.</span></h2>
+<p data-i18n="finalP" style="margin:0;font-size:19px;color:#dfe7df">Book in about a minute, or text PICKUP to <a data-sms href="#" style="color:#fff"><span data-fill="phone"></span></a>.</p>
 </div>
-<a href="#book" class="btn btn-pill" style="min-height:60px;padding:14px 34px;font-size:19px">Book my pickup</a>
+<a data-i18n="bookMy" href="#book" class="btn btn-pill" style="min-height:60px;padding:14px 34px;font-size:19px">Book my pickup</a>
 </div>
 </section>
 </main>
@@ -357,19 +360,20 @@ footer .wordmark{color:var(--cream)}
 <div>
 <div style="flex:1 1 320px">
 <span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#f3ede2"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
-<p style="margin:14px 0 0;max-width:26em">Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks, washed and folded at our own laundromats.</p>
+<p data-i18n="footP" style="margin:14px 0 0;max-width:26em">Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks, washed and folded at our own laundromats.</p>
 </div>
-<div><h3>Our laundromats</h3><div data-fill="store1"></div><div data-fill="store2" style="margin-top:6px"></div></div>
-<div><h3>Contact</h3><div><a data-sms href="#"><span data-fill="phone"></span></a></div><div style="margin-top:6px"><span data-fill="email"></span></div><div style="margin-top:6px"><a href="#" data-get-app hidden>Get the app</a></div><div style="margin-top:14px"><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></div></div>
+<div><h3 data-i18n="storesH3">Our laundromats</h3><div data-fill="store1"></div><div data-fill="store2" style="margin-top:6px"></div></div>
+<div><h3 data-i18n="contactH3">Contact</h3><div><a data-sms href="#"><span data-fill="phone"></span></a></div><div style="margin-top:6px"><span data-fill="email"></span></div><div style="margin-top:6px"><a data-i18n="getApp" href="#" data-get-app hidden>Get the app</a></div><div data-i18n="legalLinks" style="margin-top:14px"><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></div></div>
 </div>
-<p style="margin:36px 0 0;font-size:14px;color:#93a89b">&copy; <span id="year">2026</span> Loads Laundry Co. We do loads.</p>
+<p data-i18n="copyright" style="margin:36px 0 0;font-size:14px;color:#93a89b">&copy; <span id="year">2026</span> Loads Laundry Co. We do loads.</p>
 </div>
 </footer>
 
-<div class="mbar"><div><b>$<span data-price></span>/lb</b><small>K-town to Sherman Oaks</small></div><a href="#book" class="btn">Book a pickup</a></div>
+<div class="mbar"><div><b>$<span data-price></span>/lb</b><small data-i18n="mbarSmall">K-town to Sherman Oaks</small></div><a data-i18n="bookPickup" href="#book" class="btn">Book a pickup</a></div>
 
 <script src="config.js"></script>
-<script src="app-install.js?v=3" defer></script>
+<script src="i18n.js?v=1"></script>
+<script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
 const CONFIG = window.LOADS_CONFIG;
@@ -380,31 +384,45 @@ const CONFIG = window.LOADS_CONFIG;
   const $$ = s => Array.from(document.querySelectorAll(s));
   const show = (el, on) => { if (el) el.hidden = !on; };
 
-  /* ---------- fill business details ---------- */
-  const fills = {
-    phone: CONFIG.phoneDisplay, email: CONFIG.email, turnaround: CONFIG.turnaround,
-    window: CONFIG.pickupWindow, guarantee: CONFIG.guarantee, bulky: CONFIG.bulkyPrice,
-    rating: CONFIG.googleRating ? CONFIG.googleRating + ' stars' : '',
-    store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || ''
-  };
-  const missing = new Set();
-  $$('[data-fill]').forEach(el => {
-    const key = el.dataset.fill, val = fills[key];
-    const optional = el.closest('[data-optional]');
-    if (val) { el.textContent = val; el.classList.remove('todo'); show(optional, true); }
-    else if (optional) show(optional, false);
-    else { el.textContent = '[' + key.toUpperCase() + ']'; el.classList.add('todo'); missing.add(key); }
-  });
-  if (missing.size) console.warn('Loads: fill these in CONFIG before launch:', Array.from(missing).join(', '));
-  if (!CONFIG.endpoint) console.warn('Loads: no endpoint set. Preview mode: bookings are not saved.');
+  /* ---------- fill business details (re-run when the language changes) ---------- */
+  const I18N = window.LOADS_I18N || { lang: 'en', locale: () => 'en-US', t: (k, v, f) => f || k };
+  const t = (k, v) => I18N.t(k, v);
   const smsHref = CONFIG.phoneSms ? 'sms:' + CONFIG.phoneSms + '?&body=PICKUP' : '#';
-  $$('[data-sms]').forEach(a => { a.href = smsHref; a.addEventListener('click', () => track('text_click')); });
-  $$('[data-price]').forEach(el => { el.textContent = CONFIG.pricePerLb.toFixed(2); });
-  $$('[data-fee]').forEach(el => { el.textContent = CONFIG.deliveryFee.toFixed(2); });
-  $$('[data-min]').forEach(el => { el.textContent = Number(CONFIG.minOrder) || 0; });
-  $$('[data-minline]').forEach(el => show(el, Number(CONFIG.minOrder) > 0));
-  $$('[data-offer]').forEach(el => show(el, CONFIG.firstOrderOffer));
-  $('#year').textContent = new Date().getFullYear();
+  let warned = false;
+  function fillAll() {
+    const es = I18N.lang === 'es';
+    const pick = k => (es && CONFIG[k + 'Es']) || CONFIG[k];
+    const fills = {
+      phone: CONFIG.phoneDisplay, email: CONFIG.email, turnaround: pick('turnaround'),
+      window: pick('pickupWindow'), guarantee: pick('guarantee'), bulky: pick('bulkyPrice'),
+      rating: CONFIG.googleRating ? t('rating', { r: CONFIG.googleRating }) : '',
+      store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || ''
+    };
+    const missing = new Set();
+    $$('[data-fill]').forEach(el => {
+      const key = el.dataset.fill, val = fills[key];
+      const optional = el.closest('[data-optional]');
+      if (val) { el.textContent = val; el.classList.remove('todo'); show(optional, true); }
+      else if (optional) show(optional, false);
+      else { el.textContent = '[' + key.toUpperCase() + ']'; el.classList.add('todo'); missing.add(key); }
+    });
+    if (!warned) {
+      warned = true;
+      if (missing.size) console.warn('Loads: fill these in CONFIG before launch:', Array.from(missing).join(', '));
+      if (!CONFIG.endpoint) console.warn('Loads: no endpoint set. Preview mode: bookings are not saved.');
+    }
+    $$('[data-sms]').forEach(a => {
+      a.href = smsHref;
+      if (!a.dataset.bound) { a.dataset.bound = '1'; a.addEventListener('click', () => track('text_click')); }
+    });
+    $$('[data-price]').forEach(el => { el.textContent = CONFIG.pricePerLb.toFixed(2); });
+    $$('[data-fee]').forEach(el => { el.textContent = CONFIG.deliveryFee.toFixed(2); });
+    $$('[data-min]').forEach(el => { el.textContent = Number(CONFIG.minOrder) || 0; });
+    $$('[data-minline]').forEach(el => show(el, Number(CONFIG.minOrder) > 0));
+    $$('[data-offer]').forEach(el => show(el, CONFIG.firstOrderOffer));
+    if ($('#year')) $('#year').textContent = new Date().getFullYear();
+  }
+  fillAll();
 
   /* ---------- structured data for Google ---------- */
   const ld = {
@@ -481,35 +499,48 @@ const CONFIG = window.LOADS_CONFIG;
 
   /* ---------- pickup days ---------- */
   const daySel = $('#day');
-  const fmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-  let added = 0;
-  for (let i = 1; added < CONFIG.daysAhead && i < 30; i++) {
-    const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + i);
-    if (CONFIG.closedDays.includes(d.getDay())) continue;
-    const o = document.createElement('option');
-    o.value = d.toISOString().slice(0, 10); o.textContent = (i === 1 ? 'Tomorrow, ' : '') + fmt.format(d);
-    daySel.appendChild(o); added++;
+  const DAY_OPTS = { weekday: 'short', month: 'short', day: 'numeric' };
+  const fmtEn = new Intl.DateTimeFormat('en-US', DAY_OPTS);     // what staff see in the Sheet
+  const dayOf = v => { const d = new Date(v + 'T12:00:00'); return d; };
+  const localDay = v => new Intl.DateTimeFormat(I18N.locale(), DAY_OPTS).format(dayOf(v));
+  function buildDays() {
+    const keep = daySel.value;
+    daySel.innerHTML = '';
+    const first = document.createElement('option'); first.value = ''; first.textContent = t('chooseDay');
+    daySel.appendChild(first);
+    let added = 0;
+    for (let i = 1; added < CONFIG.daysAhead && i < 30; i++) {
+      const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + i);
+      if (CONFIG.closedDays.includes(d.getDay())) continue;
+      const o = document.createElement('option');
+      o.value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      o.textContent = (i === 1 ? t('tomorrow') : '') + localDay(o.value);
+      daySel.appendChild(o); added++;
+    }
+    daySel.value = keep;
   }
+  buildDays();
 
   /* ---------- booking flow ---------- */
   const s1 = $('#step1'), s2 = $('#step2'), s3 = $('#step3');
   const booking = {};
+  let lastDone = null;
   s1.addEventListener('submit', e => {
     e.preventDefault();
     const zip = digits($('#zip').value).slice(0, 5);
     show($('#outzone'), false);
-    if (zip.length !== 5) return msg($('#msg1'), 'Enter a 5-digit zip code.', true);
-    if (!daySel.value) return msg($('#msg1'), 'Choose a pickup day.', true);
+    if (zip.length !== 5) return msg($('#msg1'), t('eZip'), true);
+    if (!daySel.value) return msg($('#msg1'), t('eDay'), true);
     const zone = zipZone(zip);
     if (!zone) { msg($('#msg1'), ''); $('#outzip').textContent = zip; return show($('#outzone'), true); }
     msg($('#msg1'), '');
-    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: daySel.options[daySel.selectedIndex].text.replace('Tomorrow, ', '') });
+    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: fmtEn.format(dayOf(daySel.value)) });
     track('begin_booking', { zone });
     show(s1, false); show(s2, true); $('#name').focus();
   });
   $('#outjoin').addEventListener('click', async () => {
     const phone = $('#outphone').value;
-    if (!validPhone(phone)) return msg($('#msg1'), 'Enter a 10-digit mobile number.', true);
+    if (!validPhone(phone)) return msg($('#msg1'), t('ePhone'), true);
     await joinWaitlist(digits($('#zip').value).slice(0, 5), phone, $('#msg1'));
     show($('#outzone'), false);
   });
@@ -518,11 +549,11 @@ const CONFIG = window.LOADS_CONFIG;
     e.preventDefault();
     const m = $('#msg2');
     if ($('#company').value) return;
-    if (!$('#name').value.trim()) return msg(m, 'Add your name.', true);
-    if (!validPhone($('#phone').value)) return msg(m, 'Enter a 10-digit mobile number.', true);
-    if (!$('#street').value.trim()) return msg(m, 'Add your pickup address.', true);
-    if (!$('#consentOrder').checked) return msg(m, 'Check the box so we can text you about this order.', true);
-    const btn = $('#bookBtn'); btn.disabled = true; msg(m, 'Booking...');
+    if (!$('#name').value.trim()) return msg(m, t('eName'), true);
+    if (!validPhone($('#phone').value)) return msg(m, t('ePhone'), true);
+    if (!$('#street').value.trim()) return msg(m, t('eAddr'), true);
+    if (!$('#consentOrder').checked) return msg(m, t('eConsent'), true);
+    const btn = $('#bookBtn'); btn.disabled = true; msg(m, t('booking'));
     const id = 'L' + Date.now().toString(36).toUpperCase();
     const letters = 'abcdefghjkmnpqrstuvwxyz';
     const token = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(n => letters[n % letters.length]).join('');
@@ -530,7 +561,7 @@ const CONFIG = window.LOADS_CONFIG;
     const payload = Object.assign({
       type: 'booking', booking_id: id, submitted_at: new Date().toISOString(),
       name: $('#name').value.trim(), phone: $('#phone').value.trim(), address: $('#street').value.trim(),
-      notes: $('#notes').value.trim(), heard: $('#heard').value,
+      notes: (I18N.lang === 'es' ? '[Español] ' : '') + $('#notes').value.trim(), heard: $('#heard').value, lang: I18N.lang,
       sms_order_consent: 'yes', sms_marketing_consent: $('#consentMarketing').checked ? 'yes' : 'no',
       first_order_offer: CONFIG.firstOrderOffer ? 'yes' : 'no', user_agent: navigator.userAgent,
       track_token: token, track_url: trackUrl
@@ -538,29 +569,30 @@ const CONFIG = window.LOADS_CONFIG;
     try {
       await send(payload);
       track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
-      $('#doneText').textContent = "We'll text you at " + payload.phone + ' to confirm your pickup on ' + booking.pickup_label + '. Leave your bag by the door.';
+      lastDone = { phone: payload.phone, date: booking.pickup_date };
+      $('#doneText').textContent = t('done', { phone: lastDone.phone, day: localDay(lastDone.date) });
       $('#trackLink').href = trackUrl;
       show(s2, false); show(s3, true); msg(m, '');
     } catch (err) {
-      msg(m, "Something went wrong. Text PICKUP to " + (CONFIG.phoneDisplay || 'us') + " and we'll book you by text.", true);
+      msg(m, t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
     } finally { btn.disabled = false; }
   });
-  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); show(s3, false); show(s1, true); });
+  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; show(s3, false); show(s1, true); });
 
   /* ---------- waitlist ---------- */
   async function joinWaitlist(zip, phone, m) {
     try {
       await send(Object.assign({ type: 'waitlist', submitted_at: new Date().toISOString(), zip, phone }, attribution()));
       track('waitlist_join', { zip });
-      msg(m, "You're on the list. We'll text you when we get to " + zip + '.');
-    } catch (e) { msg(m, 'Something went wrong. Try again in a minute.', true); }
+      msg(m, t('wlOk', { zip }));
+    } catch (e) { msg(m, t('wlFail'), true); }
   }
   $('#waitlist').addEventListener('submit', async e => {
     e.preventDefault();
     const zip = digits($('#wzip').value).slice(0, 5), phone = $('#wphone').value, m = $('#msgw');
-    if (zip.length !== 5) return msg(m, 'Enter a 5-digit zip code.', true);
-    if (zipZone(zip)) return msg(m, "Good news: we already pick up in " + zip + '. Book above.');
-    if (!validPhone(phone)) return msg(m, 'Enter a 10-digit mobile number.', true);
+    if (zip.length !== 5) return msg(m, t('eZip'), true);
+    if (zipZone(zip)) return msg(m, t('wlInZone', { zip }));
+    if (!validPhone(phone)) return msg(m, t('ePhone'), true);
     await joinWaitlist(zip, phone, m); e.target.reset();
   });
 
@@ -568,14 +600,21 @@ const CONFIG = window.LOADS_CONFIG;
   const lbs = $('#lbs');
   function estimate() {
     const n = Number(lbs.value), h = Math.round(n / 5) / 2;
-    const hamper = h <= 0.5 ? 'about half a hamper' : h === 1 ? 'about 1 hamper' : 'about ' + h + ' hampers';
-    $('#lbsText').textContent = n + ' lbs, ' + hamper;
+    const hamper = h <= 0.5 ? t('hHalf') : h === 1 ? t('hOne') : t('hMany', { n: h });
+    $('#lbsText').textContent = t('lbsLine', { n, hamper });
     const laundry = n * CONFIG.pricePerLb, min = Number(CONFIG.minOrder) || 0;
     $('#total').textContent = '$' + (Math.max(laundry, min) + CONFIG.deliveryFee).toFixed(2);
-    const minNote = min && laundry < min ? 'Includes the $' + min + ' order minimum. ' : '';
-    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? 'First order? Take off the $' + CONFIG.deliveryFee.toFixed(2) + '. You pay for the actual weight.' : 'You pay for the actual weight. A full hamper is usually around 10 lbs.');
+    const minNote = min && laundry < min ? t('estMin', { min }) : '';
+    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? t('estFirst', { fee: CONFIG.deliveryFee.toFixed(2) }) : t('estPlain'));
   }
   lbs.addEventListener('input', estimate); estimate();
+
+  /* ---------- language switch ---------- */
+  document.addEventListener('loads:lang', () => {
+    fillAll(); buildDays(); estimate();
+    if (lastDone) $('#doneText').textContent = t('done', { phone: lastDone.phone, day: localDay(lastDone.date) });
+    ['#msg1', '#msg2', '#msgw'].forEach(id => msg($(id), ''));
+  });
 
   /* ---------- hide the phone booking bar while the form is on screen ---------- */
   const bar = $('.mbar');
