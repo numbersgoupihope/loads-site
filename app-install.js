@@ -15,7 +15,7 @@
   var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var isAndroid = /Android/.test(ua);
   var deferred = null;
-  addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; });
+  addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; if (go) go.hidden = false; });
   addEventListener('appinstalled', function () { btns.forEach(function (b) { b.hidden = true; }); if (d.open) d.close(); });
 
   var shareIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/></svg>';
@@ -24,7 +24,7 @@
     steps = '<ol><li>Tap the Share button ' + shareIcon + ' at the bottom of Safari. In Chrome it is at the top, next to the address.</li>' +
       '<li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. The ' + name + ' icon shows up with your other apps.</li></ol>';
   } else if (isAndroid) {
-    steps = '<ol><li>Tap the <b>&#8942;</b> menu at the top right of Chrome.</li>' +
+    steps = '<button type="button" class="appsheet-go" hidden>Install ' + name + '</button><ol><li>Tap the <b>&#8942;</b> menu at the top right of Chrome.</li>' +
       '<li>Tap <b>Add to Home screen</b> or <b>Install app</b>.</li><li>Tap <b>Install</b>. The ' + name + ' icon shows up with your other apps.</li></ol>';
   } else {
     steps = '<div class="appsheet-qr">' + QR[kind] + '</div><p class="appsheet-c">Scan this with your phone\'s camera. The steps to add it open right on your phone.</p>';
@@ -41,7 +41,8 @@
     '.appsheet-qr{margin:18px auto 0;width:180px;height:180px}.appsheet-qr svg{width:100%;height:100%;display:block}' +
     '.appsheet .appsheet-c{margin-top:12px;text-align:center}' +
     '.appsheet-x{position:absolute;top:12px;right:12px;width:44px;height:44px;border:none;border-radius:50%;background:transparent;color:#183a2e;cursor:pointer;display:flex;align-items:center;justify-content:center}' +
-    '.appsheet-x:hover{background:rgba(24,58,46,.08)}';
+    '.appsheet-x:hover{background:rgba(24,58,46,.08)}' +
+    '.appsheet-go{display:flex;width:100%;min-height:52px;margin:18px 0 4px;align-items:center;justify-content:center;border:none;border-radius:14px;background:#c4235f;color:#fff;font:inherit;font-size:17px;font-weight:650;cursor:pointer}';
   document.head.appendChild(css);
 
   var d = document.createElement('dialog');
@@ -53,16 +54,26 @@
     '<p>' + (kind === 'staff' ? 'Opens straight to today\'s loads.' : 'Free, and no App Store needed. Book your next pickup in two taps.') + '</p>' + steps;
   d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
   document.body.appendChild(d);
-
-  function open() {
-    if (deferred) {
-      var p = deferred; deferred = null;
-      p.prompt();
-      p.userChoice.then(function (c) { if (c.outcome === 'accepted') btns.forEach(function (b) { b.hidden = true; }); });
-      return;
-    }
-    if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+  var go = d.querySelector('.appsheet-go');
+  if (go) {
+    go.hidden = !deferred;
+    go.addEventListener('click', function () { install(); });
   }
-  btns.forEach(function (b) { b.hidden = false; b.addEventListener('click', function (e) { e.preventDefault(); open(); }); });
-  if (location.hash === '#getapp') setTimeout(open, 400);
+
+  function install() {
+    if (!deferred) return;
+    var p = deferred; deferred = null;
+    if (go) go.hidden = true;
+    p.prompt();
+    p.userChoice.then(function (c) {
+      if (c.outcome === 'accepted') { btns.forEach(function (b) { b.hidden = true; }); if (d.open) d.close(); }
+    }).catch(function () {});
+  }
+
+  function open(fromTap) {
+    if (fromTap && isAndroid && deferred) return install();
+    if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', '');
+  }
+  btns.forEach(function (b) { b.hidden = false; b.addEventListener('click', function (e) { e.preventDefault(); open(true); }); });
+  if (location.hash === '#getapp') setTimeout(function () { open(false); }, 400);
 })();
