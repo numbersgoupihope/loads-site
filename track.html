@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Track your load | Loads</title>
+<title data-i18n="trkTitleTag">Track your load | Loads</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#183a2e">
 <link rel="apple-touch-icon" href="icons/loads-180.png">
@@ -58,6 +58,7 @@ li.todo span{font-weight:400;color:#7d8a83}
 li time{font-size:14px;color:var(--muted);white-space:nowrap}
 .btn{display:flex;align-items:center;justify-content:center;min-height:54px;margin-top:22px;border-radius:14px;background:var(--cta);color:#fff;font-weight:650;font-size:17px;text-decoration:none}
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;margin:16px 6px 0;font-size:14px;color:var(--muted)}
+.lang{min-height:40px;padding:6px 14px;border:1.5px solid var(--ink);border-radius:999px;background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
 .todo-chip{background:#fff0a0;border:1px dashed #8a6d00;border-radius:4px;padding:0 6px;font-weight:600}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.spin svg,.bob svg,.bar i.now,li.now .dot{animation:none}}
@@ -66,15 +67,15 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
 <body>
 <header class="top">
 <a href="index.html" class="wordmark"><span aria-hidden="true">L</span><svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#183a2e"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></a>
-<span style="font-size:14px;color:var(--muted)">Order tracker</span>
+<span style="display:flex;align-items:center;gap:14px"><button type="button" class="lang" data-lang-toggle>Español</button><span style="font-size:14px;color:var(--muted)" data-i18n="trkHeader">Order tracker</span></span>
 </header>
 <main>
 <div class="card" aria-live="polite">
 <p class="demo" id="demo" hidden><strong>Preview.</strong> This is a demo order. Once the site is connected, customers see their real order here.</p>
-<div id="loading">Finding your load...</div>
+<div id="loading" data-i18n="trkLoading">Finding your load...</div>
 <div id="notfound" hidden>
-<h1>We can't find that load.</h1>
-<p class="detail">Check the tracking link in your text, or text us and we'll look it up.</p>
+<h1 data-i18n="trkNfH">We can't find that load.</h1>
+<p class="detail" data-i18n="trkNfP">Check the tracking link in your text, or text us and we'll look it up.</p>
 </div>
 <div id="order" hidden>
 <div class="order-id" id="orderId"></div>
@@ -83,15 +84,16 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
 <p class="detail" id="detail"></p>
 <div class="bar" id="bar" aria-hidden="true"></div>
 <div class="bar-meta"><span id="stageLabel"></span><span id="stepCount"></span></div>
-<div class="weight" id="weight" hidden><span>Weighed in at <b id="lbs"></b></span><span>Total <b id="total"></b></span><p class="pay-state" id="payState"></p></div>
+<div class="weight" id="weight" hidden><span data-i18n="trkWeighed">Weighed in at <b id="lbs"></b></span><span data-i18n="trkTotal">Total <b id="total"></b></span><p class="pay-state" id="payState"></p></div>
 <ol id="timeline"></ol>
-<a class="btn" id="review" href="#" hidden>Leave us a Google review</a>
+<a class="btn" id="review" href="#" hidden data-i18n="trkReview">Leave us a Google review</a>
 </div>
 </div>
-<div class="foot"><span>Questions? Text <a id="sms" href="#"><span id="phone"></span></a></span><span id="updated"></span></div>
+<div class="foot"><span data-i18n="trkQuestions">Questions? Text <a id="sms" href="#"><span id="phone"></span></a></span><span id="updated"></span></div>
 </main>
 
 <script src="config.js"></script>
+<script src="i18n.js?v=2"></script>
 <script src="preview-nav.js"></script>
 <script>
 (function () {
@@ -109,42 +111,60 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     delivered: '<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M9.5 15l2 2 3.5-4"/>'
   };
   const MOTION = { washing: 'spin', drying: 'spin', picked_up: 'bob', out_for_delivery: 'bob' };
-  const when = new Intl.DateTimeFormat('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
-  const clock = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' });
+  const I18N = window.LOADS_I18N || { lang: 'en', locale: () => 'en-US', t: (k, v, f) => f || k };
+  const t = (k, v, f) => I18N.t(k, v, f);
+  const es = () => I18N.lang === 'es';
+  const when = () => new Intl.DateTimeFormat(I18N.locale(), { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+  const clock = () => new Intl.DateTimeFormat(I18N.locale(), { hour: 'numeric', minute: '2-digit' });
+  // stage text in the current language
+  const S = s => ({ key: s.key, label: t('st.' + s.key + '.label', null, s.label), headline: t('st.' + s.key + '.headline', null, s.headline), detail: t('st.' + s.key + '.detail', null, s.detail) });
+  // the Sheet stores pickup days like "Tue, Nov 24"; show them in Spanish when needed
+  const DAYS = { Mon: 'lun', Tue: 'mar', Wed: 'mié', Thu: 'jue', Fri: 'vie', Sat: 'sáb', Sun: 'dom' };
+  const MONTHS = { Jan: 'ene', Feb: 'feb', Mar: 'mar', Apr: 'abr', May: 'may', Jun: 'jun', Jul: 'jul', Aug: 'ago', Sep: 'sep', Oct: 'oct', Nov: 'nov', Dec: 'dic' };
+  function dayLabel(label) {
+    label = String(label || '').replace('Tomorrow, ', '');
+    if (!es()) return label;
+    const m = label.match(/^(\w{3}), (\w{3}) (\d{1,2})$/);
+    return m && DAYS[m[1]] && MONTHS[m[2]] ? DAYS[m[1]] + ' ' + m[3] + ' de ' + MONTHS[m[2]] : label;
+  }
+  function setPhone() {
+    if (CONFIG.phoneDisplay) { $('#phone').textContent = CONFIG.phoneDisplay; $('#sms').href = 'sms:' + CONFIG.phoneSms; }
+    else { $('#phone').textContent = '[PHONE]'; $('#phone').className = 'todo-chip'; }
+  }
+  setPhone();
 
-  if (CONFIG.phoneDisplay) { $('#phone').textContent = CONFIG.phoneDisplay; $('#sms').href = 'sms:' + CONFIG.phoneSms; }
-  else { $('#phone').textContent = '[PHONE]'; $('#phone').className = 'todo-chip'; }
-
+  let lastOrder = null;
   function render(o) {
+    lastOrder = o;
     const idx = Math.max(0, STAGES.findIndex(s => s.key === o.stage));
-    const st = STAGES[idx];
+    const st = S(STAGES[idx]);
     $('#loading').hidden = true; $('#notfound').hidden = true; $('#order').hidden = false;
-    $('#orderId').textContent = 'Order ' + o.id + (o.pickup_label ? ' · pickup ' + o.pickup_label.replace('Tomorrow, ', '') : '');
+    $('#orderId').textContent = t('trkOrder', { id: o.id }) + (o.pickup_label ? t('trkPickupOn', { day: dayLabel(o.pickup_label) }) : '');
     $('#icon').className = 'icon ' + (MOTION[st.key] || '');
     $('#icon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[st.key] + '</svg>';
-    $('#headline').textContent = (o.first_name && idx === STAGES.length - 1 ? o.first_name + ', y' + st.headline.slice(1) : st.headline);
-    $('#detail').textContent = st.key === 'booked' && o.pickup_label ? "We'll pick it up " + o.pickup_label.replace('Tomorrow, ', 'tomorrow, ') + '.' : st.detail;
+    $('#headline').textContent = (o.first_name && idx === STAGES.length - 1 ? o.first_name + ', ' + st.headline.charAt(0).toLowerCase() + st.headline.slice(1) : st.headline);
+    $('#detail').textContent = st.key === 'booked' && o.pickup_label ? t('trkBookedDetail', { day: dayLabel(o.pickup_label) }) : st.detail;
     $('#bar').innerHTML = STAGES.map((s, i) => '<i class="' + (i < idx ? 'done' : i === idx ? (idx === STAGES.length - 1 ? 'done' : 'now') : '') + '"></i>').join('');
     $('#stageLabel').textContent = st.label;
-    $('#stepCount').textContent = 'Step ' + (idx + 1) + ' of ' + STAGES.length;
+    $('#stepCount').textContent = t('trkStep', { n: idx + 1, total: STAGES.length });
     const hasWeight = o.weight_lbs !== '' && o.weight_lbs != null && !isNaN(o.weight_lbs);
     $('#weight').hidden = !hasWeight;
     if (hasWeight) {
-      $('#lbs').textContent = Number(o.weight_lbs).toFixed(1) + ' lbs';
+      $('#lbs').textContent = t('trkLbs', { n: Number(o.weight_lbs).toFixed(1) });
       const hasTotal = o.order_total !== '' && o.order_total != null;
       $('#total').textContent = hasTotal ? '$' + Number(o.order_total).toFixed(2) : '—';
-      $('#payState').textContent = !hasTotal ? '' : o.paid ? 'Paid. Thank you!' : 'Not paid yet. Check your texts for the payment link.';
+      $('#payState').textContent = !hasTotal ? '' : o.paid ? t('trkPaid') : t('trkUnpaid');
     }
-    $('#timeline').innerHTML = STAGES.map((s, i) => {
-      const t = o.times && o.times[s.key];
+    $('#timeline').innerHTML = STAGES.map(S).map((s, i) => {
+      const tm = o.times && o.times[s.key];
       const cls = i < idx || (i === idx && i === STAGES.length - 1) ? 'done' : i === idx ? 'now' : 'todo';
-      return '<li class="' + cls + '"><i class="dot"></i><span>' + s.label + '</span>' + (t && i <= idx ? '<time datetime="' + t + '">' + when.format(new Date(t)) + '</time>' : '') + '</li>';
+      return '<li class="' + cls + '"><i class="dot"></i><span>' + s.label + '</span>' + (tm && i <= idx ? '<time datetime="' + tm + '">' + when().format(new Date(tm)) + '</time>' : '') + '</li>';
     }).join('');
     const showReview = st.key === 'delivered' && CONFIG.googleReviewUrl;
     $('#review').hidden = !showReview;
     if (showReview) $('#review').href = CONFIG.googleReviewUrl;
-    $('#updated').textContent = 'Updated ' + clock.format(new Date()) + (st.key === 'delivered' ? '' : ' · refreshes every minute');
-    document.title = st.label + ' | Track your load | Loads';
+    $('#updated').textContent = t('trkUpdated', { time: clock().format(new Date()) }) + (st.key === 'delivered' ? '' : t('trkRefresh'));
+    document.title = t('trkDocTitle', { label: st.label });
   }
 
   function notFound() { $('#loading').hidden = true; $('#order').hidden = true; $('#notfound').hidden = false; }
@@ -174,10 +194,11 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
       if (!data.ok) return notFound();
       render(data.order); last = data.order.stage;
     } catch (e) {
-      $('#updated').textContent = "Couldn't refresh. Trying again in a minute.";
-      if (!last) { $('#loading').textContent = "We couldn't reach the tracker. Check your connection and refresh."; }
+      $('#updated').textContent = t('trkNoRefresh');
+      if (!last) { $('#loading').textContent = t('trkUnreachable'); }
     }
   }
+  document.addEventListener('loads:lang', () => { setPhone(); if (lastOrder) render(lastOrder); });
   load();
   setInterval(() => { if (last !== 'delivered' && !document.hidden) load(); }, 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && last !== 'delivered') load(); });
