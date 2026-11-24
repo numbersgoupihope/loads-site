@@ -89,6 +89,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 <p class="err" id="err" role="alert"></p>
 <p class="okmsg" id="note" role="status"></p>
 <div id="list"></div>
+<p style="text-align:center;margin:24px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
 <script src="config.js"></script>
@@ -104,7 +105,15 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   const idxOf = key => Math.max(0, STAGES.findIndex(s => s.key === key));
   const PREVIEW = !CONFIG.endpoint;
   let pin = '', orders = [], filter = 'all', busy = false;
-  try { pin = sessionStorage.getItem('loads_pin') || ''; } catch (e) {}
+  // The PIN is remembered on this phone for 30 days, so staff open the app and go. "Sign out" forgets it.
+  const PIN_DAYS = 30;
+  function savePin(v) { try { localStorage.setItem('loads_pin', JSON.stringify({ v, until: Date.now() + PIN_DAYS * 864e5 })); } catch (e) {} }
+  function forgetPin() { pin = ''; try { localStorage.removeItem('loads_pin'); sessionStorage.removeItem('loads_pin'); } catch (e) {} }
+  try {
+    const saved = JSON.parse(localStorage.getItem('loads_pin') || 'null');
+    if (saved && saved.v && saved.until > Date.now()) { pin = saved.v; savePin(pin); }   // using it keeps it fresh
+    else localStorage.removeItem('loads_pin');
+  } catch (e) {}
 
   /* ---------- talking to the Sheet ---------- */
   async function api(req) {
@@ -117,7 +126,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     if (req.action !== 'list') $('#note').textContent = '';
     try {
       const data = await api(req);
-      if (!data.ok && data.error === 'pin') { pin = ''; try { sessionStorage.removeItem('loads_pin'); } catch (e) {} return showPin('That PIN didn’t work.'); }
+      if (!data.ok && data.error === 'pin') { forgetPin(); return showPin('That PIN didn’t work.'); }
       if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'That order isn’t paid yet. Send the bill first, or mark it paid if they paid another way.'; return; }
       if (!data.ok && data.message) { orders = data.orders || orders; showApp(); render(); $('#err').textContent = data.message; return; }
       if (!data.ok) throw new Error(data.error || 'failed');
@@ -313,9 +322,10 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     run({ action: 'set_stage', id, stage: b.dataset.stage });
   });
   $('#refresh').addEventListener('click', () => run({ action: 'list' }));
+  $('#signout').addEventListener('click', () => { forgetPin(); orders = []; known = null; $('#list').innerHTML = ''; showPin(''); });
   $('#pinForm').addEventListener('submit', e => {
     e.preventDefault(); pin = $('#pin').value.trim();
-    try { sessionStorage.setItem('loads_pin', pin); } catch (err) {}
+    savePin(pin);
     run({ action: 'list' });
   });
   setInterval(() => {
