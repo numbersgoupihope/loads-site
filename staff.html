@@ -338,7 +338,11 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     b.disabled = true;
     run({ action: 'set_stage', id, stage: b.dataset.stage });
   });
-  $('#refresh').addEventListener('click', () => run({ action: 'list' }));
+  // Refresh reloads the whole page: newest orders and the newest version of the app. The PIN is remembered.
+  $('#refresh').addEventListener('click', () => {
+    const b = $('#refresh'); b.disabled = true; b.textContent = 'Refreshing...';
+    location.reload();
+  });
   $('#signout').addEventListener('click', () => { forgetPin(); orders = []; known = null; $('#list').innerHTML = ''; showPin(''); });
   $('#pinForm').addEventListener('submit', e => {
     e.preventDefault(); pin = $('#pin').value.trim();
@@ -346,7 +350,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-23e';
+  const PAGE_VERSION = '2026-11-23f';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
