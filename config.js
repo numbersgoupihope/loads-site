@@ -26,8 +26,18 @@ window.LOADS_CONFIG = {
   stores: ['3658 W 3rd St, Los Angeles, CA 90020', '6839 Lennox Ave, Van Nuys, CA'],            // full street addresses of the two laundromats
 
   pricePerLb: 2.25,
-  deliveryFee: 6.99,
+  deliveryFee: 6.99,           // per trip: pickup is one trip, drop-off is another
+  tripsPerOrder: 2,            // so a regular order pays $6.99 x 2 for delivery
   minOrder: 30,                // smallest wash & fold charge per order, before the delivery fee
+  // Loads Weekly, the monthly plan. Keep the same as apps-script/Square.gs.
+  plan: {
+    name: 'Loads Weekly',
+    monthly: 200,              // charged to their card every month by Square
+    lbsPerWeek: 30,            // included on the week's one pickup
+    deliveryPerOrder: 6.99,    // both trips together, not $6.99 each way
+    overPerLb: 2.25,           // pounds over 30 on the week's pickup
+    extraPickupPerLb: 1.75     // any extra pickup that week
+  },
   firstOrderOffer: true,       // "First load? Delivery's on us."
   estOrderValue: 40,           // average order value sent to ad platforms with each booking
   daysAhead: 7,                // how many days of pickup dates to offer

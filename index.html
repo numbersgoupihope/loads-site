@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="docTitle">Laundry Pickup &amp; Delivery in Los Angeles | Loads</title>
-<meta data-i18n-attr="content:metaDesc" name="description" content="Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Washed and folded at our own laundromats. $2.25 a pound, no subscription.">
+<meta data-i18n-attr="content:metaDesc" name="description" content="Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Washed and folded at our own laundromats. $2.25 a pound, or $200 a month for 30 lb every week.">
 <meta property="og:title" content="Loads | Laundry pickup and delivery in Los Angeles">
 <meta property="og:description" content="Leave a bag at your door. It comes back washed, dried and folded from our own laundromats. $2.25 a pound.">
 <meta property="og:type" content="website">
@@ -113,6 +113,10 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-off
 .perf{position:relative;height:0;border-top:2px dashed #ddd3c8;margin:0 24px}
 .perf::before,.perf::after{content:'';position:absolute;top:-15px;width:28px;height:28px;border-radius:50%;background:var(--blush)}
 .perf::before{left:-38px}.perf::after{right:-38px}
+.tile .perf::before,.tile .perf::after{background:var(--mint)}
+.compare p span:last-child{white-space:nowrap}
+#weekly .big-price span{white-space:nowrap}
+@media (max-width:760px){#weekly .big-price b{font-size:64px}}
 .ticket-bottom{padding:22px 30px 30px}
 input[type=range]{width:100%;height:44px;accent-color:var(--ink);cursor:pointer}
 .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0 6px;border-top:1px solid #e8e0d6}
@@ -201,6 +205,7 @@ footer .wordmark{color:var(--cream)}
 <section class="panel-wrap">
 <div class="panel" id="book">
 
+<p data-i18n="subscribedMsg" class="msg" id="subscribedMsg" hidden style="margin:0 0 14px">You're on Loads Weekly. Book your pickup below, and we'll know it's you by your mobile number.</p>
 <form id="step1" novalidate>
 <div class="panel-head"><h2 data-i18n="s1Title">Send us a load</h2><div data-i18n="s1Steps" class="steps">Step 1 of 2 <span><i class="on"></i> <i></i></span></div></div>
 <div class="row">
@@ -249,7 +254,7 @@ footer .wordmark{color:var(--cream)}
 <button data-i18n="homeTip" type="button" class="link-btn" id="homeTip" data-get-app hidden style="margin-top:16px">Next time, skip the browser: add Loads to your home screen</button>
 </div>
 
-<div class="panel-foot"><span data-i18n="foot1">No subscription</span><span data-i18n="foot2">Pay by the pound</span><span data-i18n="foot3">Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
+<div class="panel-foot"><span data-i18n="foot1">No contracts</span><span data-i18n="foot2">Pay by the pound</span><span data-i18n="foot3">Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
 </div>
 </section>
 
@@ -275,14 +280,14 @@ footer .wordmark{color:var(--cream)}
 <div class="wrap split">
 <div>
 <h2 data-i18n="priceH2" class="display h2" style="max-width:12ch;margin-bottom:22px">Priced by the pound, <span class="serif">not the load.</span></h2>
-<p data-i18n="priceP" class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">You pay for what you send. No subscription and no membership. Washing, drying, folding, bagging and the ride both ways are all included.</p>
+<p data-i18n="priceP" class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">Pay for what you send, or do laundry every week and save with Loads Weekly. Washing, drying, folding and bagging are always included.</p>
 <p data-i18n="bulky" class="muted" data-optional style="font-size:15px;margin:0">Comforters and bulky items: <span data-fill="bulky"></span></p>
 </div>
 <div class="ticket">
 <div class="ticket-top">
 <div class="ticket-label"><span data-i18n="ticketWash">Wash and fold</span><span data-i18n="ticketNo">Load No. 0001</span></div>
 <div class="big-price"><b>$<span data-price></span></b><span data-i18n="perLb" class="serif muted" style="font-size:26px">per lb</span></div>
-<p data-i18n="feeLine" class="muted" style="margin:12px 0 0">+ $<span data-fee></span> pickup and delivery per order</p>
+<p data-i18n="feeLine" class="muted" style="margin:12px 0 0">+ $<span data-fee></span> pickup and $<span data-fee></span> drop-off</p>
 <p data-i18n="minLine" class="muted" data-minline style="margin:4px 0 0;font-size:15px">$<span data-min></span> minimum per order, before delivery</p>
 <p data-i18n="offerLine" data-offer style="margin:4px 0 0;font-weight:600;color:var(--cta)">First order: delivery is on us</p>
 </div>
@@ -293,6 +298,58 @@ footer .wordmark{color:var(--cream)}
 <div class="total"><span data-i18n="estTotal" style="font-weight:600">Estimated total</span><b id="total"></b></div>
 <p class="muted" style="margin:0 0 20px;font-size:14px" id="totalNote"></p>
 <a data-i18n="bookMy" href="#book" class="btn">Book my pickup</a>
+<p data-i18n="weeklyNudge" style="margin:14px 0 0;font-size:15px;text-align:center"><a href="#weekly">Every week? Loads Weekly saves about $<span data-plan="save"></span> a month</a></p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec tile" id="weekly">
+<div class="wrap split">
+<div style="flex:1 1 420px;max-width:560px">
+<p data-i18n="weeklyKicker" class="serif kicker">For every-week households</p>
+<h2 data-i18n="weeklyH2" class="display h2" style="max-width:13ch;margin-bottom:22px">Loads Weekly. <span class="serif">Save every week.</span></h2>
+<p data-i18n="weeklyP" class="muted" style="font-size:19px;max-width:28em;margin:0 0 8px">$<span data-plan="monthly"></span> a month covers <span data-plan="lbs"></span> lb of wash and fold every week, picked up and brought back by our own drivers.</p>
+<div class="points">
+<p data-i18n="weeklyA"><span class="serif">1.</span><span><strong>About $<span data-plan="perlb"></span> a pound.</strong> <span class="muted">When you use your <span data-plan="lbs"></span> lb every week, instead of $<span data-price></span>.</span></span></p>
+<p data-i18n="weeklyB"><span class="serif">2.</span><span><strong>Delivery is $<span data-plan="delivery"></span> per order.</strong> <span class="muted">Pay as you go is $<span data-fee></span> each way.</span></span></p>
+<p data-i18n="weeklyC"><span class="serif">3.</span><span><strong>Another pickup that week? $<span data-plan="extra"></span> a pound.</strong> <span class="muted">Plus $<span data-plan="delivery"></span> delivery.</span></span></p>
+<p data-i18n="weeklyD"><span class="serif">4.</span><span><strong>Over <span data-plan="lbs"></span> lb?</strong> <span class="muted">Only the extra pounds are charged, at $<span data-plan="over"></span> a pound.</span></span></p>
+<p data-i18n="weeklyE"><span class="serif">5.</span><span><strong>Charged monthly. Cancel anytime.</strong> <span class="muted">Text or email us. Unused pounds don't roll over to the next week.</span></span></p>
+</div>
+</div>
+<div class="ticket">
+<div class="ticket-top">
+<div class="ticket-label"><span data-i18n="weeklyLabel">Loads Weekly</span><span data-i18n="weeklyEvery">Every week</span></div>
+<div class="big-price"><b>$<span data-plan="monthly"></span></b><span data-i18n="perMonth" class="serif muted" style="font-size:26px">a month</span></div>
+<p data-i18n="weeklyLine" class="muted" style="margin:12px 0 0"><span data-plan="lbs"></span> lb every week + $<span data-plan="delivery"></span> delivery per order</p>
+<div class="compare" style="margin-top:18px;padding:14px 16px;border-radius:14px;background:#fff;font-size:15px">
+<p data-i18n="cmpHead" style="margin:0 0 8px;font-weight:600">If you send <span data-plan="lbs"></span> lb every week:</p>
+<p data-i18n="cmpGo" style="margin:0;display:flex;justify-content:space-between;gap:12px"><span class="muted">Pay as you go</span><span class="muted">about $<span data-plan="payg"></span>/mo</span></p>
+<p data-i18n="cmpPlan" style="margin:4px 0 0;display:flex;justify-content:space-between;gap:12px"><span>Loads Weekly, delivery included</span><span>about $<span data-plan="planmo"></span>/mo</span></p>
+<p data-i18n="cmpSave" style="margin:8px 0 0;font-weight:650;color:var(--cta)">You save about $<span data-plan="save"></span> a month.</p>
+</div>
+</div>
+<div class="perf" aria-hidden="true"></div>
+<div class="ticket-bottom">
+<form id="planForm" novalidate>
+<div class="row">
+<div class="field"><label data-i18n="nameLabel" for="pname">Name</label><input id="pname" type="text" autocomplete="name" required></div>
+<div class="field"><label data-i18n="mobileLabel" for="pphone">Mobile</label><input id="pphone" type="tel" autocomplete="tel" required></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field"><label data-i18n="emailLabel" for="pemail">Email (for receipts)</label><input id="pemail" type="email" autocomplete="email" required></div>
+<div class="field" style="flex:0 1 130px"><label data-i18n="zipShort" for="pzip">Zip</label><input id="pzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" required></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field wide"><label data-i18n="addrLabel" for="pstreet">Pickup address</label><input data-i18n-attr="placeholder:addrPh" id="pstreet" type="text" autocomplete="street-address" placeholder="Street and unit number" required></div>
+</div>
+<div class="consents"><label class="check"><input type="checkbox" id="pconsent" required><span data-i18n="consentPlan">Text me about my pickups and deliveries. Reply STOP anytime. Msg &amp; data rates may apply.</span></label></div>
+<input class="hp" type="text" id="pcompany" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button data-i18n="planBtn" class="btn" type="submit" id="planBtn" style="margin-top:8px">Start Loads Weekly</button>
+<p data-i18n="planFine" class="muted" style="margin:12px 0 0;font-size:13px">You'll finish on Square's secure checkout. $<span data-plan="monthly"></span> is charged today and then once a month. By signing up you agree to our <a href="terms.html#weekly">terms</a>.</p>
+<p class="msg" id="msgp" role="status" aria-live="polite" hidden></p>
+</form>
 </div>
 </div>
 </div>
@@ -336,7 +393,8 @@ footer .wordmark{color:var(--cream)}
 <h2 data-i18n="faqH2" class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
 <details open><summary data-i18n="q1">Do I need to be home?</summary><p data-i18n="a1">Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
 <details><summary data-i18n="q2">When do I get it back?</summary><p data-i18n="a2">Back <span data-fill="turnaround"></span>. We run one pickup route and one drop-off route every day.</p></details>
-<details><summary data-i18n="q3">How do you charge?</summary><p data-i18n="a3">No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> for pickup and delivery. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p data-i18n="a3b">First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
+<details><summary data-i18n="q3">How do you charge?</summary><p data-i18n="a3">No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> each way for pickup and drop-off. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p data-i18n="a3b">First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
+<details><summary data-i18n="qPlan">How does Loads Weekly work?</summary><p data-i18n="aPlan">It's $<span data-plan="monthly"></span> a month, charged to your card by Square. Each week, one pickup of up to <span data-plan="lbs"></span> lb is included, and delivery on that order is $<span data-plan="delivery"></span>. If that pickup weighs more, only the extra pounds are charged, at $<span data-plan="over"></span> each. A second pickup in the same week is $<span data-plan="extra"></span> a pound plus $<span data-plan="delivery"></span> delivery. Unused pounds don't roll over. Book each pickup on this page like normal, and cancel anytime by text or email.</p></details>
 <details><summary data-i18n="q4">What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
 <details><summary data-i18n="q5">What areas do you serve?</summary><p data-i18n="a5">Koreatown, Downtown LA, Van Nuys and Sherman Oaks. Enter your zip in the booking form to check, or join the waitlist above.</p></details>
 </div>
@@ -371,8 +429,8 @@ footer .wordmark{color:var(--cream)}
 
 <div class="mbar"><div><b>$<span data-price></span>/lb</b><small data-i18n="mbarSmall">K-town to Sherman Oaks</small></div><a data-i18n="bookShort" href="#book" class="btn">Book a pickup</a></div>
 
-<script src="config.js?v=2"></script>
-<script src="i18n.js?v=2"></script>
+<script src="config.js?v=3"></script>
+<script src="i18n.js?v=3"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -417,6 +475,16 @@ const CONFIG = window.LOADS_CONFIG;
     });
     $$('[data-price]').forEach(el => { el.textContent = CONFIG.pricePerLb.toFixed(2); });
     $$('[data-fee]').forEach(el => { el.textContent = CONFIG.deliveryFee.toFixed(2); });
+    const P = CONFIG.plan, wk = 52 / 12, trip2 = CONFIG.deliveryFee * (CONFIG.tripsPerOrder || 2);
+    if (P) {
+      const payg = (P.lbsPerWeek * CONFIG.pricePerLb + trip2) * wk, planmo = P.monthly + P.deliveryPerOrder * wk;
+      const vals = {
+        monthly: P.monthly, lbs: P.lbsPerWeek, perlb: (P.monthly / (P.lbsPerWeek * wk)).toFixed(2),
+        delivery: P.deliveryPerOrder.toFixed(2), extra: P.extraPickupPerLb.toFixed(2), over: P.overPerLb.toFixed(2),
+        payg: Math.round(payg), planmo: Math.round(planmo), save: Math.round(payg - planmo)
+      };
+      $$('[data-plan]').forEach(el => { el.textContent = vals[el.dataset.plan]; });
+    }
     $$('[data-min]').forEach(el => { el.textContent = Number(CONFIG.minOrder) || 0; });
     $$('[data-minline]').forEach(el => show(el, Number(CONFIG.minOrder) > 0));
     $$('[data-offer]').forEach(el => show(el, CONFIG.firstOrderOffer));
@@ -579,6 +647,40 @@ const CONFIG = window.LOADS_CONFIG;
   });
   $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; show(s3, false); show(s1, true); });
 
+  /* ---------- Loads Weekly sign-up ---------- */
+  // Back from Square's checkout: point them at booking their first pickup.
+  if (new URLSearchParams(location.search).get('subscribed') === '1') { show($('#subscribedMsg'), true); track('plan_subscribed'); }
+  $('#planForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const m = $('#msgp'), btn = $('#planBtn');
+    if ($('#pcompany').value) return;
+    const name = $('#pname').value.trim(), phone = $('#pphone').value.trim(), email = $('#pemail').value.trim();
+    const zip = digits($('#pzip').value).slice(0, 5), address = $('#pstreet').value.trim();
+    if (!name) return msg(m, t('eName'), true);
+    if (!validPhone(phone)) return msg(m, t('ePhone'), true);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return msg(m, t('eEmail'), true);
+    if (zip.length !== 5) return msg(m, t('eZip'), true);
+    const zone = zipZone(zip);
+    if (!zone) return msg(m, t('ePlanZone', { zip }), true);
+    if (!address) return msg(m, t('eAddr'), true);
+    if (!$('#pconsent').checked) return msg(m, t('eConsentPlan'), true);
+    if (!CONFIG.endpoint) return msg(m, 'Preview mode: sign-ups are not sent.');
+    btn.disabled = true; msg(m, t('planStarting'));
+    try {
+      const res = await fetch(CONFIG.endpoint, {
+        method: 'POST',
+        body: JSON.stringify(Object.assign({ action: 'subscribe', name, phone, email, zip, zone, address, lang: I18N.lang }, attribution()))
+      });
+      const data = await res.json();
+      if (data.ok && data.url) { track('plan_checkout', { zone }); location.href = data.url; return; }
+      const errs = { name: 'eName', phone: 'ePhone', email: 'eEmail' };
+      msg(m, errs[data.error] ? t(errs[data.error]) : t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
+    } catch (err) {
+      msg(m, t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
+    }
+    btn.disabled = false;
+  });
+
   /* ---------- waitlist ---------- */
   async function joinWaitlist(zip, phone, m) {
     try {
@@ -603,9 +705,10 @@ const CONFIG = window.LOADS_CONFIG;
     const hamper = h <= 0.5 ? t('hHalf') : h === 1 ? t('hOne') : t('hMany', { n: h });
     $('#lbsText').textContent = t('lbsLine', { n, hamper });
     const laundry = n * CONFIG.pricePerLb, min = Number(CONFIG.minOrder) || 0;
-    $('#total').textContent = '$' + (Math.max(laundry, min) + CONFIG.deliveryFee).toFixed(2);
+    const delivery = CONFIG.deliveryFee * (CONFIG.tripsPerOrder || 2);         // $6.99 each way
+    $('#total').textContent = '$' + (Math.max(laundry, min) + delivery).toFixed(2);
     const minNote = min && laundry < min ? t('estMin', { min }) : '';
-    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? t('estFirst', { fee: CONFIG.deliveryFee.toFixed(2) }) : t('estPlain'));
+    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? t('estFirst', { fee: delivery.toFixed(2) }) : t('estPlain'));
   }
   lbs.addEventListener('input', estimate); estimate();
 

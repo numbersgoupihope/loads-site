@@ -73,6 +73,7 @@ details.done[open] summary::after{content:'Hide'}
 .chip.paid{background:#cfeccf;color:#14532d}
 .chip.unpaid{background:#fde2b0;color:#7a4b00}
 .chip.es{background:#fde7c8;margin-right:6px}
+.chip.plan{background:#dfe7fb;color:#1e3a8a;margin-right:6px}
 .okmsg{color:#1d6b3a;font-size:14px;font-weight:600;min-height:0;margin:8px 0 0}
 .newbar{position:sticky;top:96px;z-index:4;margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--cta);color:#fff;font-weight:650;box-shadow:0 6px 18px rgba(196,35,95,.3)}
 .empty{text-align:center;color:var(--muted);padding:48px 16px}
@@ -106,7 +107,7 @@ details.done[open] summary::after{content:'Hide'}
 <p style="text-align:center;margin:24px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
-<script src="config.js"></script>
+<script src="config.js?v=3"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -161,6 +162,7 @@ details.done[open] summary::after{content:'Hide'}
     const o = orders.find(x => x.id === id), who = o ? (o.name || '').split(/\s+/)[0] : 'them';
     const money = '$' + Number(bill.amount || 0).toFixed(2);
     if (bill.kind === 'charged') $('#note').textContent = 'Charged ' + money + ' to ' + who + '’s saved ' + bill.card + '. Paid.';
+    else if (bill.kind === 'covered') $('#note').textContent = 'Nothing to charge: ' + who + '’s pickup is covered by Loads Weekly. Marked paid.';
     else if (bill.kind === 'paid') $('#note').textContent = 'Already paid.';
     else {
       $('#note').textContent = (bill.declined ? who + '’s saved card didn’t go through, so text the payment link instead. ' : '') +
@@ -215,7 +217,8 @@ details.done[open] summary::after{content:'Hide'}
   const demoOrders = [
     { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
     { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
-    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' }
+    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
+    { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' }
   ];
   function demoApi(req) {
     const o = demoOrders.find(x => x.id === req.id);
@@ -224,9 +227,10 @@ details.done[open] summary::after{content:'Hide'}
       if (idxOf(req.stage) >= idxOf('out_for_delivery') && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
       o.stage = req.stage;
     }
-    if (o && req.action === 'set_weight') { o.weight_lbs = Number(req.weight_lbs) || ''; o.order_total = Number(req.order_total) || ''; }
+    if (o && req.action === 'set_weight') { o.weight_lbs = Number(req.weight_lbs) || ''; o.order_total = String(req.order_total).trim() === '' ? '' : Number(req.order_total); }
     if (o && req.action === 'set_paid') o.paid = req.paid === true;
     if (o && req.action === 'send_bill') {
+      if (o.subscriber && Number(o.order_total) === 0) { o.paid = true; return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'covered', amount: 0 } }); }
       if (o.first_order === 'no') { o.paid = true; return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'charged', amount: o.order_total, card: 'VISA ending 4242' } }); }
       o.bill_url = 'https://squareup.com/pay-invoice/demo'; o.bill_sent = true;
       return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'link', url: o.bill_url, amount: o.order_total } });
@@ -234,12 +238,30 @@ details.done[open] summary::after{content:'Hide'}
     return Promise.resolve({ ok: true, orders: copy() });
   }
 
-  /* ---------- pricing ---------- */
+  /* ---------- pricing (same as apps-script/Square.gs) ---------- */
   const isFirst = o => (o.first_order ? o.first_order : o.first_order_offer) === 'yes';
   const freeDelivery = o => CONFIG.firstOrderOffer && isFirst(o);
   const minOrder = Number(CONFIG.minOrder) || 0;
-  const totalFor = (o, lbs) => Math.max(lbs * CONFIG.pricePerLb, minOrder) + (freeDelivery(o) ? 0 : CONFIG.deliveryFee);
-  const underMin = o => minOrder && Number(o.weight_lbs) * CONFIG.pricePerLb < minOrder;
+  const PLAN = CONFIG.plan || {};
+  const orderDelivery = (Number(CONFIG.deliveryFee) || 0) * (Number(CONFIG.tripsPerOrder) || 2);   // $6.99 each way
+  const cents = n => Math.round(n * 100) / 100;
+  const totalFor = (o, lbs) => {
+    lbs = Math.round(lbs * 10) / 10;
+    if (o.subscriber) {                          // Loads Weekly
+      const del = freeDelivery(o) ? 0 : PLAN.deliveryPerOrder;
+      if (o.plan_extra) return cents(lbs * PLAN.extraPickupPerLb) + del;
+      return cents(Math.round(Math.max(0, lbs - PLAN.lbsPerWeek) * 10) / 10 * PLAN.overPerLb) + del;
+    }
+    return Math.max(lbs * CONFIG.pricePerLb, minOrder) + (freeDelivery(o) ? 0 : orderDelivery);
+  };
+  const underMin = o => !o.subscriber && minOrder && Number(o.weight_lbs) * CONFIG.pricePerLb < minOrder;
+  const hasTotal = o => o.order_total !== '' && o.order_total != null && !isNaN(Number(o.order_total));
+  const priceHelp = o => {
+    const del = freeDelivery(o) ? 'delivery free (first order)' : null;
+    if (o.subscriber && o.plan_extra) return 'Loads Weekly extra pickup: $' + PLAN.extraPickupPerLb.toFixed(2) + '/lb, ' + (del || '+ $' + PLAN.deliveryPerOrder.toFixed(2) + ' delivery');
+    if (o.subscriber) return 'Loads Weekly: first ' + PLAN.lbsPerWeek + ' lb included, then $' + PLAN.overPerLb.toFixed(2) + '/lb, ' + (del || '+ $' + PLAN.deliveryPerOrder.toFixed(2) + ' delivery');
+    return '$' + CONFIG.pricePerLb.toFixed(2) + '/lb' + (minOrder ? ' ($' + minOrder + ' minimum)' : '') + ', ' + (del || '+ $' + orderDelivery.toFixed(2) + ' delivery ($' + Number(CONFIG.deliveryFee).toFixed(2) + ' each way)');
+  };
 
   /* ---------- texts to the customer ---------- */
   const isTest = o => /^test\b/i.test((o.name || '').trim());
@@ -257,7 +279,11 @@ details.done[open] summary::after{content:'Hide'}
     const atStore = idxOf(o.stage) >= idxOf('at_store') && idxOf(o.stage) < idxOf('out_for_delivery');
     const money = o.bill_url ? billMoney(o) : '$' + Number(o.order_total || 0).toFixed(2);
     const minNote = underMin(o) ? (es ? ', que incluye nuestro mínimo de $' + minOrder : ', which includes our $' + minOrder + ' minimum') : '';
-    if (atStore && o.order_total) {
+    if (atStore && hasTotal(o) && o.subscriber && Number(o.order_total) === 0) {
+      return es ? hi + 'tu ropa pesó ' + o.weight_lbs + ' libras (te mando foto de la báscula). Está cubierta por tu plan Loads Weekly, así que no hay nada que pagar.' + link
+                : hi + 'your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached). It’s covered by your Loads Weekly plan, so there’s nothing to pay.' + link;
+    }
+    if (atStore && hasTotal(o)) {
       const weighed = es
         ? hi + 'tu ropa pesó ' + o.weight_lbs + ' libras (te mando foto de la báscula), así que tu total es ' + money + minNote + '. '
         : hi + 'your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached), so your total is ' + money + minNote + '. ';
@@ -310,7 +336,7 @@ details.done[open] summary::after{content:'Hide'}
     const done = shown.filter(o => o.stage === 'delivered');
     const doneHtml = done.length
       ? '<details class="done"><summary>Completed today (' + done.length + ')</summary>' + done.map(o =>
-          '<div class="mini"><b>' + esc(o.name) + '</b><span>' + (o.order_total ? '$' + Number(o.bill_total || o.order_total).toFixed(2) + ' · ' : '') + (o.paid ? '✓ Paid' : 'Not paid') + '</span></div>').join('') +
+          '<div class="mini"><b>' + esc(o.name) + '</b><span>' + (hasTotal(o) ? '$' + Number(o.bill_total || o.order_total).toFixed(2) + ' · ' : '') + (o.paid ? '✓ Paid' : 'Not paid') + '</span></div>').join('') +
         '<p class="meta" style="margin:6px 4px 0">Older orders are in the Google Sheet.</p></details>'
       : '';
     $('#list').innerHTML = (groups.length ? '' : '<p class="empty">No open orders right now.</p>') + groups.map(g =>
@@ -325,28 +351,34 @@ details.done[open] summary::after{content:'Hide'}
       const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address + ' ' + o.zip);
       const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
       const money = '$' + Number(o.order_total || 0).toFixed(2);
-      const payChip = o.paid ? '<span class="chip paid">✓ Paid</span>' : (weighed && o.order_total ? '<span class="chip unpaid">Not paid</span>' : '');
+      const payChip = o.paid ? '<span class="chip paid">✓ Paid</span>' : (weighed && hasTotal(o) ? '<span class="chip unpaid">Not paid</span>' : '');
+      const covered = o.subscriber && hasTotal(o) && Number(o.order_total) === 0 && !isTest(o);
       const testNote = isTest(o) ? '<p><b>Test order:</b> Square bills $1.00 instead of the ' + money + ' total, so testing costs a dollar.</p>' : '';
       const otherWay = '<button class="undo" type="button" data-act="paid">Paid another way (cash, Zelle)? Mark paid</button>';
       let pay = '';
-      if (weighed && o.order_total) {
+      if (weighed && hasTotal(o)) {
         if (o.paid) pay = '<div class="pay ok"><b>✓ Paid · ' + (o.bill_total ? billMoney(o) : money) + '</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>';
         else if (o.bill_sent && o.bill_url) pay = '<div class="pay"><b>Bill sent · ' + billMoney(o) + ' · waiting for payment</b>' + testNote +
           '<a class="textlink" href="' + smsHref(o) + '">Text the payment link</a>' +
           '<p>Attach the photo of the scale. This turns to Paid by itself once they pay.</p>' + otherWay + '</div>';
+        else if (covered) pay = '<div class="pay"><b>Covered by Loads Weekly · $0.00</b>' +
+          '<button class="bill" type="button" data-act="bill">Mark covered</button>' +
+          '<p>This pickup is inside their ' + PLAN.lbsPerWeek + ' lb for the week, so there’s nothing to charge.</p></div>';
         else pay = '<div class="pay"><b>Not paid yet · ' + money + '</b>' +
           '<button class="bill" type="button" data-act="bill">Send bill · ' + (isTest(o) ? '$1.00 (test)' : money) + '</button>' + testNote +
-          '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>' + otherWay + '</div>';
+          (o.subscriber
+            ? '<p>Loads Weekly member: the card on their plan is charged right away.</p>'
+            : '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>') + otherWay + '</div>';
       }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><div class="chips">' + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><div class="chips">' + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
         '<p class="meta"><a href="' + maps + '" target="_blank" rel="noopener">' + esc(o.address) + ', ' + esc(o.zip) + '</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         (nxt ? (needsPay
           ? '<button class="next" type="button" disabled>Waiting on payment</button>'
           : '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>') : '') +
         '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span>' + (i > 0 ? '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</div>' +
-        (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as $' + CONFIG.pricePerLb.toFixed(2) + '/lb' + (minOrder ? ' ($' + minOrder + ' minimum)' : '') + (freeDelivery(o) ? ', delivery free (first order)' : ' + $' + CONFIG.deliveryFee.toFixed(2) + ' delivery') + '. Edit it if needed.</small></div>' : '') +
+        (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as ' + priceHelp(o) + '. Edit it if needed.</small></div>' : '') +
         pay +
         '</article>';
     }
@@ -380,7 +412,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-23h';
+  const PAGE_VERSION = '2026-11-24a';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
