@@ -107,7 +107,7 @@ details.done[open] summary::after{content:'Hide'}
 <p style="text-align:center;margin:24px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
-<script src="config.js?v=3"></script>
+<script src="config.js?v=4"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -215,10 +215,10 @@ details.done[open] summary::after{content:'Hide'}
 
   /* ---------- preview data ---------- */
   const demoOrders = [
-    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
-    { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown + Downtown LA', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
-    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
-    { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys + Sherman Oaks', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' }
+    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
+    { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
+    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys store', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
+    { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' }
   ];
   function demoApi(req) {
     const o = demoOrders.find(x => x.id === req.id);
@@ -412,7 +412,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24a';
+  const PAGE_VERSION = '2026-11-24b';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
