@@ -55,6 +55,12 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 .pay button{min-height:44px;padding:8px 16px;border:none;border-radius:10px;background:var(--ink);color:#f3ede2;font-weight:600;cursor:pointer}
 .pay p{flex-basis:100%;margin:0;font-size:13px;color:var(--muted)}
 .pay button.undo{min-height:40px;padding:4px 0;background:none;color:var(--muted);font-weight:400;text-decoration:underline}
+.pay .bill{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border:none;border-radius:12px;background:var(--cta);color:#fff !important;font-size:17px;font-weight:650;cursor:pointer}
+.pay .bill:disabled{opacity:.6}
+.textlink{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border-radius:12px;background:var(--ink);color:#f3ede2;font-size:17px;font-weight:650;text-decoration:none}
+.chip.es{background:#fde7c8;margin-right:6px}
+.okmsg{color:#1d6b3a;font-size:14px;font-weight:600;min-height:0;margin:8px 0 0}
+.newbar{position:sticky;top:96px;z-index:4;margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--cta);color:#fff;font-weight:650;box-shadow:0 6px 18px rgba(196,35,95,.3)}
 .empty{text-align:center;color:var(--muted);padding:48px 16px}
 .pin{max-width:360px;margin:72px auto;background:#fff;border-radius:20px;padding:28px 24px;text-align:center}
 .pin input{width:100%;min-height:56px;margin:16px 0 12px;padding:10px;border:1.5px solid #d5ddd6;border-radius:14px;text-align:center;font-size:24px;letter-spacing:8px}
@@ -79,12 +85,14 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 
 <main id="app" hidden>
 <p class="demo" id="demo" hidden><strong>Preview.</strong> Demo orders, nothing is saved. Once the site is connected this shows real bookings from the Sheet.</p>
+<div class="newbar" id="newbar" role="status" hidden></div>
 <p class="err" id="err" role="alert"></p>
+<p class="okmsg" id="note" role="status"></p>
 <div id="list"></div>
 </main>
 
 <script src="config.js"></script>
-<script src="app-install.js?v=3" defer></script>
+<script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
 (function () {
@@ -106,15 +114,68 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   }
   async function run(req) {
     if (busy) return; busy = true; $('#err').textContent = '';
+    if (req.action !== 'list') $('#note').textContent = '';
     try {
       const data = await api(req);
       if (!data.ok && data.error === 'pin') { pin = ''; try { sessionStorage.removeItem('loads_pin'); } catch (e) {} return showPin('That PIN didn’t work.'); }
-      if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'Mark that order paid before it goes out for delivery.'; return; }
+      if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'That order isn’t paid yet. Send the bill first, or mark it paid if they paid another way.'; return; }
+      if (!data.ok && data.message) { orders = data.orders || orders; showApp(); render(); $('#err').textContent = data.message; return; }
       if (!data.ok) throw new Error(data.error || 'failed');
-      orders = data.orders || []; showApp(); render();
+      const fresh = data.orders || [];
+      newOrders(fresh);
+      orders = fresh; showApp(); render();
+      if (data.bill) billNote(req.id, data.bill);
     } catch (e) {
       $('#err').textContent = "Couldn't reach the Sheet. Check the connection and tap Refresh.";
     } finally { busy = false; }
+  }
+
+  /* ---------- after Send bill ---------- */
+  function billNote(id, bill) {
+    const o = orders.find(x => x.id === id), who = o ? (o.name || '').split(/\s+/)[0] : 'them';
+    const money = '$' + Number(bill.amount || 0).toFixed(2);
+    if (bill.kind === 'charged') $('#note').textContent = 'Charged ' + money + ' to ' + who + '’s saved ' + bill.card + '. Paid.';
+    else if (bill.kind === 'paid') $('#note').textContent = 'Already paid.';
+    else {
+      $('#note').textContent = (bill.declined ? who + '’s saved card didn’t go through, so text the payment link instead. ' : '') +
+        (bill.resent ? 'Same bill as before (' + money + '). ' : 'Bill ready: ' + money + '. ') + 'Tap “Text the payment link” on ' + who + '’s order.';
+      const link = document.querySelector('.order[data-id="' + id + '"] .textlink');
+      if (link) { link.scrollIntoView({ block: 'center', behavior: 'smooth' }); link.focus(); }
+    }
+  }
+
+  /* ---------- new booking alert ---------- */
+  let known = null, audio = null;
+  document.addEventListener('pointerdown', () => {   // phones only allow sound after a first tap
+    try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); } catch (e) {}
+  });
+  function chime() {
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      const t = audio.currentTime;
+      [880, 1175, 1568].forEach((f, i) => {
+        const o = audio.createOscillator(), g = audio.createGain(), at = t + i * 0.16;
+        o.type = 'sine'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(0.35, at + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, at + 0.6);
+        o.connect(g); g.connect(audio.destination); o.start(at); o.stop(at + 0.65);
+      });
+    } catch (e) {}
+    try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {}
+  }
+  function newOrders(fresh) {
+    const ids = new Set(fresh.map(o => o.id));
+    if (known) {
+      const added = fresh.filter(o => !known.has(o.id) && o.stage === 'booked');
+      if (added.length) {
+        chime();
+        $('#newbar').textContent = added.length === 1
+          ? 'New booking: ' + added[0].name + ', pickup ' + added[0].pickup_label
+          : added.length + ' new bookings';
+        $('#newbar').hidden = false;
+        clearTimeout(newOrders.t); newOrders.t = setTimeout(() => { $('#newbar').hidden = true; }, 30000);
+      }
+    }
+    known = ids;
   }
 
   /* ---------- preview data ---------- */
@@ -132,6 +193,11 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     }
     if (o && req.action === 'set_weight') { o.weight_lbs = Number(req.weight_lbs) || ''; o.order_total = Number(req.order_total) || ''; }
     if (o && req.action === 'set_paid') o.paid = req.paid === true;
+    if (o && req.action === 'send_bill') {
+      if (o.first_order === 'no') { o.paid = true; return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'charged', amount: o.order_total, card: 'VISA ending 4242' } }); }
+      o.bill_url = 'https://squareup.com/pay-invoice/demo'; o.bill_sent = true;
+      return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'link', url: o.bill_url, amount: o.order_total } });
+    }
     return Promise.resolve({ ok: true, orders: copy() });
   }
 
@@ -143,25 +209,45 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   const underMin = o => minOrder && Number(o.weight_lbs) * CONFIG.pricePerLb < minOrder;
 
   /* ---------- texts to the customer ---------- */
+  const isEs = o => o.lang === 'es' || /^\[Español\]/.test(o.notes || '');
+  const DAYS_ES = { Mon: 'lun', Tue: 'mar', Wed: 'mié', Thu: 'jue', Fri: 'vie', Sat: 'sáb', Sun: 'dom' };
+  const MONTHS_ES = { Jan: 'ene', Feb: 'feb', Mar: 'mar', Apr: 'abr', May: 'may', Jun: 'jun', Jul: 'jul', Aug: 'ago', Sep: 'sep', Oct: 'oct', Nov: 'nov', Dec: 'dic' };
+  const dayEs = l => { const m = String(l || '').match(/^(\w{3}), (\w{3}) (\d{1,2})$/); return m && DAYS_ES[m[1]] && MONTHS_ES[m[2]] ? DAYS_ES[m[1]] + ' ' + m[3] + ' de ' + MONTHS_ES[m[2]] : String(l || ''); };
   function smsBody(o) {
-    const first = (o.name || '').trim().split(/\s+/)[0] || 'there';
-    const link = o.track_url ? ' Track it here: ' + o.track_url : '';
+    const es = isEs(o);
+    const first = (o.name || '').trim().split(/\s+/)[0] || (es ? '' : 'there');
+    const hi = es ? 'Hola ' + first + ', ' : 'Hi ' + first + ', ';
+    const link = o.track_url ? (es ? ' Sigue tu pedido aquí: ' : ' Track it here: ') + o.track_url : '';
     const st = STAGES[idxOf(o.stage)];
     const atStore = idxOf(o.stage) >= idxOf('at_store') && idxOf(o.stage) < idxOf('out_for_delivery');
-    if (atStore && o.order_total && !o.paid) {
-      const total = 'Hi ' + first + ', your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached), so your total is $' + Number(o.order_total).toFixed(2) + (underMin(o) ? ', which includes our $' + minOrder + ' minimum' : '') + '. ';
-      return total + (isFirst(o)
-        ? "You'll get a payment link from Square in a minute. Tick “save card” when you pay and next time we'll just charge it. We'll deliver as soon as it's paid."
-        : "We'll charge the card you saved with us and text you the receipt. No card saved? You'll get a Square payment link instead.") + link;
+    const money = '$' + Number(o.order_total || 0).toFixed(2);
+    const minNote = underMin(o) ? (es ? ', que incluye nuestro mínimo de $' + minOrder : ', which includes our $' + minOrder + ' minimum') : '';
+    if (atStore && o.order_total) {
+      const weighed = es
+        ? hi + 'tu ropa pesó ' + o.weight_lbs + ' libras (te mando foto de la báscula), así que tu total es ' + money + minNote + '. '
+        : hi + 'your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached), so your total is ' + money + minNote + '. ';
+      if (o.paid) return es ? hi + 'tu ropa pesó ' + o.weight_lbs + ' libras (te mando foto de la báscula). Total ' + money + ', ya pagado. ¡Gracias!' + link
+                            : hi + 'your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached). Total ' + money + ', paid. Thanks!' + link;
+      if (o.bill_url) return weighed + (es
+        ? 'Paga aquí: ' + o.bill_url + ' . Marca “guardar mi tarjeta” y la próxima vez te cobramos automáticamente. Te la entregamos en cuanto esté pagado.'
+        : 'Pay here: ' + o.bill_url + ' . Tick “Save my card on file” and next time we’ll charge it automatically. We’ll deliver as soon as it’s paid.');
+      return weighed + (es ? 'En un momento te mando el enlace de pago.' : 'Payment link coming next.') + link;
     }
-    const msgs = {
-      booked: 'Hi ' + first + ", it's Loads. You're booked for pickup " + (o.pickup_label || '') + (CONFIG.pickupWindow ? ', ' + CONFIG.pickupWindow : '') + '. Leave your bag by the door.' + link,
-      picked_up: 'Hi ' + first + ", we've got your load. It's on the way to our laundromat." + link,
-      at_store: 'Hi ' + first + ', your load made it to our laundromat.' + link,
-      out_for_delivery: 'Hi ' + first + ', your load is out for delivery and headed back to you.' + link,
-      delivered: 'Hi ' + first + ', your load is back at your door. Thanks for using Loads!' + (CONFIG.googleReviewUrl ? ' If you have a sec, a quick review helps a lot: ' + CONFIG.googleReviewUrl : '')
+    const win = es ? (CONFIG.pickupWindowEs || CONFIG.pickupWindow) : CONFIG.pickupWindow;
+    const msgs = es ? {
+      booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (win ? ', de ' + win : '') + '. Deja tu bolsa en la puerta.' + link,
+      picked_up: hi + 'ya tenemos tu ropa. Va camino a nuestra lavandería.' + link,
+      at_store: hi + 'tu ropa ya llegó a nuestra lavandería.' + link,
+      out_for_delivery: hi + 'tu ropa va en camino de regreso a tu casa.' + link,
+      delivered: hi + 'tu ropa ya está en tu puerta. ¡Gracias por usar Loads!' + (CONFIG.googleReviewUrl ? ' Si tienes un momento, una reseña nos ayuda mucho: ' + CONFIG.googleReviewUrl : '')
+    } : {
+      booked: hi + "it's Loads. You're booked for pickup " + (o.pickup_label || '') + (win ? ', ' + win : '') + '. Leave your bag by the door.' + link,
+      picked_up: hi + "we've got your load. It's on the way to our laundromat." + link,
+      at_store: hi + 'your load made it to our laundromat.' + link,
+      out_for_delivery: hi + 'your load is out for delivery and headed back to you.' + link,
+      delivered: hi + 'your load is back at your door. Thanks for using Loads!' + (CONFIG.googleReviewUrl ? ' If you have a sec, a quick review helps a lot: ' + CONFIG.googleReviewUrl : '')
     };
-    return msgs[o.stage] || 'Hi ' + first + ', quick update from Loads: ' + st.label.toLowerCase() + '.' + link;
+    return msgs[o.stage] || hi + (es ? 'una actualización de Loads: ' : 'quick update from Loads: ') + st.label.toLowerCase() + '.' + link;
   }
   const smsHref = o => 'sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(smsBody(o));
 
@@ -184,18 +270,22 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
       const weighed = i >= idxOf('at_store');
       const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address + ' ' + o.zip);
       const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
-      const howToPay = isFirst(o)
-        ? 'First order: send a Square invoice from the <b>Loads</b> location and tick “Allow customer to save card on file.”'
-        : 'Repeat customer: charge their saved card in Square (Loads location). No saved card? Send an invoice.';
-      const pay = weighed && o.order_total
-        ? (o.paid
-          ? '<div class="pay ok"><b>Paid</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>'
-          : '<div class="pay"><b>Not paid yet · $' + Number(o.order_total).toFixed(2) + '</b><button type="button" data-act="paid">Mark paid</button><p>' + howToPay + ' Tap <b>Text update</b> and attach a photo of the scale.</p></div>')
-        : '';
+      const money = '$' + Number(o.order_total || 0).toFixed(2);
+      const otherWay = '<button class="undo" type="button" data-act="paid">Paid another way (cash, Zelle)? Mark paid</button>';
+      let pay = '';
+      if (weighed && o.order_total) {
+        if (o.paid) pay = '<div class="pay ok"><b>Paid · ' + money + '</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>';
+        else if (o.bill_sent && o.bill_url) pay = '<div class="pay"><b>Bill sent · waiting for payment</b>' +
+          '<a class="textlink" href="' + smsHref(o) + '">Text the payment link</a>' +
+          '<p>Attach the photo of the scale. This turns to Paid by itself once they pay.</p>' + otherWay + '</div>';
+        else pay = '<div class="pay"><b>Not paid yet · ' + money + '</b>' +
+          '<button class="bill" type="button" data-act="bill">Send bill · ' + money + '</button>' +
+          '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>' + otherWay + '</div>';
+      }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div><p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><span class="chip ' + chip + '">' + esc(st.label) + '</span></div>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><span class="chip ' + chip + '">' + esc(st.label) + '</span></div>' +
         '<p class="meta"><a href="' + maps + '" target="_blank" rel="noopener">' + esc(o.address) + ', ' + esc(o.zip) + '</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
-        '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">Text update</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
+        '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         (nxt ? (needsPay
           ? '<button class="next" type="button" disabled>Waiting on payment</button>'
           : '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>') : '') +
@@ -218,6 +308,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     const card = b.closest('.order'), id = card.dataset.id;
     if (b.dataset.act === 'weight') return run({ action: 'set_weight', id, weight_lbs: card.querySelector('[data-w]').value, order_total: card.querySelector('[data-t]').value });
     if (b.dataset.act === 'paid' || b.dataset.act === 'unpaid') { b.disabled = true; return run({ action: 'set_paid', id, paid: b.dataset.act === 'paid' }); }
+    if (b.dataset.act === 'bill') { b.disabled = true; b.textContent = 'Sending bill...'; return run({ action: 'send_bill', id }); }
     b.disabled = true;
     run({ action: 'set_stage', id, stage: b.dataset.stage });
   });
@@ -230,7 +321,8 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   setInterval(() => {
     const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest('#list input');
     if (!document.hidden && !$('#app').hidden && !typing) run({ action: 'list' });
-  }, 60000);
+  }, 30000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#app').hidden) run({ action: 'list' }); });
 
   if (PREVIEW || pin) run({ action: 'list' }); else showPin();
 })();
