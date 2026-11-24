@@ -11,7 +11,7 @@ window.LOADS_CONFIG = {
 
   phoneDisplay: '(805) 407-3309',            // e.g. '(213) 555-0123'
   phoneSms: '+18054073309',                // same number for texting links, e.g. '+12135550123'
-  email: 'dimitri@dpzwest.com', // e.g. 'hello@loadslaundry.com'
+  email: 'hello@loadspickup.com', // forwards to loadspickup@gmail.com (Cloudflare Email Routing)
   turnaround: 'the next day',              // finishes the sentence "Back ___", e.g. 'the next evening'
   pickupWindow: '8 to 11am',            // e.g. '8 to 11am'
   guarantee: "If something comes back wrong, text us within 48 hours and we'll rewash it free.",               // e.g. "If something comes back wrong, we'll rewash it free. Just text us within 48 hours."

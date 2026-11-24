@@ -11,7 +11,7 @@
  */
 
 // Where new bookings get emailed. Separate several addresses with commas.
-const NOTIFY_EMAIL = 'dimitri@dpzwest.com';
+const NOTIFY_EMAIL = 'loadspickup@gmail.com,dimitri@dpzwest.com';
 
 // PIN the staff page asks for (4 to 8 digits). Leave empty and the staff page stays locked.
 const STAFF_PIN = '';
