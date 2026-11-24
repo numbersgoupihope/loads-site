@@ -6,6 +6,7 @@
  *  - Answers the customer tracking page.
  *  - Takes stage updates from the staff page.
  *  - Bills customers through Square when staff tap "Send bill" (see Square.gs).
+ *  - Starts Loads Weekly sign-ups (the monthly plan) on Square's checkout page.
  *
  * Setup: README.md, step 1.
  */
@@ -30,7 +31,14 @@ const BOOKING_HEADERS = [
   'gclid', 'gbraid', 'wbraid', 'fbclid', 'ttclid',
   'first_utm_source', 'first_utm_medium', 'first_utm_campaign', 'first_utm_content',
   'landing_page', 'referrer', 'first_seen', 'submitted_at', 'user_agent', 'lang',
-  'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at'
+  'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at',
+  'subscriber'
+];
+
+// Loads Weekly sign-ups from the website. Square keeps the subscription itself.
+const SUBSCRIBER_HEADERS = [
+  'received_at', 'name', 'phone', 'email', 'address', 'zip', 'zone', 'lang', 'status', 'checkout_url',
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'gclid', 'fbclid', 'landing_page', 'referrer'
 ];
 
 const WAITLIST_HEADERS = [
@@ -46,6 +54,9 @@ function doPost(e) {
   if (type.indexOf('text/plain') === 0) {               // staff page sends JSON as plain text
     let req;
     try { req = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: 'bad_request' }); }
+    if (req.action === 'subscribe') {                     // Loads Weekly sign-up from the website
+      try { return json_(subscribe_(req)); } catch (err) { return json_({ ok: false, error: 'square', message: String(err && err.message || err) }); }
+    }
     return json_(staff_(req));
   }
   return saveForm_((e && e.parameter) || {});           // booking form and waitlist
@@ -67,6 +78,7 @@ function saveForm_(p) {
     const isWaitlist = p.type === 'waitlist';
     const sheet = sheet_(isWaitlist ? 'Waitlist' : 'Bookings', isWaitlist ? WAITLIST_HEADERS : BOOKING_HEADERS);
     if (!isWaitlist) p.first_order = isFirstOrder_(p.phone) ? 'yes' : 'no';
+    if (!isWaitlist) p.subscriber = planFlag_(p.phone);   // Loads Weekly member? Asks Square by mobile number
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const now = new Date();
     const row = headers.map(function (h) {
@@ -93,6 +105,7 @@ function notify_(p) {
     'Notes: ' + (p.notes || '-'),
     'Heard about us: ' + (p.heard || '-'),
     'First order: ' + (p.first_order || ''),
+    'Loads Weekly member: ' + (p.subscriber === 'yes' ? 'yes' : 'no'),
     'Reminder texts OK: ' + (p.sms_marketing_consent || 'no'),
     'Source: ' + [p.utm_source, p.utm_medium, p.utm_campaign].filter(String).join(' / '),
     '',
@@ -191,7 +204,9 @@ function setWeight_(id, weight, total) {
   const r = t && find_(t, id);
   if (!r) return;
   const w = Number(weight), tot = Number(total);
-  const updates = { weight_lbs: isFinite(w) && w > 0 ? w : '', order_total: isFinite(tot) && tot > 0 ? tot : '' };
+  const weighed = isFinite(w) && w > 0;
+  // $0 is a real total for a Loads Weekly pickup that's fully covered by the plan.
+  const updates = { weight_lbs: weighed ? w : '', order_total: weighed && String(total == null ? '' : total).trim() !== '' && isFinite(tot) && tot >= 0 ? tot : '' };
   // A bill already went out for a different amount: cancel it so the old link can't be paid.
   if (r.square_invoice_id && !r.paid_at && Number(r.square_bill_total) !== updates.order_total) {
     cancelInvoice_(r.square_invoice_id);
@@ -237,6 +252,7 @@ function list_() {
         paid: !!r.paid_at, track_url: String(r.track_url || ''),
         bill_url: String(r.square_bill_url || ''), bill_total: r.square_bill_total === '' ? '' : Number(r.square_bill_total) || '',
         bill_sent: !!r.bill_sent_at, lang: String(r.lang || ''),
+        subscriber: String(r.subscriber) === 'yes', plan_extra: String(r.subscriber) === 'yes' && extraPickup_(t, r),
         updated: iso_(r.stage_updated_at)
       };
     })
