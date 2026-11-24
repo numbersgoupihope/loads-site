@@ -218,6 +218,8 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   const underMin = o => minOrder && Number(o.weight_lbs) * CONFIG.pricePerLb < minOrder;
 
   /* ---------- texts to the customer ---------- */
+  const isTest = o => /^test\b/i.test((o.name || '').trim());
+  const billMoney = o => '$' + Number(o.bill_total || (isTest(o) ? 1 : o.order_total) || 0).toFixed(2);
   const isEs = o => o.lang === 'es' || /^\[Español\]/.test(o.notes || '');
   const DAYS_ES = { Mon: 'lun', Tue: 'mar', Wed: 'mié', Thu: 'jue', Fri: 'vie', Sat: 'sáb', Sun: 'dom' };
   const MONTHS_ES = { Jan: 'ene', Feb: 'feb', Mar: 'mar', Apr: 'abr', May: 'may', Jun: 'jun', Jul: 'jul', Aug: 'ago', Sep: 'sep', Oct: 'oct', Nov: 'nov', Dec: 'dic' };
@@ -229,7 +231,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     const link = o.track_url ? (es ? ' Sigue tu pedido aquí: ' : ' Track it here: ') + o.track_url : '';
     const st = STAGES[idxOf(o.stage)];
     const atStore = idxOf(o.stage) >= idxOf('at_store') && idxOf(o.stage) < idxOf('out_for_delivery');
-    const money = '$' + Number(o.order_total || 0).toFixed(2);
+    const money = o.bill_url ? billMoney(o) : '$' + Number(o.order_total || 0).toFixed(2);
     const minNote = underMin(o) ? (es ? ', que incluye nuestro mínimo de $' + minOrder : ', which includes our $' + minOrder + ' minimum') : '';
     if (atStore && o.order_total) {
       const weighed = es
@@ -280,15 +282,16 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
       const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address + ' ' + o.zip);
       const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
       const money = '$' + Number(o.order_total || 0).toFixed(2);
+      const testNote = isTest(o) ? '<p><b>Test order:</b> Square bills $1.00 instead of the ' + money + ' total, so testing costs a dollar.</p>' : '';
       const otherWay = '<button class="undo" type="button" data-act="paid">Paid another way (cash, Zelle)? Mark paid</button>';
       let pay = '';
       if (weighed && o.order_total) {
         if (o.paid) pay = '<div class="pay ok"><b>Paid · ' + money + '</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>';
-        else if (o.bill_sent && o.bill_url) pay = '<div class="pay"><b>Bill sent · waiting for payment</b>' +
+        else if (o.bill_sent && o.bill_url) pay = '<div class="pay"><b>Bill sent · ' + billMoney(o) + ' · waiting for payment</b>' + testNote +
           '<a class="textlink" href="' + smsHref(o) + '">Text the payment link</a>' +
           '<p>Attach the photo of the scale. This turns to Paid by itself once they pay.</p>' + otherWay + '</div>';
         else pay = '<div class="pay"><b>Not paid yet · ' + money + '</b>' +
-          '<button class="bill" type="button" data-act="bill">Send bill · ' + money + '</button>' +
+          '<button class="bill" type="button" data-act="bill">Send bill · ' + (isTest(o) ? '$1.00 (test)' : money) + '</button>' + testNote +
           '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>' + otherWay + '</div>';
       }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
