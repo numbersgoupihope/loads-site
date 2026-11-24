@@ -58,6 +58,9 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 .pay .bill{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border:none;border-radius:12px;background:var(--cta);color:#fff !important;font-size:17px;font-weight:650;cursor:pointer}
 .pay .bill:disabled{opacity:.6}
 .textlink{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border-radius:12px;background:var(--ink);color:#f3ede2;font-size:17px;font-weight:650;text-decoration:none}
+.chips{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.chip.paid{background:#cfeccf;color:#14532d}
+.chip.unpaid{background:#fde2b0;color:#7a4b00}
 .chip.es{background:#fde7c8;margin-right:6px}
 .okmsg{color:#1d6b3a;font-size:14px;font-weight:600;min-height:0;margin:8px 0 0}
 .newbar{position:sticky;top:96px;z-index:4;margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--cta);color:#fff;font-weight:650;box-shadow:0 6px 18px rgba(196,35,95,.3)}
@@ -288,11 +291,12 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
       const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address + ' ' + o.zip);
       const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
       const money = '$' + Number(o.order_total || 0).toFixed(2);
+      const payChip = o.paid ? '<span class="chip paid">✓ Paid</span>' : (weighed && o.order_total ? '<span class="chip unpaid">Not paid</span>' : '');
       const testNote = isTest(o) ? '<p><b>Test order:</b> Square bills $1.00 instead of the ' + money + ' total, so testing costs a dollar.</p>' : '';
       const otherWay = '<button class="undo" type="button" data-act="paid">Paid another way (cash, Zelle)? Mark paid</button>';
       let pay = '';
       if (weighed && o.order_total) {
-        if (o.paid) pay = '<div class="pay ok"><b>Paid · ' + money + '</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>';
+        if (o.paid) pay = '<div class="pay ok"><b>✓ Paid · ' + (o.bill_total ? billMoney(o) : money) + '</b><button class="undo" type="button" data-act="unpaid">Undo</button></div>';
         else if (o.bill_sent && o.bill_url) pay = '<div class="pay"><b>Bill sent · ' + billMoney(o) + ' · waiting for payment</b>' + testNote +
           '<a class="textlink" href="' + smsHref(o) + '">Text the payment link</a>' +
           '<p>Attach the photo of the scale. This turns to Paid by itself once they pay.</p>' + otherWay + '</div>';
@@ -301,7 +305,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
           '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>' + otherWay + '</div>';
       }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><span class="chip ' + chip + '">' + esc(st.label) + '</span></div>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><div class="chips">' + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
         '<p class="meta"><a href="' + maps + '" target="_blank" rel="noopener">' + esc(o.address) + ', ' + esc(o.zip) + '</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         (nxt ? (needsPay
