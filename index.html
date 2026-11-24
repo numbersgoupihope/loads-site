@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app="customer">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,6 +45,7 @@ a{color:var(--ink)}
 .wordmark svg{margin:0 1px 0 1.5px}
 .logo small{margin-top:4px;font-size:12px;font-weight:500;letter-spacing:.4px;color:var(--muted)}
 .nav-right{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;font-size:15px}
+.app-pill{display:none;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--ink);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
 .nav-right .btn{min-height:46px;padding:10px 22px;border-radius:999px;font-size:16px}
 /* hero */
 .hero-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px 56px;margin:24px 0 40px}
@@ -159,7 +160,7 @@ footer .wordmark{color:var(--cream)}
 .mbar small{font-size:13px;color:var(--muted)}
 .mbar .btn{min-height:48px;padding:10px 22px;border-radius:12px;font-size:16px}
 .mbar.away{display:none!important}
-@media (max-width:760px){.mbar{display:flex}.panel{padding:20px 18px;margin-top:-40px}.faq{padding:32px 22px}.proof>div{border-left:none;padding:8px 0}.sec{padding:72px 0}.offer{font-size:13px;padding:8px 16px}.nav{min-height:0;padding:14px 0 6px}.nav-right{display:none}.hero-top{margin:12px 0 24px;gap:16px}.hero-side{padding-bottom:0}.hero-side p.muted{font-size:17px!important}.kicker{font-size:26px}.price b{font-size:38px}.hero-img{height:240px;border-radius:20px}}
+@media (max-width:760px){.mbar{display:flex}.panel{padding:20px 18px;margin-top:-40px}.faq{padding:32px 22px}.proof>div{border-left:none;padding:8px 0}.sec{padding:72px 0}.offer{font-size:13px;padding:8px 16px}.nav{min-height:0;padding:14px 0 6px}.nav-right{display:none}.app-pill{display:inline-flex;align-items:center}.hero-top{margin:12px 0 24px;gap:16px}.hero-side{padding-bottom:0}.hero-side p.muted{font-size:17px!important}.kicker{font-size:26px}.price b{font-size:38px}.hero-img{height:240px;border-radius:20px}}
 </style>
 </head>
 <body>
@@ -172,7 +173,9 @@ footer .wordmark{color:var(--cream)}
 <span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#183a2e"/><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"/><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
 <small>Laundry pickup &amp; delivery</small>
 </a>
+<button type="button" class="app-pill" data-get-app hidden>Get the app</button>
 <div class="nav-right">
+<button type="button" class="link-btn" data-get-app hidden>Get the app</button>
 <span class="muted">Questions? Text <a data-sms href="#"><span data-fill="phone"></span></a></span>
 <a href="#book" class="btn">Book a pickup</a>
 </div>
@@ -240,7 +243,7 @@ footer .wordmark{color:var(--cream)}
 <a class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
 <button class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
 </div>
-<p class="muted" id="homeTip" style="margin:16px 0 0;font-size:14px">Next time, skip the browser. Add Loads to your home screen: on iPhone tap Share, then Add to Home Screen. On Android tap the ⋮ menu, then Add to Home screen.</p>
+<button type="button" class="link-btn" id="homeTip" data-get-app hidden style="margin-top:16px">Next time, skip the browser: add Loads to your home screen</button>
 </div>
 
 <div class="panel-foot"><span>No subscription</span><span>Pay by the pound</span><span>Or text PICKUP to <a data-sms href="#"><span data-fill="phone"></span></a></span></div>
@@ -357,7 +360,7 @@ footer .wordmark{color:var(--cream)}
 <p style="margin:14px 0 0;max-width:26em">Laundry pickup and delivery in Koreatown, Downtown LA, Van Nuys and Sherman Oaks, washed and folded at our own laundromats.</p>
 </div>
 <div><h3>Our laundromats</h3><div data-fill="store1"></div><div data-fill="store2" style="margin-top:6px"></div></div>
-<div><h3>Contact</h3><div><a data-sms href="#"><span data-fill="phone"></span></a></div><div style="margin-top:6px"><span data-fill="email"></span></div><div style="margin-top:14px"><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></div></div>
+<div><h3>Contact</h3><div><a data-sms href="#"><span data-fill="phone"></span></a></div><div style="margin-top:6px"><span data-fill="email"></span></div><div style="margin-top:6px"><a href="#" data-get-app hidden>Get the app</a></div><div style="margin-top:14px"><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></div></div>
 </div>
 <p style="margin:36px 0 0;font-size:14px;color:#93a89b">&copy; <span id="year">2026</span> Loads Laundry Co. We do loads.</p>
 </div>
@@ -366,6 +369,7 @@ footer .wordmark{color:var(--cream)}
 <div class="mbar"><div><b>$<span data-price></span>/lb</b><small>K-town to Sherman Oaks</small></div><a href="#book" class="btn">Book a pickup</a></div>
 
 <script src="config.js"></script>
+<script src="app-install.js" defer></script>
 <script src="preview-nav.js"></script>
 <script>
 const CONFIG = window.LOADS_CONFIG;
@@ -536,7 +540,6 @@ const CONFIG = window.LOADS_CONFIG;
       track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
       $('#doneText').textContent = "We'll text you at " + payload.phone + ' to confirm your pickup on ' + booking.pickup_label + '. Leave your bag by the door.';
       $('#trackLink').href = trackUrl;
-      $('#homeTip').hidden = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
       show(s2, false); show(s3, true); msg(m, '');
     } catch (err) {
       msg(m, "Something went wrong. Text PICKUP to " + (CONFIG.phoneDisplay || 'us') + " and we'll book you by text.", true);

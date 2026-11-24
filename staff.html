@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app="staff">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,7 +65,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 </head>
 <body>
 <header>
-<div class="hrow"><h1>Today's loads</h1><button class="ghost" id="refresh" type="button">Refresh</button></div>
+<div class="hrow"><h1>Today's loads</h1><div style="display:flex;gap:8px"><button class="ghost" type="button" data-get-app hidden>Get app</button><button class="ghost" id="refresh" type="button">Refresh</button></div></div>
 <div class="summary" id="summary"></div>
 <div class="filters" id="filters"></div>
 </header>
@@ -84,6 +84,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 </main>
 
 <script src="config.js"></script>
+<script src="app-install.js" defer></script>
 <script src="preview-nav.js"></script>
 <script>
 (function () {
