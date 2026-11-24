@@ -154,7 +154,7 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
   }
 
   /* ---------- new booking alert ---------- */
-  let known = null, audio = null;
+  let known = null, wasPaid = null, audio = null;
   document.addEventListener('pointerdown', () => {   // phones only allow sound after a first tap
     try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); } catch (e) {}
   });
@@ -171,20 +171,26 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
     } catch (e) {}
     try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {}
   }
+  function banner(text) {
+    $('#newbar').textContent = text; $('#newbar').hidden = false;
+    clearTimeout(banner.t); banner.t = setTimeout(() => { $('#newbar').hidden = true; }, 30000);
+  }
   function newOrders(fresh) {
     const ids = new Set(fresh.map(o => o.id));
+    const paidNow = new Set(fresh.filter(o => o.paid).map(o => o.id));
     if (known) {
       const added = fresh.filter(o => !known.has(o.id) && o.stage === 'booked');
+      // a customer paid since the last refresh (Square link or saved card)
+      const justPaid = fresh.filter(o => o.paid && wasPaid && !wasPaid.has(o.id) && known.has(o.id));
       if (added.length) {
         chime();
-        $('#newbar').textContent = added.length === 1
-          ? 'New booking: ' + added[0].name + ', pickup ' + added[0].pickup_label
-          : added.length + ' new bookings';
-        $('#newbar').hidden = false;
-        clearTimeout(newOrders.t); newOrders.t = setTimeout(() => { $('#newbar').hidden = true; }, 30000);
+        banner(added.length === 1 ? 'New booking: ' + added[0].name + ', pickup ' + added[0].pickup_label : added.length + ' new bookings');
+      } else if (justPaid.length) {
+        chime();
+        banner(justPaid.length === 1 ? justPaid[0].name + ' paid. Ready to go out for delivery.' : justPaid.length + ' customers paid. Ready to go out.');
       }
     }
-    known = ids;
+    known = ids; wasPaid = paidNow;
   }
 
   /* ---------- preview data ---------- */
