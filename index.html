@@ -295,7 +295,8 @@ footer .wordmark{color:var(--cream)}
 <div class="ticket-bottom">
 <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><label data-i18n="sizeLabel" for="lbs" style="font-size:16px;color:var(--ink)">How big is your load?</label><span class="muted" style="font-size:15px" id="lbsText"></span></div>
 <input id="lbs" type="range" min="5" max="50" step="1" value="15">
-<div class="total"><span data-i18n="estTotal" style="font-weight:600">Estimated total</span><b id="total"></b></div>
+<div class="total"><span data-i18n="estTotal" style="font-weight:600">Estimate</span><b id="total"></b></div>
+<p class="muted" style="margin:0 0 10px;font-size:13px;text-align:right" id="tripNote"></p>
 <p class="muted" style="margin:0 0 20px;font-size:14px" id="totalNote"></p>
 <a data-i18n="bookMy" href="#book" class="btn">Book my pickup</a>
 <p data-i18n="weeklyNudge" style="margin:14px 0 0;font-size:15px;text-align:center"><a href="#weekly">Every week? Loads Weekly saves about $<span data-plan="save"></span> a month</a></p>
@@ -430,7 +431,7 @@ footer .wordmark{color:var(--cream)}
 <div class="mbar"><div><b>$<span data-price></span>/lb</b><small data-i18n="mbarSmall">K-town to Sherman Oaks</small></div><a data-i18n="bookShort" href="#book" class="btn">Book a pickup</a></div>
 
 <script src="config.js?v=3"></script>
-<script src="i18n.js?v=3"></script>
+<script src="i18n.js?v=4"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -705,10 +706,11 @@ const CONFIG = window.LOADS_CONFIG;
     const hamper = h <= 0.5 ? t('hHalf') : h === 1 ? t('hOne') : t('hMany', { n: h });
     $('#lbsText').textContent = t('lbsLine', { n, hamper });
     const laundry = n * CONFIG.pricePerLb, min = Number(CONFIG.minOrder) || 0;
-    const delivery = CONFIG.deliveryFee * (CONFIG.tripsPerOrder || 2);         // $6.99 each way
-    $('#total').textContent = '$' + (Math.max(laundry, min) + delivery).toFixed(2);
+    // Laundry only; the per-trip charge sits in small print under the number.
+    $('#total').textContent = '$' + Math.max(laundry, min).toFixed(2);
+    $('#tripNote').textContent = t('tripNote', { fee: CONFIG.deliveryFee.toFixed(2) });
     const minNote = min && laundry < min ? t('estMin', { min }) : '';
-    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? t('estFirst', { fee: delivery.toFixed(2) }) : t('estPlain'));
+    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? t('estFirst') : t('estPlain'));
   }
   lbs.addEventListener('input', estimate); estimate();
 
