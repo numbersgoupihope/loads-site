@@ -189,7 +189,8 @@ details.done[open] summary::after{content:'Hide'}
     try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {}
   }
   function banner(text) {
-    $('#newbar').textContent = text; $('#newbar').hidden = false;
+    // sit just under the sticky header, so the banner shows even when scrolled down the list
+    $('#newbar').textContent = text; $('#newbar').style.top = ($('header').offsetHeight + 8) + 'px'; $('#newbar').hidden = false;
     clearTimeout(banner.t); banner.t = setTimeout(() => { $('#newbar').hidden = true; }, 30000);
   }
   function newOrders(fresh) {
@@ -379,7 +380,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-23g';
+  const PAGE_VERSION = '2026-11-23h';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
