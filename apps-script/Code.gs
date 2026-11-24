@@ -5,6 +5,7 @@
  *  - Emails a notice for every new booking.
  *  - Answers the customer tracking page.
  *  - Takes stage updates from the staff page.
+ *  - Bills customers through Square when staff tap "Send bill" (see Square.gs).
  *
  * Setup: README.md, step 1.
  */
@@ -28,7 +29,8 @@ const BOOKING_HEADERS = [
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
   'gclid', 'gbraid', 'wbraid', 'fbclid', 'ttclid',
   'first_utm_source', 'first_utm_medium', 'first_utm_campaign', 'first_utm_content',
-  'landing_page', 'referrer', 'first_seen', 'submitted_at', 'user_agent'
+  'landing_page', 'referrer', 'first_seen', 'submitted_at', 'user_agent', 'lang',
+  'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at'
 ];
 
 const WAITLIST_HEADERS = [
@@ -111,6 +113,11 @@ function track_(id, token) {
   const t = table_('Bookings');
   const r = t && t.rows.filter(function (row) { return String(row.booking_id) === String(id); })[0];
   if (!r || !token || String(r.track_token) !== String(token)) return { ok: false, error: 'not_found' };
+  if (r.square_invoice_id && !r.paid_at) {
+    syncPaid_(id);
+    const fresh = find_(table_('Bookings'), id);
+    if (fresh) r.paid_at = fresh.paid_at;
+  }
   return {
     ok: true,
     order: {
@@ -141,12 +148,23 @@ function staff_(req) {
   lock.tryLock(10000);
   try {
     sheet_('Bookings', BOOKING_HEADERS);                  // adds any new columns to an older sheet
-    let error = '';
+    let error = '', message = '', bill = null;
+    if (req.action === 'list') syncPaid_();
     if (req.action === 'set_stage') error = setStage_(req.id, req.stage) || '';
     if (req.action === 'set_weight') setWeight_(req.id, req.weight_lbs, req.order_total);
     if (req.action === 'set_paid') setPaid_(req.id, req.paid);
+    if (req.action === 'send_bill') {
+      try {
+        const res = sendBill_(req.id);
+        if (res.error) { error = res.error; message = res.message || ''; } else bill = res.bill;
+      } catch (e) {
+        error = 'square'; message = String(e && e.message || e);
+      }
+    }
     const out = { ok: !error, orders: list_() };
     if (error) out.error = error;
+    if (message) out.message = message;
+    if (bill) out.bill = bill;
     return out;
   } finally {
     lock.releaseLock();
@@ -173,7 +191,13 @@ function setWeight_(id, weight, total) {
   const r = t && find_(t, id);
   if (!r) return;
   const w = Number(weight), tot = Number(total);
-  write_(t, r, { weight_lbs: isFinite(w) && w > 0 ? w : '', order_total: isFinite(tot) && tot > 0 ? tot : '' });
+  const updates = { weight_lbs: isFinite(w) && w > 0 ? w : '', order_total: isFinite(tot) && tot > 0 ? tot : '' };
+  // A bill already went out for a different amount: cancel it so the old link can't be paid.
+  if (r.square_invoice_id && !r.paid_at && Number(r.square_bill_total) !== updates.order_total) {
+    cancelInvoice_(r.square_invoice_id);
+    Object.assign(updates, { square_invoice_id: '', square_bill_url: '', square_bill_total: '', bill_sent_at: '' });
+  }
+  write_(t, r, updates);
 }
 
 function setPaid_(id, paid) {
@@ -211,6 +235,8 @@ function list_() {
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,
         first_order_offer: String(r.first_order_offer || ''), first_order: String(r.first_order || ''),
         paid: !!r.paid_at, track_url: String(r.track_url || ''),
+        bill_url: String(r.square_bill_url || ''), bill_total: r.square_bill_total === '' ? '' : Number(r.square_bill_total) || '',
+        bill_sent: !!r.bill_sent_at, lang: String(r.lang || ''),
         updated: iso_(r.stage_updated_at)
       };
     })
