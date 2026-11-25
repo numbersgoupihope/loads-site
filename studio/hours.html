@@ -1,0 +1,145 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>62 hours</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/Bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:'Instrument Serif';src:url('fonts/InstrumentSerif-Italic.ttf') format('truetype');font-style:italic}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#183a2e}
+body{font-family:'Bricolage Grotesque',sans-serif;color:#f3ede2;position:relative}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-stretch:normal}
+.abs{position:absolute;transform-origin:50% 50%}
+.brand{left:84px;top:150px;font-size:56px;font-weight:800;font-stretch:85%;letter-spacing:-.03em}
+.handle{right:84px;top:166px;font-size:30px;color:#b9d6bb}
+.l1{left:84px;top:300px;font-size:92px;font-weight:700;transform-origin:0 50%}
+.big{left:70px;top:380px;font-size:420px;font-weight:800;font-stretch:78%;letter-spacing:-.04em;line-height:1;transform-origin:0 70%}
+.big span{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-size:150px;color:#f2a5c0;letter-spacing:0;margin-left:16px}
+.l3{left:84px;top:820px;font-size:92px;font-weight:700;line-height:1;transform-origin:0 50%}
+.src{left:84px;top:1600px;font-size:26px;color:#7fa391}
+.kick{left:84px;top:300px;font-size:34px;font-weight:700;letter-spacing:.16em;color:#b9d6bb}
+.icon{left:340px;top:560px;width:400px;height:400px}
+.num{left:0;right:0;top:1000px;text-align:center;font-size:300px;font-weight:800;font-stretch:78%;letter-spacing:-.03em;line-height:1}
+.lab{left:0;right:0;top:1300px;text-align:center;font-size:96px;line-height:1}
+.lab.serif{color:#f2a5c0}
+.or{left:84px;top:330px;font-size:170px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9;transform-origin:0 50%}
+.or .serif{color:#f2a5c0;font-size:1.08em}
+.url{left:84px;top:760px;background:#f3ede2;color:#183a2e;border-radius:999px;padding:22px 42px;font-size:48px;font-weight:700;transform-origin:0 50%}
+.bl{left:330px;top:1100px;width:420px;height:500px;transform-origin:50% 100%}
+.clock{left:290px;top:1050px;width:500px;height:500px}
+.sp{width:70px;height:70px;left:0;top:0}
+</style></head><body>
+<div class="abs brand">Loads</div><div class="abs handle">@loadspickup</div>
+
+<!-- hook -->
+<div class="abs l1" id="l1">You spend</div>
+<div class="abs big" id="bignum"><b id="n62">0</b><span>hours</span></div>
+<div class="abs l3" id="l3">a year doing<br>laundry.</div>
+<svg class="abs clock" id="clock" viewBox="0 0 500 500">
+  <circle cx="250" cy="250" r="220" fill="#f3ede2" stroke="#14251f" stroke-width="14"/>
+  <g stroke="#14251f" stroke-width="10" stroke-linecap="round">
+    <path d="M250 50 L250 80 M450 250 L420 250 M250 450 L250 420 M50 250 L80 250"/>
+  </g>
+  <path id="hrH" d="M250 250 L250 150" stroke="#14251f" stroke-width="18" stroke-linecap="round"/>
+  <path id="mnH" d="M250 250 L250 90" stroke="#c4235f" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="250" cy="250" r="16" fill="#14251f"/>
+</svg>
+<div class="abs src" id="src">Source: American Time Use Survey</div>
+
+<!-- what 62 hours buys -->
+<div class="abs kick" id="kick">62 HOURS IS…</div>
+<svg class="abs icon" id="ic0" viewBox="0 0 400 400" style="overflow:visible">
+  <path d="M90 150 L310 150 L280 370 L120 370 Z" fill="#f3ede2" stroke="#14251f" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M130 150 L150 370 M200 150 L200 370 M270 150 L250 370" stroke="#c4235f" stroke-width="22"/>
+  <path d="M90 150 L310 150 L280 370 L120 370 Z" fill="none" stroke="#14251f" stroke-width="10" stroke-linejoin="round"/>
+  <g fill="#fff6dc" stroke="#14251f" stroke-width="8">
+    <circle cx="120" cy="140" r="36"/><circle cx="175" cy="110" r="40"/><circle cx="235" cy="118" r="38"/><circle cx="285" cy="140" r="34"/><circle cx="205" cy="70" r="34"/><circle cx="150" cy="70" r="28"/><circle cx="255" cy="74" r="28"/>
+  </g>
+</svg>
+<svg class="abs icon" id="ic1" viewBox="0 0 400 400" style="overflow:visible">
+  <path d="M140 40 L260 40 C262 130 240 190 200 200 C160 190 138 130 140 40 Z" fill="#e8f0ea" stroke="#14251f" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M146 90 L254 90 C250 150 232 184 200 190 C168 184 150 150 146 90 Z" fill="#f4a24a"/>
+  <path d="M200 200 L200 340 M140 350 L260 350" stroke="#14251f" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="178" cy="130" r="7" fill="#fff" opacity=".8"/><circle cx="215" cy="150" r="5" fill="#fff" opacity=".8"/><circle cx="196" cy="112" r="5" fill="#fff" opacity=".8"/>
+  <path d="M262 40 C290 30 312 46 304 72 C296 96 266 92 258 72" fill="#f4a24a" stroke="#14251f" stroke-width="8"/>
+</svg>
+<svg class="abs icon" id="ic2" viewBox="0 0 400 400" style="overflow:visible">
+  <g transform="rotate(-28 200 200)">
+    <path d="M60 200 C60 184 80 176 110 176 L300 176 C340 176 360 190 360 200 C360 210 340 224 300 224 L110 224 C80 224 60 216 60 200 Z" fill="#f3ede2" stroke="#14251f" stroke-width="10"/>
+    <path d="M190 180 L120 70 L160 70 L250 180 Z M190 220 L120 330 L160 330 L250 220 Z" fill="#f2a5c0" stroke="#14251f" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M80 182 L50 130 L78 130 L110 180 Z" fill="#f2a5c0" stroke="#14251f" stroke-width="8" stroke-linejoin="round"/>
+    <circle cx="300" cy="200" r="9" fill="#14251f"/><circle cx="270" cy="200" r="9" fill="#14251f"/><circle cx="240" cy="200" r="9" fill="#14251f"/>
+  </g>
+</svg>
+<svg class="abs icon" id="ic3" viewBox="0 0 400 400" style="overflow:visible">
+  <rect x="110" y="20" width="180" height="360" rx="34" fill="#14251f"/>
+  <rect x="124" y="50" width="152" height="300" rx="14" fill="#f2a5c0"/>
+  <rect x="140" y="70" width="120" height="70" rx="10" fill="#f3ede2"/><rect x="140" y="155" width="120" height="70" rx="10" fill="#f3ede2"/><rect x="140" y="240" width="120" height="70" rx="10" fill="#f3ede2"/>
+  <rect x="170" y="30" width="60" height="10" rx="5" fill="#2f5a4b"/>
+</svg>
+<div class="abs num" id="nm0">31</div><div class="abs lab serif" id="lb0">movies</div>
+<div class="abs num" id="nm1">41</div><div class="abs lab serif" id="lb1">bottomless brunches</div>
+<div class="abs num" id="nm2">5</div><div class="abs lab serif" id="lb2">flights to Tokyo</div>
+<div class="abs num" id="nm3">3,720</div><div class="abs lab serif" id="lb3">minutes of scrolling</div>
+
+<!-- payoff -->
+<div class="abs or" id="or">Or let<br>Big Load <span class="serif">do it.</span></div>
+<div class="abs url" id="url">loadspickup.com</div>
+<div class="abs bl" id="bl"></div>
+<svg class="abs sp" id="sp0" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#f3ede2"/></svg>
+<svg class="abs sp" id="sp1" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#f2a5c0"/></svg>
+<svg class="abs sp" id="sp2" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#b9d6bb"/></svg>
+
+<script src="lib.js"></script>
+<script>
+$('#bl').innerHTML = bigLoadSVG('big');
+const big = $('#big');
+const DUR = 12.0;
+const HOOK = [0, 2.8], ITEMS = [[2.8, 4.1], [4.1, 5.4], [5.4, 6.7], [6.7, 8.1]], PAY = 8.1;
+
+function seek(t) {
+  t = Math.min(t, DUR - 0.0001);
+  // ---- hook: count up to 62
+  const hOut = E.in(prog(t, HOOK[1] - 0.25, 0.25));
+  const n = Math.round(62 * E.out(prog(t, 0.05, 1.5)));
+  $('#n62').textContent = n;
+  const hit = t > 1.55 && t < 2.0 ? E.elastic(prog(t, 1.55, 0.45)) : 1;
+  put('#l1', { o: (1 - hOut) * E.out(prog(t, -0.2, 0.3)), y: -hOut * 60 });
+  put("#bignum", { s: (t > 1.55 && t < 2.0 ? lerp(1.12, 1, hit) : 1), o: 1 - hOut, y: -hOut * 60 });
+  put('#l3', { o: E.out(prog(t, 0.25, 0.35)) * (1 - hOut), y: (1 - E.out(prog(t, 0.25, 0.35))) * 40 - hOut * 60 });
+  put('#src', { o: E.out(prog(t, 0.6, 0.4)) * (1 - hOut) });
+  // clock spins fast while counting, then settles
+  const spin = 62 * 360 * E.out(prog(t, 0.05, 1.5));
+  $('#mnH').setAttribute('transform', `rotate(${spin} 250 250)`);
+  $('#hrH').setAttribute('transform', `rotate(${spin / 12} 250 250)`);
+  put('#clock', { o: 1 - hOut, s: (t > 1.55 && t < 2.0 ? lerp(1.08, 1, hit) : 1) * (1 - hOut * 0.3), y: hOut * 200 });
+
+  // ---- items: icon pops, number + label slide in, then slide out left
+  const kIn = E.out(prog(t, ITEMS[0][0], 0.3)), kOut = E.in(prog(t, PAY - 0.2, 0.2));
+  put('#kick', { o: kIn * (1 - kOut) });
+  ITEMS.forEach(([a, b], i) => {
+    const pop = E.back(prog(t, a, 0.4)), out = E.in(prog(t, b - 0.2, 0.2));
+    const on = t >= a && t < b ? 1 : 0;
+    const wig = Math.sin((t - a) * 6) * 4;
+    put('#ic' + i, { s: Math.max(0.001, pop) * (1 - out * 0.4), r: wig, x: -out * 900, o: on });
+    const ti = E.out(prog(t, a + 0.08, 0.35));
+    put('#nm' + i, { y: (1 - ti) * 80, x: -out * 900, o: on * ti });
+    const li = E.out(prog(t, a + 0.18, 0.35));
+    put('#lb' + i, { y: (1 - li) * 60, x: -out * 900, o: on * li });
+  });
+
+  // ---- payoff
+  const oIn = E.out(prog(t, PAY + 0.05, 0.4));
+  put('#or', { y: (1 - oIn) * 80, o: oIn });
+  const uIn = E.back(prog(t, PAY + 1.4, 0.45));
+  put('#url', { s: Math.max(0.001, uIn), o: prog(t, PAY + 1.4, 0.1) });
+  const ip = prog(t, PAY + 0.35, 0.55), h = hop(ip, 260), l = land(prog(t, PAY + 0.9, 0.3));
+  const bob = t > PAY + 1.2 ? Math.sin((t - PAY) * 3.4) * 0.015 : 0;
+  put('#bl', { y: h.y + lerp(900, 0, E.out(Math.min(1, ip * 1.6))), sx: 1.35 * h.sx * l.sx * (1 - bob), sy: 1.35 * h.sy * l.sy * (1 + bob), o: t >= PAY + 0.35 ? 1 : 0 });
+  const sip = E.inOut(prog(t, PAY + 2.0, 0.35)) * (1 - E.inOut(prog(t, PAY + 3.0, 0.35)));
+  blPose(big, { sip, smile: 1, glint: prog(t, PAY + 1.1, 0.35) < 1 && t > PAY + 1.1 ? prog(t, PAY + 1.1, 0.35) : 0, wave: t > PAY + 1.2 && t < PAY + 2.0 ? 60 * Math.sin(prog(t, PAY + 1.2, 0.8) * Math.PI) : 0 });
+  [[880, 1050], [140, 1150], [930, 1350]].forEach(([x, y], k) => {
+    const q = prog(t, PAY + 0.9 + k * 0.06, 0.55);
+    put('#sp' + k, { x, y, s: Math.sin(q * Math.PI) * 1.1, r: q * 90, o: q > 0 && q < 1 ? 1 : 0 });
+  });
+}
+seek(0);
+</script>
+</body></html>

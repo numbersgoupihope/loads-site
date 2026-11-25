@@ -1,0 +1,163 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Loading…</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/Bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:'Instrument Serif';src:url('fonts/InstrumentSerif-Italic.ttf') format('truetype');font-style:italic}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#183a2e}
+body{font-family:'Bricolage Grotesque',sans-serif;color:#f3ede2;position:relative}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-stretch:normal}
+.abs{position:absolute;transform-origin:50% 50%}
+.brand{left:84px;top:150px;font-size:56px;font-weight:800;font-stretch:85%;letter-spacing:-.03em}
+.handle{right:84px;top:166px;font-size:30px;color:#b9d6bb}
+.h{left:84px;top:300px;font-size:168px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9;transform-origin:0 50%}
+.h .serif{color:#f2a5c0;font-size:1.08em}
+.status{left:88px;top:690px;font-size:58px;color:#b9d6bb;white-space:nowrap;transform-origin:0 50%}
+.pct{right:110px;top:640px;font-size:110px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;transform-origin:100% 50%}
+.bar{left:84px;top:800px;width:912px;height:92px;border:7px solid #f3ede2;border-radius:999px;box-sizing:border-box;padding:9px;transform-origin:50% 50%}
+.fill{height:100%;border-radius:999px;background:#c4235f;width:0}
+.sub{left:84px;top:930px;font-size:44px;line-height:1.25;color:#f3ede2;transform-origin:0 50%}
+.sub b{color:#f2a5c0}
+.hamper{left:130px;top:1220px;width:400px;height:440px;transform-origin:50% 100%}
+.bl{left:490px;top:1160px;width:420px;height:500px;transform-origin:50% 100%}
+.item{left:0;top:0;width:120px;height:120px;transform-origin:50% 50%}
+.stink{left:282px;top:1040px;width:140px;height:160px}
+.sparkle{width:70px;height:70px;left:0;top:0}
+</style></head><body>
+<div class="abs brand">Loads</div><div class="abs handle">@loadspickup</div>
+
+<div class="abs h" id="h1">Your<br>Sunday</div>
+<div class="abs h" id="h2">Sunday,<br><span class="serif">fully loaded.</span></div>
+
+<div class="abs status" id="st0"><span class="serif">sorting darks…</span></div>
+<div class="abs status" id="st1"><span class="serif">waiting for a dryer…</span></div>
+<div class="abs status" id="st2"><span class="serif">matching socks…</span></div>
+<div class="abs status" id="st3"><span class="serif">this is taking all day.</span></div>
+<div class="abs status" id="st4"><span class="serif" style="color:#f2a5c0">done. obviously.</span></div>
+<div class="abs pct" id="pct">0%</div>
+<div class="abs bar" id="bar"><div class="fill" id="fill"></div></div>
+<div class="abs sub" id="sub">We pick up, wash, fold<br>and bring it back. <b>loadspickup.com</b></div>
+
+<svg class="abs stink" id="stink" viewBox="0 0 140 160" style="overflow:visible">
+  <path d="M30 150 C10 120 50 100 30 70 C10 40 50 30 34 4" stroke="#b9d6bb" stroke-width="8" fill="none" stroke-linecap="round" opacity=".7"/>
+  <path d="M80 150 C60 120 100 100 80 70 C60 40 100 30 84 4" stroke="#b9d6bb" stroke-width="8" fill="none" stroke-linecap="round" opacity=".7"/>
+</svg>
+
+<div class="abs hamper" id="hamper">
+<svg viewBox="0 0 400 440" width="400" height="440" style="overflow:visible">
+  <ellipse cx="200" cy="430" rx="170" ry="14" fill="#000" opacity=".22"/>
+  <g id="pile">
+    <path d="M70 170 C60 110 120 80 160 104 C180 60 250 64 262 108 C300 86 352 120 330 172 Z" fill="#f2e2d5" stroke="#14251f" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M96 168 C100 130 150 118 176 140 C196 112 240 120 246 150 L250 170 Z" fill="#c4235f" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M232 170 C236 132 290 122 308 160 L310 170 Z" fill="#b9d6bb" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M300 150 C330 170 344 210 336 260 C334 272 320 274 318 262 C322 220 312 190 292 172 Z" fill="#f2a5c0" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+  <path d="M50 170 L350 170 L320 420 C318 428 312 432 304 432 L96 432 C88 432 82 428 80 420 Z" fill="#d9c6a5" stroke="#14251f" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M70 220 L332 220 M78 280 L324 280 M86 340 L316 340" stroke="#b9a37f" stroke-width="7" stroke-linecap="round"/>
+  <path d="M140 172 L130 430 M200 172 L200 430 M260 172 L270 430" stroke="#b9a37f" stroke-width="6" stroke-linecap="round"/>
+  <rect x="40" y="156" width="320" height="30" rx="12" fill="#e6d6b8" stroke="#14251f" stroke-width="8"/>
+</svg>
+</div>
+
+<div class="abs item" id="i0"><svg viewBox="0 0 120 120" width="120" height="120" style="overflow:visible"><path d="M30 20 L50 12 C54 22 66 22 70 12 L90 20 L108 44 L92 54 L88 46 L88 104 L32 104 L32 46 L28 54 L12 44 Z" fill="#c4235f" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/></svg></div>
+<div class="abs item" id="i1"><svg viewBox="0 0 120 120" width="120" height="120" style="overflow:visible"><path d="M44 10 L72 10 L72 64 C72 70 76 74 82 76 L100 82 C112 86 112 106 98 108 L60 108 C48 108 42 100 42 90 Z" fill="#f2a5c0" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/><path d="M44 24 L72 24 M44 36 L72 36" stroke="#f3ede2" stroke-width="6"/></svg></div>
+<div class="abs item" id="i2"><svg viewBox="0 0 120 120" width="120" height="120" style="overflow:visible"><rect x="10" y="30" width="100" height="62" rx="12" fill="#b9d6bb" stroke="#14251f" stroke-width="7"/><path d="M10 70 L110 70" stroke="#14251f" stroke-width="5" opacity=".35"/></svg></div>
+<div class="abs item" id="i3"><svg viewBox="0 0 120 120" width="120" height="120" style="overflow:visible"><path d="M20 30 L100 30 L96 92 C96 98 92 102 86 102 L34 102 C28 102 24 98 24 92 Z" fill="#f3ede2" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/><path d="M40 30 C40 50 80 50 80 30" stroke="#14251f" stroke-width="6" fill="none"/></svg></div>
+
+<div class="abs bl" id="bl"></div>
+<svg class="abs sparkle" id="sp0" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#f3ede2"/></svg>
+<svg class="abs sparkle" id="sp1" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#f2a5c0"/></svg>
+<svg class="abs sparkle" id="sp2" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#b9d6bb"/></svg>
+
+<script src="lib.js"></script>
+<script>
+$('#bl').innerHTML = bigLoadSVG('big');
+const big = $('#big');
+const DUR = 8.0;
+const BL_S = 1.2;
+// where the clothes land: Big Load's open top, in page px
+const blBox = { left: 490, top: 1160, w: 420, h: 500 };
+const mouth = { x: blBox.left + blBox.w / 2 + (210 - 210) * BL_S, y: blBox.top + blBox.h - (500 - 118) * BL_S };
+const hamperTop = { x: 330, y: 1660 - (440 - 150) * 1.2 };
+
+function pctAt(t) {
+  if (t < 3.0) return Math.floor(12 * E.out(prog(t, 0.1, 2.9)) + 0.0001);
+  if (t < 4.5) return 12;
+  if (t < 5.05) return Math.round(lerp(12, 100, E.inOut(prog(t, 4.5, 0.55))));
+  if (t < 7.35) return 100;
+  return Math.round(lerp(100, 0, E.inOut(prog(t, 7.35, 0.5))));
+}
+
+function seek(t) {
+  t = Math.min(t, DUR - 0.0001);
+  // headline swap: old line leaves, then the new one arrives
+  const h1out = E.in(prog(t, 4.95, 0.2)), h2in = E.out(prog(t, 5.12, 0.38));
+  const h2out = E.in(prog(t, 7.3, 0.2)), h1in = E.out(prog(t, 7.48, 0.38));
+  const back = E.inOut(prog(t, 7.3, 0.6));
+  if (t < 7.3) put('#h1', { y: -50 * h1out, o: 1 - h1out });
+  else put('#h1', { y: 50 * (1 - h1in), o: h1in });
+  put('#h2', { y: 50 * (1 - h2in) - 50 * h2out, o: h2in * (1 - h2out) });
+
+  // status lines
+  const st = [[0, 1.0], [1.0, 2.0], [2.0, 3.0], [3.0, 5.05], [5.05, 7.3]];
+  st.forEach(([a, b], i) => {
+    const fi = i === 0 ? 1 : E.out(prog(t, a + 0.12, 0.22)), fo = E.in(prog(t, b, 0.15));
+    let o = fi * (1 - fo), y = (1 - fi) * 24 - fo * 24;
+    if (i === 0 && t >= 7.3) { const q = E.out(prog(t, 7.5, 0.3)); o = q; y = (1 - q) * 24; }
+    put('#st' + i, { y, o });
+  });
+  // stall shake
+  const shake = t > 3.05 && t < 3.6 ? Math.sin(t * 70) * 6 * (1 - prog(t, 3.05, 0.55)) : 0;
+
+  // bar and percent
+  const p = pctAt(t);
+  $('#pct').textContent = p + '%';
+  $('#fill').style.width = p + '%';
+  const done = prog(t, 5.0, 0.15) * (1 - back);
+  $('#fill').style.background = done > 0.5 ? '#b9d6bb' : '#c4235f';
+  const punch = t > 5.0 && t < 5.5 ? E.elastic(prog(t, 5.0, 0.5)) : 1;
+  put('#bar', { x: shake, s: t > 5.0 && t < 5.5 ? lerp(1.06, 1, punch) : 1 });
+  put('#pct', { x: shake, s: t > 5.0 && t < 5.5 ? lerp(1.25, 1, punch) : 1 });
+
+  // tagline + url on the end card
+  const subIn = E.out(prog(t, 5.5, 0.5));
+  put('#sub', { y: (1 - subIn) * 30, o: subIn * (1 - E.in(prog(t, 7.3, 0.25))) });
+
+  // hamper: wobbles while waiting, items leave, comes back on reset
+  const wob = t < 4.4 ? (Math.sin(t * Math.PI * 1.5) * 2.2 + (t > 3.0 && t < 3.6 ? Math.sin(t * 40) * 3 : 0)) * (1 - prog(t, 4.0, 0.4)) : 0;
+  const hx = t < 5.3 ? 0 : t < 7.35 ? -700 * E.in(prog(t, 5.3, 0.45)) : lerp(-700, 0, E.out(prog(t, 7.35, 0.5)));
+  put('#hamper', { r: wob, x: hx, s: 1.2 });
+  $('#pile').style.opacity = (t < 4.55 || t >= 7.3) ? 1 : 0;
+  put('#stink', { y: -((t * 45) % 30), o: (t < 4.5 ? 0.9 * (1 - prog(t, 4.2, 0.3)) : t >= 7.5 ? 0.9 * prog(t, 7.5, 0.4) : 0) * (0.6 + 0.4 * Math.sin(t * Math.PI * 1.5)) });
+
+  // Big Load: slides in from the right, lands, gulps, sips, slides out on reset
+  const inP = prog(t, 3.5, 0.6);
+  const hp = hop(inP, 140);
+  const lp = land(prog(t, 4.1, 0.3));
+  // gulps as each item lands
+  let gulp = 0;
+  [4.75, 4.85, 4.95, 5.05].forEach(g => { const q = prog(t, g, 0.18); if (q > 0 && q < 1) gulp = Math.max(gulp, Math.sin(q * Math.PI)); });
+  const bob = t > 5.3 && t < 7.3 ? Math.sin((t - 5.3) * 4.4) * 0.018 : 0;
+  const out = E.in(prog(t, 7.3, 0.5));
+  const x = lerp(760, 0, E.out(inP)) + out * 760;
+  put('#bl', { x, y: hp.y, sx: BL_S * hp.sx * lp.sx * (1 + 0.1 * gulp) * (1 - bob), sy: BL_S * hp.sy * lp.sy * (1 - 0.1 * gulp) * (1 + bob), o: t < 3.5 ? 0 : 1 });
+  const sip = E.inOut(prog(t, 5.6, 0.35)) * (1 - E.inOut(prog(t, 6.6, 0.35)));
+  blPose(big, { sip, wave: 0, smile: prog(t, 5.0, 0.3), glint: (t > 4.25 && t < 4.55) ? prog(t, 4.25, 0.3) : 0 });
+
+  // clothes fly from hamper into Big Load
+  ['#i0', '#i1', '#i2', '#i3'].forEach((id, k) => {
+    const a = 4.45 + k * 0.1, q = prog(t, a, 0.32);
+    const sx = hamperTop.x - 60 + (k - 1.5) * 40, sy = hamperTop.y - 60;
+    const ex = mouth.x - 60, ey = mouth.y - 60;
+    const x2 = lerp(sx, ex, q), y2 = lerp(sy, ey, q) - Math.sin(q * Math.PI) * 300;
+    put(id, { x: x2, y: y2, r: q * 360 * (k % 2 ? -1 : 1), s: lerp(1, 0.55, q), o: q > 0 && q < 1 ? 1 : 0 });
+  });
+
+  // sparkles on "done"
+  [[880, 760], [130, 640], [960, 1000]].forEach(([sx, sy], k) => {
+    const q = prog(t, 5.0 + k * 0.08, 0.6);
+    put('#sp' + k, { x: sx, y: sy, s: Math.sin(q * Math.PI) * 1.1, r: q * 90, o: q > 0 && q < 1 ? 1 : 0 });
+  });
+}
+seek(0);
+</script>
+</body></html>

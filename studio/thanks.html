@@ -1,0 +1,165 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Thanksgiving survival guide</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/Bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:'Instrument Serif';src:url('fonts/InstrumentSerif-Italic.ttf') format('truetype');font-style:italic}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#f3ede2}
+body{font-family:'Bricolage Grotesque',sans-serif;color:#183a2e;position:relative}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-stretch:normal}
+.abs{position:absolute;transform-origin:50% 50%}
+.brand{left:84px;top:150px;font-size:56px;font-weight:800;font-stretch:85%;letter-spacing:-.03em}
+.handle{right:84px;top:166px;font-size:30px;color:#4d6b5f}
+.hook{left:84px;top:300px;transform-origin:0 50%}
+.hook small{display:block;font-size:34px;font-weight:700;letter-spacing:.16em;color:#c4235f;margin-bottom:14px}
+.hook b{display:block;font-size:176px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.hook .serif{display:block;font-size:190px;color:#c4235f;line-height:.92}
+.kick{left:84px;top:300px;font-size:30px;font-weight:700;letter-spacing:.16em;color:#4d6b5f}
+.item{left:84px;top:360px;width:920px;transform-origin:0 50%}
+.item .n{font-size:40px;font-weight:700;letter-spacing:.1em;color:#c4235f;margin-bottom:14px}
+.item .t{font-size:150px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.endt{left:84px;top:330px;transform-origin:0 50%}
+.endt b{display:block;font-size:176px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.endt .serif{display:block;font-size:190px;color:#c4235f;line-height:.92}
+.url{left:84px;top:800px;background:#183a2e;color:#f3ede2;border-radius:999px;padding:22px 42px;font-size:48px;font-weight:700;transform-origin:0 50%}
+.bl{left:560px;top:1140px;width:420px;height:500px;transform-origin:50% 100%}
+.prop{left:0;top:0;transform-origin:50% 50%}
+.crumb{width:16px;height:16px;border-radius:50%;background:#c98a4b;left:0;top:0}
+.leaf{width:60px;height:60px;left:0;top:0}
+</style></head><body>
+<!-- falling leaves in the background -->
+<div id="leaves"></div>
+<div class="abs brand">Loads</div><div class="abs handle">@loadspickup</div>
+
+<div class="abs hook" id="hook"><small>BY BIG LOAD</small><b>Thanksgiving</b><span class="serif">survival guide.</span></div>
+<div class="abs kick" id="kick">THANKSGIVING SURVIVAL GUIDE</div>
+<div class="abs item" id="it0"><div class="n">STEP 1</div><div class="t">Eat the pie.</div></div>
+<div class="abs item" id="it1"><div class="n">STEP 2</div><div class="t">Spill the gravy.</div></div>
+<div class="abs item" id="it2"><div class="n">STEP 3</div><div class="t">Loosen the waistband.</div></div>
+<div class="abs item" id="it3"><div class="n">STEP 4</div><div class="t">Leave the tablecloth to us.</div></div>
+<div class="abs endt" id="endt"><b>Happy<br>Thanksgiving</b><span class="serif">from Loads.</span></div>
+<div class="abs url" id="url">loadspickup.com</div>
+
+<!-- props -->
+<svg class="abs prop" id="pie" viewBox="0 0 420 300" width="420" height="300" style="left:110px;top:1240px;overflow:visible">
+  <ellipse cx="210" cy="170" rx="200" ry="110" fill="#b7835a" stroke="#14251f" stroke-width="9"/>
+  <ellipse cx="210" cy="150" rx="196" ry="104" fill="#e8a25a" stroke="#14251f" stroke-width="9"/>
+  <ellipse cx="210" cy="150" rx="160" ry="80" fill="#e8833a" stroke="#14251f" stroke-width="6"/>
+  <path d="M210 150 L370 150 C366 120 340 96 300 82 Z" fill="#f3ede2" stroke="#14251f" stroke-width="6" stroke-linejoin="round"/>
+  <ellipse cx="160" cy="130" rx="30" ry="12" fill="#fff" opacity=".9"/>
+</svg>
+<svg class="abs prop" id="slice" viewBox="0 0 180 90" width="180" height="90" style="left:310px;top:1300px;overflow:visible">
+  <path d="M10 70 L170 70 C166 40 140 16 100 2 Z" fill="#e8833a" stroke="#14251f" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M170 70 C166 40 140 16 100 2" stroke="#e8a25a" stroke-width="14" fill="none"/>
+  <path d="M170 70 C166 40 140 16 100 2" stroke="#14251f" stroke-width="7" fill="none"/>
+</svg>
+<svg class="abs prop" id="cloth" viewBox="0 0 440 300" width="440" height="300" style="left:90px;top:1290px;overflow:visible">
+  <path d="M20 40 C120 20 320 20 420 40 L410 270 C300 290 140 290 30 270 Z" fill="#faf6ef" stroke="#14251f" stroke-width="9" stroke-linejoin="round"/>
+  <g stroke="#f2a5c0" stroke-width="10" opacity=".9"><path d="M30 100 L414 100 M28 180 L412 180 M110 30 L104 280 M220 28 L220 284 M330 30 L336 280"/></g>
+  <path id="stain" d="M200 140 C230 110 290 120 296 150 C320 160 316 196 290 200 C270 230 220 226 210 204 C176 206 168 166 200 140 Z" fill="#8a5a3b" opacity="0"/>
+</svg>
+<svg class="abs prop" id="boat" viewBox="0 0 300 200" width="300" height="200" style="left:60px;top:1050px;overflow:visible">
+  <path d="M30 80 L250 80 C262 80 280 60 296 54 C290 80 270 100 256 110 C240 150 200 170 140 170 C80 170 40 150 30 110 Z" fill="#f3ede2" stroke="#14251f" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M40 80 L246 80 L246 92 L40 92 Z" fill="#8a5a3b"/>
+  <path d="M60 120 C30 120 18 100 30 86" stroke="#14251f" stroke-width="9" fill="none" stroke-linecap="round"/>
+</svg>
+<svg class="abs prop" id="pour" viewBox="0 0 120 260" width="120" height="260" style="left:0;top:0;overflow:visible">
+  <path d="M60 0 C50 80 70 150 60 260" stroke="#8a5a3b" stroke-width="22" fill="none" stroke-linecap="round"/>
+</svg>
+<div id="crumbs"></div>
+
+<div class="abs bl" id="bl"></div>
+
+<script src="lib.js"></script>
+<script>
+$('#bl').innerHTML = bigLoadSVG('big');
+const big = $('#big');
+const DUR = 11.0;
+const IT = [[1.7, 3.6], [3.6, 5.6], [5.6, 7.5], [7.5, 9.1]];
+const END = 9.1;
+// Big Load's open top, in page px (scale 1.25, bottom-center origin at 770,1640)
+const BS = 1.25, mouth = { x: 770, y: 1640 - (500 - 118) * BS };
+$('#crumbs').innerHTML = Array.from({ length: 8 }, (_, i) => `<div class="abs crumb" id="cr${i}"></div>`).join('');
+const leafSVG = c => `<svg viewBox="0 0 60 60"><path d="M30 4 C44 14 54 30 30 56 C6 30 16 14 30 4 Z" fill="${c}" stroke="#14251f" stroke-width="3"/><path d="M30 10 L30 52" stroke="#14251f" stroke-width="3"/></svg>`;
+const LC = ['#e8833a', '#c4235f', '#e8a25a', '#b9d6bb', '#d9783a', '#f2a5c0'];
+$('#leaves').innerHTML = Array.from({ length: 10 }, (_, i) => `<div class="abs leaf" id="lf${i}" style="opacity:.55">${leafSVG(LC[i % 6])}</div>`).join('');
+
+function seek(t) {
+  t = Math.min(t, DUR - 0.0001);
+  // background leaves drifting down
+  for (let i = 0; i < 10; i++) {
+    const sp = 120 + (i % 4) * 40, ph = (t * sp + i * 197) % 2100 - 100;
+    put('#lf' + i, { x: (i * 113) % 1040 + Math.sin(t * 1.3 + i) * 40, y: ph, r: t * 60 * (i % 2 ? 1 : -1) + i * 30, s: 0.8 + (i % 3) * 0.25, o: 0.5 });
+  }
+  // hook
+  const hIn = E.out(prog(t, -0.2, 0.4)), hOut = E.in(prog(t, IT[0][0] - 0.2, 0.2));
+  put('#hook', { y: (1 - hIn) * 70 - hOut * 60, o: hIn * (1 - hOut) });
+  const kIn = E.out(prog(t, IT[0][0], 0.3)), kOut = E.in(prog(t, END - 0.2, 0.2));
+  put('#kick', { o: kIn * (1 - kOut) });
+  IT.forEach(([a, b], i) => {
+    const qi = E.out(prog(t, a, 0.35)), qo = E.in(prog(t, b - 0.18, 0.18));
+    put('#it' + i, { y: (1 - qi) * 120 - qo * 120, o: qi * (1 - qo) * (t >= a ? 1 : 0) });
+  });
+  const eIn = E.out(prog(t, END + 0.1, 0.4));
+  put('#endt', { y: (1 - eIn) * 70, o: eIn });
+  const uIn = E.back(prog(t, END + 0.6, 0.45));
+  put('#url', { s: Math.max(0.001, uIn), o: prog(t, END + 0.6, 0.1) });
+
+  // ---- step 1: pie slides in, the slice flies into Big Load
+  const [a1, b1] = IT[0];
+  const pieIn = E.back(prog(t, a1 + 0.05, 0.4)), pieOut = E.in(prog(t, b1 - 0.25, 0.25));
+  const pieOn = t >= a1 && t < b1;
+  put('#pie', { s: Math.max(0.001, pieIn) * (1 - pieOut), o: pieOn ? 1 : 0 });
+  const fly = prog(t, a1 + 0.7, 0.45);
+  const sx0 = 310 + 90, sy0 = 1300 + 45, sx1 = mouth.x, sy1 = mouth.y;
+  put('#slice', { x: lerp(0, sx1 - sx0, fly), y: lerp(0, sy1 - sy0, fly) - Math.sin(fly * Math.PI) * 300, r: fly * 420, s: lerp(1, 0.5, fly), o: pieOn && fly < 1 ? 1 : 0 });
+  // crumbs burst after the bite
+  for (let i = 0; i < 8; i++) {
+    const q = prog(t, a1 + 1.17, 0.6);
+    const ang = -Math.PI / 2 + (i - 3.5) * 0.35, v = 260 + (i % 3) * 60;
+    put('#cr' + i, { x: mouth.x + Math.cos(ang) * v * q, y: mouth.y + Math.sin(ang) * v * q + 600 * q * q, o: q > 0 && q < 1 ? 1 : 0 });
+  }
+  // ---- step 2: gravy boat tips, gravy pours onto the cloth
+  const [a2, b2] = IT[1];
+  const on2 = t >= a2 && t < b2;
+  const clothIn = E.out(prog(t, a2 + 0.05, 0.35));
+  const tip = E.inOut(prog(t, a2 + 0.45, 0.35)) * (1 - E.inOut(prog(t, a2 + 1.3, 0.3)));
+  const bx = lerp(-500, 0, E.out(prog(t, a2, 0.4)));
+  put('#boat', { x: bx, r: 35 * tip, o: on2 ? 1 : 0 });
+  const pourOn = on2 && t > a2 + 0.65 && t < a2 + 1.45;
+  const pourLen = prog(t, a2 + 0.65, 0.2);
+  const ang = 35 * tip * Math.PI / 180, ox = 146, oy = -46;
+  const spx = 210 + bx + ox * Math.cos(ang) - oy * Math.sin(ang), spy = 1150 + ox * Math.sin(ang) + oy * Math.cos(ang);
+  $('#pour').style.left = (spx - 60) + 'px'; $('#pour').style.top = spy + 'px';
+  $('#pour').style.transformOrigin = '50% 0%';
+  put('#pour', { sy: Math.max(0.01, (1440 - spy) / 260 * pourLen), o: pourOn ? 1 : 0 });
+  const stain = prog(t, a2 + 0.8, 0.5);
+  $('#stain').setAttribute('opacity', t >= a2 + 0.8 ? 1 : 0);
+  $('#stain').setAttribute('transform', `translate(20 0) translate(240 170) scale(${E.back(stain)}) translate(-240 -170)`);
+  // the cloth stays for steps 2-4; in step 4 it flies into Big Load
+  const [a4, b4] = IT[3];
+  const cf = prog(t, a4 + 0.5, 0.5);
+  const cOn = t >= a2 && t < b4 && cf < 1;
+  put('#cloth', { s: (on2 ? clothIn : 1) * lerp(1, 0.2, E.in(cf)), x: lerp(0, mouth.x - 310, E.in(cf)), y: lerp(0, mouth.y - 1440, E.in(cf)) - Math.sin(cf * Math.PI) * 250, r: cf * 300, o: cOn ? 1 : 0 });
+
+  // ---- Big Load
+  let y = 0, sx = 1, sy = 1, r = 0;
+  const bob = Math.sin(t * 3.2) * 0.015;
+  const gulp = (g) => { const q = prog(t, g, 0.25); return q > 0 && q < 1 ? Math.sin(q * Math.PI) : 0; };
+  const gp = Math.max(gulp(a1 + 1.15), gulp(a4 + 1.0));
+  sx *= 1 + 0.12 * gp; sy *= 1 - 0.12 * gp;
+  // step 3: belly grows, patch pops off
+  const [a3, b3] = IT[2];
+  const belly = t >= a3 ? E.out(prog(t, a3 + 0.3, 0.5)) * (1 - E.inOut(prog(t, END, 0.5))) : 0;
+  sx *= 1 + 0.12 * belly;
+  const pp = prog(t, a3 + 0.75, 0.9);
+  big.querySelector('.patch').setAttribute('transform', `translate(${pp * 380} ${-Math.sin(pp * Math.PI) * 360 + pp * pp * 520}) rotate(${-6 + pp * 540} 210 402)`);
+  big.querySelector('.patch').style.opacity = pp < 1 ? 1 : 0;
+  if (t >= END + 0.2) { const p = prog(t, END + 0.2, 0.6); const h = hop(p, 160); y = h.y; sx *= h.sx; sy *= h.sy; big.querySelector('.patch').style.opacity = 1; big.querySelector('.patch').setAttribute('transform', 'rotate(-6 210 402)'); }
+  put('#bl', { y, r, sx: BS * sx * (1 - bob), sy: BS * sy * (1 + bob) });
+  const shrug = t >= a2 + 1.0 && t < b2 ? 60 * Math.sin(prog(t, a2 + 1.0, 0.8) * Math.PI) : 0;
+  const sip = t > END + 1.0 ? E.inOut(prog(t, END + 1.0, 0.35)) : 0;
+  blPose(big, { sip, wave: shrug, smile: 1, glint: t < 1.5 ? prog(t, 0.8, 0.35) : 0 });
+}
+seek(0);
+</script>
+</body></html>

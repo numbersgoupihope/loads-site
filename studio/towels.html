@@ -1,0 +1,97 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>POV: someone else folds it</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/Bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:'Instrument Serif';src:url('fonts/InstrumentSerif-Italic.ttf') format('truetype');font-style:italic}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#f3ede2}
+body{font-family:'Bricolage Grotesque',sans-serif;color:#183a2e;position:relative}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-stretch:normal}
+.abs{position:absolute;transform-origin:50% 50%}
+.brand{left:84px;top:150px;font-size:56px;font-weight:800;font-stretch:85%;letter-spacing:-.03em}
+.handle{right:84px;top:166px;font-size:30px;color:#4d6b5f}
+.h{left:84px;top:270px;font-size:150px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.h .serif{color:#c4235f;font-size:1.1em}
+.flap{position:absolute;box-sizing:border-box;border:8px solid #14251f}
+.stack .it{position:absolute;left:0;width:480px;height:84px;border-radius:20px;border:8px solid #14251f;box-sizing:border-box}
+.stack .it::before{content:'';position:absolute;left:30px;right:30px;top:20px;height:8px;border-radius:4px;background:rgba(255,255,255,.45)}
+.stack .it::after{content:'';position:absolute;left:0;right:0;bottom:14px;height:8px;background:rgba(0,0,0,.08)}
+.you{left:70px;top:1210px;width:210px;font-size:34px;font-weight:700;line-height:1.1;color:#4d6b5f}
+.you b{display:block;font-size:150px;font-weight:800;font-stretch:80%;color:#c4235f;line-height:.9;margin-top:6px}
+</style></head><body>
+<div class="abs brand">Loads</div><div class="abs handle">@loadspickup</div>
+<div class="abs h">POV: someone<br>else <span class="serif">folds it.</span></div>
+<div class="abs you">Folded<br>by you:<b>0</b></div>
+<div class="abs stack" id="stack" style="left:300px;top:0;width:480px;height:1920px"></div>
+<div class="abs" id="towel" style="left:0;top:0;width:1080px;height:1920px"></div>
+<script src="lib.js"></script>
+<script>
+const DUR = 8.0, CYC = 1.0;
+const COLORS = ['#b9d6bb', '#f2e2d5', '#f2a5c0', '#d3e6d4'];
+const BACKS = ['#9fc2a2', '#e3cbb8', '#e48aab', '#b9d3bb'];
+const STACK_TOP = 1200, ITEM = 76;
+// stack items (enough to run off the bottom)
+$('#stack').innerHTML = Array.from({ length: 12 }, (_, i) => `<div class="it" id="k${i}"></div>`).join('');
+// towel pieces: top half + bottom flap (fold 1), then left half + right flap (fold 2)
+$('#towel').innerHTML = `
+  <div class="flap" id="tA" style="border-radius:26px 26px 0 0"></div>
+  <div class="flap" id="fA" style="border-radius:0 0 26px 26px"></div>
+  <div class="flap" id="tB" style="border-radius:26px 0 0 26px"></div>
+  <div class="flap" id="fB" style="border-radius:0 26px 26px 0"></div>`;
+const stripe = c => `linear-gradient(${c},${c}) , repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 64px, rgba(255,255,255,.0) 64px 72px)`;
+function box(id, x, y, w, h, bg, tf = '', origin = '50% 50%', o = 1, bands = true) {
+  const el = $(id);
+  const band = bands ? `linear-gradient(to bottom, transparent 18%, rgba(255,255,255,.55) 18%, rgba(255,255,255,.55) 23%, transparent 23%, transparent 77%, rgba(255,255,255,.55) 77%, rgba(255,255,255,.55) 82%, transparent 82%), ` : '';
+  Object.assign(el.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px', background: band + bg, transform: tf, transformOrigin: origin, opacity: o });
+}
+function seek(t) {
+  t = Math.min(t, DUR - 0.0001);
+  const c = Math.floor(t / CYC), u = t - c * CYC;   // cycle number, time inside it
+  const col = COLORS[c % 4], back = BACKS[c % 4];
+  // stack: shifts down one item at the end of each cycle (camera moving up)
+  const shift = E.inOut(prog(u, 0.82, 0.18)) * ITEM;
+  for (let i = 0; i < 12; i++) {
+    const k = $('#k' + i);
+    const ci = ((c - 1 - i) % 4 + 4) % 4;            // item i was folded i+1 cycles ago
+    k.style.background = COLORS[ci];
+    const wob = i === 0 ? 0 : 0;
+    k.style.transform = `translate(0px, ${STACK_TOP + i * ITEM + shift}px)`;
+  }
+  const W = 480, H = 480, cx = 540, cy = 850;
+  const hide = { o: 0 };
+  ['#tA', '#fA', '#tB', '#fB'].forEach(id => $(id).style.opacity = 0);
+  // 0.00-0.12 drop in from above
+  const enter = E.out(prog(u, 0.0, 0.14));
+  const yIn = lerp(-500, 0, enter);
+  if (u < 0.40) {
+    // fold 1: bottom half flips up over the top half
+    const f = E.inOut(prog(u, 0.14, 0.24));
+    const k = Math.cos(f * Math.PI);
+    box('#tA', cx - W / 2, cy - H / 2 + yIn, W, H / 2, col);
+    box('#fA', cx - W / 2, cy + yIn, W, H / 2, k >= 0 ? col : back, `scaleY(${k})`, '50% 0%');
+    $('#fA').style.borderRadius = k >= 0 ? '0 0 26px 26px' : '26px 26px 0 0';
+  } else if (u < 0.64) {
+    // fold 2: right half flips over the left
+    const f = E.inOut(prog(u, 0.40, 0.22));
+    const k = Math.cos(f * Math.PI);
+    box('#tB', cx - W / 2, cy - H / 2, W / 2, H / 2, back);
+    box('#fB', cx, cy - H / 2, W / 2, H / 2, k >= 0 ? back : col, `scaleX(${k})`, '0% 50%');
+    $('#fB').style.borderRadius = k >= 0 ? '0 26px 26px 0' : '26px 0 0 26px';
+  } else if (u < 0.86) {
+    // drop onto the stack, settling into a folded towel
+    const d = E.in(prog(u, 0.64, 0.18));
+    const w = lerp(W / 2, 480, d), h = lerp(H / 2, ITEM, d);
+    const x0 = cx - W / 2, y0 = cy - H / 2;
+    const x = lerp(x0, 300, d), y = lerp(y0, STACK_TOP - ITEM, d);
+    const sq = land(prog(u, 0.82, 0.12));
+    box('#tB', x, y, w, h * sq.sy, col, '', '50% 100%', 1, d < 0.6);
+    $('#tB').style.borderRadius = '22px';
+  } else {
+    // landed: it is now the top of the stack (drawn as the new item while the stack shifts)
+    const sq = land(prog(u, 0.82, 0.12));
+    box('#tB', 300, STACK_TOP - ITEM + E.inOut(prog(u, 0.82, 0.18)) * ITEM, 480, ITEM * sq.sy, col, '', '50% 50%', 1, false);
+    $('#tB').style.borderRadius = '20px';
+  }
+}
+seek(0);
+</script>
+</body></html>

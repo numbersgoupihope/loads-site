@@ -1,0 +1,190 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>The Lost Sock Diaries, ep. 1</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/Bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:'Instrument Serif';src:url('fonts/InstrumentSerif-Italic.ttf') format('truetype');font-style:italic}
+@font-face{font-family:'Instrument Serif R';src:url('fonts/InstrumentSerif-Regular.ttf') format('truetype')}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#10261e}
+body{font-family:'Bricolage Grotesque',sans-serif;color:#f3ede2;position:relative}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-stretch:normal}
+.abs{position:absolute;transform-origin:50% 50%}
+.scene{left:0;top:0;width:1080px;height:1920px;overflow:hidden}
+.brand{left:84px;top:150px;font-size:56px;font-weight:800;font-stretch:85%;letter-spacing:-.03em;z-index:20}
+.handle{right:84px;top:166px;font-size:30px;color:#b9d6bb;z-index:20}
+.cap{left:84px;top:300px;width:912px;z-index:15;transform-origin:0 50%}
+.cap small{display:block;font-size:34px;font-weight:700;letter-spacing:.16em;color:#b9d6bb;margin-bottom:12px}
+.cap b{display:block;font-size:132px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.92}
+.cap .serif{display:block;font-size:150px;color:#f2a5c0;line-height:.95}
+.vig{left:0;top:0;width:1080px;height:1920px;background:radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 40%, rgba(0,0,0,.55) 100%);z-index:12;pointer-events:none}
+.flash{left:0;top:0;width:1080px;height:1920px;background:#f2a5c0;z-index:30;opacity:0}
+/* title card */
+#s3{background:radial-gradient(circle at 50% 46%, #3a1f2c 0%, #10261e 62%)}
+.ttl{left:0;right:0;top:640px;text-align:center}
+.ttl .a{font-size:150px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.ttl .b{font-family:'Instrument Serif',serif;font-style:italic;font-size:230px;color:#f2a5c0;line-height:.9}
+.ttl .c{margin-top:40px;font-size:38px;font-weight:700;letter-spacing:.22em;color:#b9d6bb}
+/* poster */
+.pole{left:600px;top:420px;width:70px;height:1500px;background:#5b4636;border:8px solid #14251f;box-sizing:border-box}
+.bar{left:470px;top:470px;width:330px;height:40px;background:#5b4636;border:8px solid #14251f;box-sizing:border-box}
+.poster{left:400px;top:640px;width:470px;height:640px;background:#f6f0e4;border:8px solid #14251f;box-sizing:border-box;color:#14251f;text-align:center;padding:26px 30px;box-shadow:12px 14px 0 rgba(0,0,0,.25)}
+.poster h3{margin:0;font-size:96px;font-weight:800;font-stretch:78%;letter-spacing:.02em;color:#c4235f;line-height:1}
+.poster .pic{width:190px;height:258px;margin:16px auto 10px;filter:grayscale(1) contrast(1.1)}
+.poster .pic svg{width:190px;height:258px}
+.poster p{margin:0;font-size:34px;line-height:1.18}
+.poster p b{font-weight:800}
+.tape{position:absolute;width:120px;height:40px;background:rgba(232,194,122,.8);top:-18px}
+/* sunset */
+#s5{background:linear-gradient(to bottom,#2a3d5c 0%,#7a4a74 32%,#e9789a 58%,#f8b98a 74%,#f8d39a 82%)}
+.sun{left:390px;top:1250px;width:300px;height:300px;border-radius:50%;background:#ffe2a6;opacity:.95}
+.ground{left:0;top:1430px;width:1080px;height:490px;background:#10261e}
+.sky{left:0;top:1180px;width:1080px;height:260px}
+.circ{width:200px;height:200px;border-radius:50%;border:10px solid #f2a5c0;box-sizing:border-box;left:0;top:0}
+.endcap{left:84px;top:300px;z-index:15}
+.endcap b{display:block;font-size:120px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.92}
+.endcap .serif{display:block;font-size:150px;color:#f2a5c0;line-height:.95}
+.follow{left:84px;top:760px;background:#f3ede2;color:#183a2e;border-radius:999px;padding:22px 42px;font-size:46px;font-weight:700;z-index:15;transform-origin:0 50%}
+</style></head><body>
+<div class="abs brand">Loads</div><div class="abs handle">@loadspickup</div>
+
+<!-- scene 1 + 2: laundry day, then the dramatic zoom -->
+<div class="abs scene" id="s1">
+  <div class="abs" id="world" style="left:0;top:0;width:1080px;height:1920px;transform-origin:540px 1215px">
+    <div class="abs" style="left:-100px;top:1520px;width:1280px;height:500px;background:#183a2e;border-top:8px solid #14251f"></div>
+    <div class="abs" id="dryer" style="left:240px;top:560px;width:600px;height:600px"></div>
+    <div class="abs" id="lefty" style="left:400px;top:1150px;width:280px;height:380px;transform-origin:50% 100%"></div>
+  </div>
+  <div class="abs vig"></div>
+</div>
+<div class="abs cap" id="c1"><small>LAUNDRY DAY</small><b>Only one sock<br>came out.</b></div>
+<div class="abs cap" id="c2"><small>DAY 1</small><span class="serif">Where is<br>Righty?!</span></div>
+
+<!-- scene 3: title card -->
+<div class="abs scene" id="s3">
+  <div class="abs ttl" id="ttl"><div class="a">The Lost Sock</div><div class="b">Diaries.</div><div class="c">EPISODE 1 · GONE</div></div>
+</div>
+
+<!-- scene 4: the poster -->
+<div class="abs scene" id="s4" style="background:#183a2e">
+  <div class="abs" style="left:-100px;top:1560px;width:1280px;height:500px;background:#10261e;border-top:8px solid #14251f"></div>
+  <div class="abs pole"></div><div class="abs bar"></div>
+  <div class="abs poster" id="poster"><div class="tape" style="left:40px;transform:rotate(-8deg)"></div><div class="tape" style="right:40px;transform:rotate(7deg)"></div>
+    <h3>MISSING</h3><div class="pic" id="pic"></div>
+    <p><b>My other half.</b><br>Pink. Striped. Last seen<br>in the dryer.<br>Answers to <b>Righty.</b></p></div>
+  <div class="abs" id="lefty2" style="left:60px;top:1200px;width:280px;height:380px;transform-origin:50% 100%"></div>
+  <div class="abs vig"></div>
+</div>
+<div class="abs cap" id="c4"><small>DAY 1</small><b>Still no sign<br>of Righty.</b></div>
+
+<!-- scene 5 + 6: walking into the sunset, then the cliffhanger -->
+<div class="abs scene" id="s5">
+  <div class="abs sun"></div>
+  <svg class="abs sky" viewBox="0 0 1080 260" preserveAspectRatio="none">
+    <path d="M0 260 L0 170 L60 170 L60 120 L110 120 L110 150 L170 150 L170 60 L230 60 L230 140 L290 140 L290 100 L340 100 L340 180 L720 180 L720 90 L760 90 L760 40 L810 40 L810 110 L870 110 L870 150 L930 150 L930 80 L990 80 L990 160 L1080 160 L1080 260 Z" fill="#3a2a46" opacity=".85"/>
+  </svg>
+  <svg class="abs" style="left:0;top:820px;width:1080px;height:640px;overflow:visible" viewBox="0 0 1080 640">
+    <g fill="#10261e" stroke="#10261e">
+      <path d="M150 640 C146 480 160 330 176 200" stroke-width="20" fill="none"/>
+      <path d="M176 200 C130 170 80 180 40 220 M176 200 C140 140 90 120 50 130 M176 200 C200 140 250 120 290 130 M176 200 C230 170 280 190 310 230 M176 200 C170 140 180 100 200 70" stroke-width="16" fill="none" stroke-linecap="round"/>
+      <path d="M940 640 C944 520 934 400 916 300" stroke-width="18" fill="none"/>
+      <path d="M916 300 C870 270 830 280 800 310 M916 300 C890 250 850 236 810 244 M916 300 C940 250 980 236 1020 246 M916 300 C960 274 1000 290 1030 330 M916 300 C912 250 920 216 936 190" stroke-width="14" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <div class="abs ground"></div>
+  <div class="abs" id="bigwrap" style="left:330px;top:1000px;width:420px;height:500px;transform-origin:50% 100%"></div>
+  <div class="abs" id="lefty3" style="left:400px;top:1110px;width:280px;height:380px;transform-origin:50% 100%"></div>
+  <div class="abs circ" id="circ"></div>
+  <div class="abs vig"></div>
+</div>
+<div class="abs cap" id="c5"><small>SOCKS GO MISSING EVERY DAY</small><b>At Loads, we<br>pair them up.</b></div>
+<div class="abs endcap" id="c6"><b>Wait…</b><span class="serif">is that Righty?</span></div>
+<div class="abs follow" id="follow">Ep. 2 soon · follow @loadspickup</div>
+
+<div class="abs flash" id="flash"></div>
+
+<script src="lib.js"></script>
+<script>
+const DUR = 14.0;
+const S = { s1: [0, 1.9], s2: [1.9, 3.5], s3: [3.5, 5.3], s4: [5.3, 8.5], s5: [8.5, 11.2], s6: [11.2, 14.0] };
+$('#dryer').innerHTML = porthole('pdry', 'dry');
+$('#lefty').innerHTML = sockSVG('L1');
+$('#lefty2').innerHTML = sockSVG('L2');
+$('#lefty3').innerHTML = sockSVG('L3');
+$('#pic').innerHTML = sockSVG('R1', true);
+$('#bigwrap').innerHTML = bigLoadSVG('big');
+const L1 = $('#L1'), L2 = $('#L2'), L3 = $('#L3'), R1 = $('#R1'), big = $('#big');
+sockFace(R1, { sad: 0 });
+const inS = (t, k) => t >= S[k][0] && t < S[k][1];
+
+function seek(t) {
+  t = Math.min(t, DUR - 0.0001);
+  // which scene is on
+  $('#s1').style.opacity = t < S.s3[0] ? 1 : 0;
+  $('#s3').style.opacity = inS(t, 's3') ? 1 : 0;
+  $('#s4').style.opacity = inS(t, 's4') ? 1 : 0;
+  $('#s5').style.opacity = t >= S.s5[0] ? 1 : 0;
+
+  // ---- scene 1: Lefty pops out of the dryer
+  const pop = prog(t, 0.3, 0.55);
+  const lx = 0, ly = lerp(-560, 0, E.in(pop)) - Math.sin(pop * Math.PI) * 220;
+  const ls = lerp(0.35, 1.25, E.out(pop));
+  const l1 = land(prog(t, 0.85, 0.3));
+  const look = t > 1.0 && t < 1.9 ? Math.sin((t - 1.0) * 7) : 0;
+  put('#lefty', { x: lx, y: ly, sx: ls * l1.sx, sy: ls * l1.sy, r: pop < 1 ? (1 - pop) * 300 : 0, o: t >= 0.3 ? 1 : 0 });
+  sockFace(L1, { sad: prog(t, 1.2, 0.5), look, tear: inS(t, 's2') ? prog(t, 2.55, 0.85) : 0, shock: t > 0.85 && t < 1.05 ? 1 : 0 });
+  put('#dryer', { s: 0.9, y: 0, o: t < 1.9 ? 1 : 0 });
+  // ---- scene 2: three snap zooms on Lefty's face
+  let z = 1;
+  [[1.9, 1.45], [2.15, 1.9], [2.4, 2.4]].forEach(([a, zz]) => { if (t >= a) z = zz; });
+  const zk = t >= 1.9 && t < 2.6 ? E.out(Math.min(1, ((t - 1.9) % 0.25) / 0.08)) : 1;
+  $('#world').style.transform = `scale(${z})`;
+  const c1 = E.out(prog(t, 0.95, 0.3));
+  put('#c1', { o: t < 1.9 ? c1 : 0, y: (1 - c1) * 40 });
+  const c2 = E.back(prog(t, 2.4, 0.35));
+  put('#c2', { o: inS(t, 's2') ? Math.min(1, prog(t, 2.4, 0.1)) : 0, s: inS(t, 's2') ? Math.max(0.001, c2) : 1 });
+
+  // ---- scene 3: title card slowly pushes in
+  const ti = prog(t, S.s3[0], S.s3[1] - S.s3[0]);
+  put('#ttl', { s: lerp(1.18, 1, E.out(ti)), o: Math.min(1, ti * 6) });
+
+  // ---- scene 4: poster slaps on the pole, Lefty sighs
+  const sl = prog(t, 5.75, 0.2);
+  put('#poster', { s: lerp(1.7, 1, E.in(sl)), r: lerp(-14, -3, sl), o: sl > 0 ? 1 : 0 });
+  const walkIn = E.out(prog(t, 5.3, 0.5));
+  const sigh = land(prog(t, 7.1, 0.5));
+  put('#lefty2', { x: lerp(-400, 0, walkIn), sx: sigh.sx, sy: sigh.sy });
+  sockFace(L2, { sad: 1, look: t > 6.1 && t < 7.0 ? 1 : 0.2 });
+  const c4 = E.out(prog(t, 5.5, 0.35));
+  put('#c4', { o: inS(t, 's4') ? c4 : 0, y: (1 - c4) * 40 });
+
+  // ---- scene 5: Lefty hops off into the sunset, getting smaller
+  const wk = prog(t, 8.65, 2.4);
+  const stepP = (wk * 7) % 1, st = hop(stepP, 34);
+  const scale = lerp(1.15, 0.38, E.inOut(wk));
+  put('#lefty3', { x: lerp(-160, 300, E.inOut(wk)), y: lerp(160, -150, E.inOut(wk)) + st.y * scale, sx: scale * st.sx, sy: scale * st.sy, o: t < 11.05 ? 1 : 0 });
+  sockFace(L3, { sad: 0.6, look: 1 });
+  const c5 = E.out(prog(t, 8.7, 0.35));
+  put('#c5', { o: inS(t, 's5') ? c5 : 0, y: (1 - c5) * 40 });
+
+  // ---- scene 6: Big Load wanders past with a pink striped sock on his head... freeze
+  const bw = prog(t, 11.2, 1.1);
+  const bstep = hop((bw * 4.5) % 1, 26);
+  const bx = lerp(-760, -60, E.out(bw));
+  put('#bigwrap', { x: bx, y: bstep.y * (bw < 1 ? 1 : 0), sx: 0.95 * (bw < 1 ? bstep.sx : 1), sy: 0.95 * (bw < 1 ? bstep.sy : 1), o: t >= 11.2 ? 1 : 0 });
+  blPose(big, { sip: t > 12.9 ? E.inOut(prog(t, 12.9, 0.35)) : 0, smile: 1 });
+  // circle around his sock after the freeze
+  const cz = E.back(prog(t, 12.35, 0.35));
+  const sockX = 330 + bx + 210 + (276 - 210) * 0.95, sockY = 1500 - (500 - 70) * 0.95;
+  put('#circ', { x: sockX - 100, y: sockY - 100, s: Math.max(0.001, cz) * (1 + Math.sin(t * 9) * 0.04), o: t > 12.35 ? 1 : 0 });
+  const c6 = E.out(prog(t, 12.3, 0.3));
+  put('#c6', { o: t >= 12.3 ? c6 : 0, y: (1 - c6) * 40 });
+  const fo = E.back(prog(t, 12.9, 0.45));
+  put('#follow', { s: Math.max(0.001, fo), o: t > 12.9 ? 1 : 0 });
+
+  // ---- flashes on the hard cuts and the snap zooms
+  let fl = 0;
+  [1.9, 2.15, 2.4, 3.5, 5.75, 12.25].forEach(a => { const q = prog(t, a, 0.16); if (q > 0 && q < 1) fl = Math.max(fl, (1 - q) * (a === 3.5 ? 0.9 : 0.45)); });
+  $('#flash').style.opacity = fl;
+}
+seek(0);
+</script>
+</body></html>

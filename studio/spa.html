@@ -1,0 +1,242 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Spa Day</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';src:url('fonts/Bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:'Instrument Serif';src:url('fonts/InstrumentSerif-Italic.ttf') format('truetype');font-style:italic}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#f3ede2}
+body{font-family:'Bricolage Grotesque',sans-serif;color:#183a2e;position:relative}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-stretch:normal}
+.abs{position:absolute;transform-origin:50% 50%}
+.brand{left:84px;top:150px;font-size:56px;font-weight:800;font-stretch:85%;letter-spacing:-.03em}
+.brand span{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#c4235f;font-size:1.05em}
+.handle{right:84px;top:166px;font-size:30px;color:#4d6b5f}
+.blob{left:90px;top:760px;width:900px;height:900px;border-radius:50%;background:#e6eedf}
+.hook{left:84px;top:300px;transform-origin:0 50%}
+.hook div{font-size:170px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9;overflow:hidden;height:156px}
+.hook div span{display:block}
+.hook .serif{color:#c4235f;font-size:1.1em}
+.step{left:84px;top:300px;transform-origin:0 50%}
+.step .n{display:inline-block;font-size:34px;font-weight:700;letter-spacing:.12em;color:#c4235f;margin-bottom:10px}
+.step .t{font-size:176px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.step .c{font-family:'Instrument Serif',serif;font-style:italic;font-size:64px;color:#4d6b5f;margin-top:18px}
+.end{left:84px;top:300px;transform-origin:0 50%}
+.end .t{font-size:176px;font-weight:800;font-stretch:80%;letter-spacing:-.02em;line-height:.9}
+.end .t .serif{color:#c4235f;font-size:1.1em}
+.end .c{font-size:44px;margin-top:30px;line-height:1.3}
+.url{left:84px;top:1012px;background:#183a2e;color:#f3ede2;border-radius:999px;padding:22px 40px;font-size:46px;font-weight:700;transform-origin:0 50%}
+.dots{left:0;right:0;top:1575px;display:flex;justify-content:center;gap:22px}
+.dot{width:22px;height:22px;border-radius:50%;background:#cfd9cc;transition:none}
+.vis{left:0;top:0;width:1080px;height:1920px;pointer-events:none}
+.hoodie{left:340px;top:980px;width:400px;height:420px;transform-origin:50% 100%}
+.bl{left:560px;top:1060px;width:420px;height:500px;transform-origin:50% 100%}
+.port{left:240px;top:860px;width:600px;height:600px}
+.steam{left:390px;top:640px;width:300px;height:200px}
+.towels{left:300px;top:1250px;width:480px;height:240px}
+.towel{position:absolute;left:0;height:76px;border-radius:22px;border:7px solid #14251f;box-sizing:border-box}
+.door{left:640px;top:880px;width:340px;height:640px}
+.sp{width:64px;height:64px;left:0;top:0}
+.lines{left:0;top:0;width:500px;height:300px}
+</style></head><body>
+<div class="abs blob" id="blob"></div>
+<div class="abs brand">Loads <span>spa</span></div><div class="abs handle">@loadspickup</div>
+
+<div class="abs hook" id="hook">
+  <div><span id="hk0">Your hoodie</span></div>
+  <div><span id="hk1">needs a</span></div>
+  <div style="height:178px"><span id="hk2" class="serif">spa day.</span></div>
+</div>
+
+<div class="abs step" id="s1"><div class="n">01 · CHECK-IN</div><div class="t">Check-in.</div><div class="c">Picked up at your door.</div></div>
+<div class="abs step" id="s2"><div class="n">02 · DETOX</div><div class="t">Detox.</div><div class="c">Washed in our own machines.</div></div>
+<div class="abs step" id="s3"><div class="n">03 · SAUNA</div><div class="t">Sauna.</div><div class="c">Tumble dried, nice and warm.</div></div>
+<div class="abs step" id="s4"><div class="n">04 · BLOWOUT</div><div class="t">Blowout.</div><div class="c">Folded by hand.</div></div>
+<div class="abs step" id="s5"><div class="n">05 · CHAUFFEUR</div><div class="t">Chauffeur.</div><div class="c">Back at your door the next day.</div></div>
+<div class="abs end" id="end"><div class="t">Glow-up<br><span class="serif">complete.</span></div><div class="c">Laundry pickup &amp; delivery<br>across LA and the Valley.</div></div>
+<div class="abs url" id="url">loadspickup.com</div>
+
+<!-- visuals -->
+<svg class="abs steam" id="steam" viewBox="0 0 300 200" style="overflow:visible">
+  <path id="st0" d="M60 200 C40 160 80 140 60 100 C40 60 80 40 60 0" stroke="#c4235f" stroke-width="9" fill="none" stroke-linecap="round" opacity=".5"/>
+  <path id="st1" d="M150 200 C130 160 170 140 150 100 C130 60 170 40 150 0" stroke="#c4235f" stroke-width="9" fill="none" stroke-linecap="round" opacity=".5"/>
+  <path id="st2" d="M240 200 C220 160 260 140 240 100 C220 60 260 40 240 0" stroke="#c4235f" stroke-width="9" fill="none" stroke-linecap="round" opacity=".5"/>
+</svg>
+<svg class="abs" id="stink" viewBox="0 0 160 160" style="left:470px;top:820px;width:160px;height:160px;overflow:visible">
+  <path d="M40 150 C20 120 60 100 40 70 C20 40 60 30 44 4" stroke="#8a9a6a" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M100 150 C80 120 120 100 100 70 C80 40 120 30 104 4" stroke="#8a9a6a" stroke-width="8" fill="none" stroke-linecap="round"/>
+</svg>
+<div class="abs port" id="wash"></div>
+<div class="abs port" id="dry"></div>
+<div class="abs towels" id="towels">
+  <div class="towel" style="bottom:0;width:480px;background:#b9d6bb"></div>
+  <div class="towel" style="bottom:70px;left:20px;width:440px;background:#f2e2d5"></div>
+  <div class="towel" style="bottom:140px;left:36px;width:408px;background:#d3e6d4"></div>
+</div>
+<svg class="abs door" id="door" viewBox="0 0 340 640" style="overflow:visible">
+  <rect x="10" y="10" width="320" height="600" rx="14" fill="#183a2e" stroke="#14251f" stroke-width="8"/>
+  <rect x="44" y="50" width="252" height="230" rx="10" fill="none" stroke="#2f5a4b" stroke-width="8"/>
+  <rect x="44" y="320" width="252" height="250" rx="10" fill="none" stroke="#2f5a4b" stroke-width="8"/>
+  <circle cx="276" cy="320" r="16" fill="#e8c27a" stroke="#14251f" stroke-width="6"/>
+  <rect x="-30" y="606" width="400" height="26" rx="10" fill="#c4235f" stroke="#14251f" stroke-width="7"/>
+  <text x="170" y="170" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="64" fill="#f3ede2">4B</text>
+</svg>
+<svg class="abs lines" id="speed" viewBox="0 0 500 300" style="overflow:visible">
+  <path d="M0 60 L300 60 M60 150 L420 150 M20 240 L280 240" stroke="#183a2e" stroke-width="12" stroke-linecap="round" opacity=".25"/>
+</svg>
+<div class="abs hoodie" id="hoodie"></div>
+<div class="abs hoodie" id="clean"></div>
+<div class="abs bl" id="bl"></div>
+<svg class="abs sp" id="sp0" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#c4235f"/></svg>
+<svg class="abs sp" id="sp1" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#e8c27a"/></svg>
+<svg class="abs sp" id="sp2" viewBox="0 0 70 70"><path d="M35 0 L41 29 L70 35 L41 41 L35 70 L29 41 L0 35 L29 29 Z" fill="#7fb38a"/></svg>
+
+<div class="abs dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+
+<script src="lib.js"></script>
+<script>
+const DUR = 15.5;
+// scene windows
+const S = { hook: [0, 2.4], s1: [2.4, 4.6], s2: [4.6, 6.8], s3: [6.8, 8.8], s4: [8.8, 11.2], s5: [11.2, 13.2], end: [13.2, 15.5] };
+$('#hoodie').innerHTML = hoodieSVG('hd', '#c4235f', true);
+$('#clean').innerHTML = hoodieSVG('hc', '#c4235f', false);
+$('#bl').innerHTML = bigLoadSVG('big');
+const big = $('#big');
+$('#wash').innerHTML = porthole('pw', 'wash');
+$('#dry').innerHTML = porthole('pd', 'dry');
+// a small tumbling hoodie and bubbles inside each machine door
+function tumbler(id, dirty) {
+  return `<g class="tum"><svg x="190" y="190" width="220" height="231" viewBox="0 0 400 420" style="overflow:visible">${hoodieSVG(id, '#c4235f', dirty).replace(/^\s*<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')}</svg></g>`;
+}
+$('#pw .inside').innerHTML = tumbler('tw', false) + Array.from({ length: 9 }, (_, i) => `<circle class="bub" r="${10 + (i % 3) * 7}" fill="#fff" opacity=".55"/>`).join('');
+$('#pd .inside').innerHTML = tumbler('td', false);
+const dots = [...document.querySelectorAll('.dot')];
+
+// slide a scene in from the right and out to the left
+function swipe(t, [a, b], { first = false, last = false } = {}) {
+  const i = first ? 1 : E.out(prog(t, a, 0.45)), o = last ? 0 : E.in(prog(t, b - 0.32, 0.32));
+  return { x: (1 - i) * 1080 - o * 1080, o: t >= a - 0.001 && t <= b ? 1 : 0 };
+}
+function partFold(svg, cls, axis, at, amt) {
+  const g = svg.querySelector('.' + cls);
+  const k = Math.cos(amt * Math.PI); // 1 -> -1, passing through 0
+  const sy = lerp(1, 0.84, amt);
+  g.setAttribute('transform', axis === 'x' ? `translate(${at} 112) scale(${k} ${sy}) translate(${-at} -112)` : `translate(0 ${at}) scale(1 ${k}) translate(0 ${-at})`);
+  if (axis === 'x') g.querySelector('rect').style.opacity = amt > 0.6 ? 0 : 1;
+  g.style.filter = amt > 0.5 ? 'brightness(.82)' : 'none';
+}
+
+function seek(t) {
+  t = Math.min(t, DUR - 0.0001);
+  // ---- hook text: lines rise in right away, leave at 2.4
+  ['#hk0', '#hk1', '#hk2'].forEach((id, k) => {
+    const q = E.out(prog(t, -0.2 + k * 0.12, 0.45)), out = E.in(prog(t, 2.2 + k * 0.05, 0.22));
+    put(id, { y: (1 - q) * 170 - out * 200 });
+  });
+  $('#hook').style.opacity = t < 2.5 ? 1 : 0;
+  // ---- step titles
+  ['s1', 's2', 's3', 's4', 's5'].forEach(k => {
+    const [a, b] = S[k];
+    const i = E.out(prog(t, a + 0.08, 0.4)), o = E.in(prog(t, b - 0.28, 0.25));
+    put('#' + k, { x: (1 - i) * 90, y: o * -40, o: i * (1 - o) * (t >= a ? 1 : 0) });
+  });
+  const ei = E.out(prog(t, S.end[0] + 0.1, 0.45));
+  put('#end', { y: (1 - ei) * 60, o: ei });
+  const ui = E.back(prog(t, S.end[0] + 0.55, 0.45));
+  put('#url', { s: Math.max(0, ui), o: prog(t, S.end[0] + 0.55, 0.1) });
+  // progress dots
+  const stepIdx = ['s1', 's2', 's3', 's4', 's5'].findIndex(k => t >= S[k][0] && t < S[k][1]);
+  dots.forEach((d, i) => { d.style.background = (t >= S.end[0] || i <= stepIdx) && stepIdx !== -1 || t >= S.end[0] ? (i === stepIdx ? '#c4235f' : '#183a2e') : '#cfd9cc'; d.style.transform = i === stepIdx ? 'scale(1.35)' : 'none'; });
+  put('.dots', { o: t >= S.s1[0] ? 1 : 0 });
+
+  // ---- dirty hoodie: slumps during the hook, gets eaten by Big Load in step 1
+  const slump = Math.sin(t * 3) * 2;
+  const hopIn = prog(t, 3.15, 0.42);
+  const move = E.inOut(prog(t, 2.5, 0.5));            // slides left as Big Load arrives
+  let hx = lerp(0, -170, move), hy = 0, hs = 1, hr = -4 + slump;
+  if (hopIn > 0) {
+    const sx0 = -170, ex = 230, ey = -290;
+    hx = lerp(sx0, ex, hopIn); hy = lerp(0, ey, hopIn) - Math.sin(hopIn * Math.PI) * 260; hs = lerp(1, 0.25, E.in(hopIn)); hr = hopIn * 300;
+  }
+  const hookIn = E.back(prog(t, -0.25, 0.5));
+  put('#hoodie', { x: hx, y: hy, r: hr, s: 1.25 * hs * (t < 0.25 ? Math.max(0.01, hookIn) : 1), sy: 0.96, o: hopIn >= 1 ? 0 : 1 });
+  put('#stink', { x: hx, y: -((t * 45) % 30), o: t < 3.1 ? 0.8 * (0.6 + 0.4 * Math.sin(t * 5)) : 0 });
+
+  // ---- Big Load: step 1 arrival and gulp; step 5 chauffeur; end card sip
+  let bx = 2000, by = 0, bsx = 1, bsy = 1, bo = 0, bs = 1;
+  if (t >= S.s1[0] && t < S.s1[1]) {
+    const ip = prog(t, 2.45, 0.55), h = hop(ip, 160), l = land(prog(t, 3.0, 0.3));
+    let gulp = 0; const g = prog(t, 3.57, 0.25); if (g > 0 && g < 1) gulp = Math.sin(g * Math.PI);
+    const sw = swipe(t, S.s1, { first: true });
+    bx = lerp(700, 0, E.out(ip)) + sw.x; by = h.y; bs = 1.2; bsx = h.sx * l.sx * (1 + .12 * gulp); bsy = h.sy * l.sy * (1 - .12 * gulp); bo = 1;
+    blPose(big, { glint: t > 3.75 && t < 4.1 ? prog(t, 3.75, 0.35) : 0, smile: prog(t, 3.8, 0.3) });
+  } else if (t >= S.s5[0] - 0.05 && t < S.s5[1]) {
+    const ip = prog(t, S.s5[0] - 0.05, 0.55), l = land(prog(t, S.s5[0] + 0.5, 0.3));
+    const sw = swipe(t, S.s5);
+    bx = lerp(-1000, -300, E.out(ip)) + (sw.x > 0 ? 0 : sw.x); bs = 1.1; bsx = l.sx; bsy = l.sy; bo = 1;
+    blPose(big, { smile: 1, glint: t > S.s5[0] + 1.0 && t < S.s5[0] + 1.35 ? prog(t, S.s5[0] + 1.0, 0.35) : 0 });
+  } else if (t >= S.end[0]) {
+    const ip = E.back(prog(t, S.end[0] + 0.3, 0.5));
+    bx = 10; by = 0; bs = Math.max(0.01, ip) * 0.95; bo = 1;
+    const sip = E.inOut(prog(t, S.end[0] + 1.0, 0.35)) * (1 - E.inOut(prog(t, S.end[0] + 1.9, 0.35)));
+    blPose(big, { sip, smile: 1, wave: 0 });
+  }
+  put('#bl', { x: bx, y: by, sx: bs * bsx, sy: bs * bsy, o: bo });
+
+  // ---- step 2: washer
+  const w = swipe(t, S.s2);
+  put('#wash', { x: w.x, o: w.o, s: 1.2 });
+  if (w.o) {
+    const tum = $('#pw .tum'); tum.setAttribute('transform', `rotate(${(t - S.s2[0]) * 300} 300 300)`);
+    $('#pw .wave').setAttribute('transform', `translate(${-((t * 260) % 360)} ${Math.sin(t * 3) * 10})`);
+    document.querySelectorAll('#pw .bub').forEach((c, i) => {
+      const ph = ((t * (0.55 + (i % 4) * 0.12)) + i * 0.37) % 1;
+      c.setAttribute('cx', 160 + (i * 53) % 290 + Math.sin(t * 4 + i) * 12); c.setAttribute('cy', 500 - ph * 420);
+    });
+  }
+  // ---- step 3: dryer with steam
+  const d = swipe(t, S.s3);
+  put('#dry', { x: d.x, o: d.o, s: 1.2 });
+  put('#steam', { x: d.x, o: d.o });
+  if (d.o) {
+    $('#pd .tum').setAttribute('transform', `rotate(${(t - S.s3[0]) * 360} 300 300)`);
+    ['#st0', '#st1', '#st2'].forEach((id, k) => { const ph = ((t * 0.9) + k * 0.33) % 1; $(id).setAttribute('transform', `translate(0 ${-ph * 60})`); $(id).style.opacity = Math.sin(ph * Math.PI) * 0.6; });
+  }
+  // ---- step 4: clean hoodie folds, lands on towels
+  const f = swipe(t, S.s4);
+  const a4 = S.s4[0];
+  const hc = $('#hc');
+  partFold(hc, 'sleeveL', 'x', 118, E.inOut(prog(t, a4 + 0.55, 0.35)));
+  partFold(hc, 'sleeveR', 'x', 282, E.inOut(prog(t, a4 + 0.95, 0.35)));
+  partFold(hc, 'bodyBot', 'y', 252, E.inOut(prog(t, a4 + 1.35, 0.35)));
+  const drop = E.out(prog(t, a4 + 1.8, 0.3)), dl = land(prog(t, a4 + 2.1, 0.25));
+  // in step 5 the folded hoodie rides on Big Load's head to the door
+  let cx = f.x, cy = lerp(-110, 30, drop), cs = lerp(1.2, 0.95, drop), co = f.o, cr = 0;
+  if (t >= S.s5[0] - 0.05 && t < S.s5[1]) {
+    const ip = prog(t, S.s5[0] - 0.05, 0.55), sw = swipe(t, S.s5);
+    const off = E.inOut(prog(t, S.s5[0] + 1.0, 0.45)); // hops off onto the doormat
+    const bxNow = lerp(-1000, -300, E.out(ip)) + (sw.x > 0 ? 0 : sw.x);
+    cx = lerp(bxNow + 230, 270 + (sw.x > 0 ? 0 : sw.x), off);
+    cy = lerp(-190, 165, off) - Math.sin(off * Math.PI) * 200; cs = 0.5; co = 1; cr = off * 360;
+  } else if (t >= S.end[0]) {
+    const q = E.back(prog(t, S.end[0] + 0.2, 0.5));
+    cx = -210; cy = 240; cs = Math.max(0.01, q) * 0.85; co = 1; cr = -6;
+  }
+  put('#clean', { x: cx, y: cy, s: cs * dl.sx, sy: dl.sy, o: co, r: cr });
+  put('#towels', { x: f.x, o: f.o && prog(t, a4 + 1.5, 0.01) ? 1 : 0, y: (1 - E.out(prog(t, a4 + 1.45, 0.3))) * 700 });
+  // ---- step 5: door + speed lines
+  const dd = swipe(t, S.s5);
+  const din = E.out(prog(t, S.s5[0] - 0.2, 0.45)), dout = E.in(prog(t, S.s5[1] - 0.32, 0.32));
+  put('#door', { x: (1 - din) * 1080 - dout * 1080, o: t >= S.s5[0] - 0.2 && t <= S.s5[1] ? 1 : 0 });
+  const sl = prog(t, S.s5[0] - 0.05, 0.55);
+  put('#speed', { x: lerp(-700, 0, E.out(sl)) + 80, y: 1160, o: sl > 0 && sl < 1 ? 1 - sl : 0 });
+
+  // ---- sparkles: on the fold landing and the end card
+  const spT = t < S.s5[0] ? a4 + 2.05 : S.end[0] + 0.6;
+  const spots = t < S.s5[0] ? [[260, 1180], [770, 1120], [760, 1380]] : [[180, 1300], [440, 1240], [880, 1180]];
+  spots.forEach(([x, y], k) => { const q = prog(t, spT + k * 0.08, 0.6); put('#sp' + k, { x, y, s: Math.sin(q * Math.PI) * 1.2, r: q * 90, o: q > 0 && q < 1 ? 1 : 0 }); });
+
+  // background blob breathes, moves between scenes
+  put('#blob', { s: 1 + Math.sin(t * 1.4) * 0.015 });
+}
+seek(0);
+</script>
+</body></html>
