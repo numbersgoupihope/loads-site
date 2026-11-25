@@ -262,6 +262,48 @@ function driveSeconds_(lat, lng, street, zip) {
   }
 }
 
+// Run this from the editor for a quick health check of the whole system. It logs counts,
+// order IDs and first names only (no phones or addresses). Changes nothing.
+function checkHealth() {
+  const lines = [], tz = Session.getScriptTimeZone();
+  const t = table_('Bookings');
+  if (!t) { Logger.log('No Bookings sheet yet.'); return; }
+  const missing = BOOKING_HEADERS.filter(function (h) { return t.headers.indexOf(h) < 0; });
+  lines.push('Bookings: ' + t.rows.length + ' rows. Missing columns: ' + (missing.join(', ') || 'none (they get added on the next booking or staff action)'));
+  const byStage = {};
+  t.rows.forEach(function (r) { const k = String(r.stage || '(blank)'); byStage[k] = (byStage[k] || 0) + 1; });
+  lines.push('By stage: ' + Object.keys(byStage).map(function (k) { return k + ' ' + byStage[k]; }).join(', '));
+  let listed = [];
+  try { listed = list_().map(function (o) { return o.id; }); lines.push('Staff list: OK, ' + listed.length + ' orders showing'); }
+  catch (e) { lines.push('Staff list: ERROR ' + e); }
+  t.rows.slice(-6).forEach(function (r) {
+    const reached = STAGES.slice(1).filter(function (s) { return r[s + '_at']; });
+    let tracked = '';
+    try { const tr = track_(r.booking_id, r.track_token); tracked = tr && tr.ok ? 'tracker OK (' + tr.order.stage + ')' : 'tracker ' + JSON.stringify(tr).slice(0, 60); }
+    catch (e) { tracked = 'tracker ERROR ' + e; }
+    lines.push('  ' + r.booking_id + ' ' + String(r.name || '').trim().split(/\s+/)[0] + ': stage ' + r.stage +
+      ' | done: ' + (reached.join(' > ') || 'none') + ' | weight ' + (r.weight_lbs || '-') + ' | total ' + (r.order_total || '-') +
+      ' | paid ' + (r.paid_at ? 'yes' : 'no') + ' | ' + (listed.indexOf(String(r.booking_id)) >= 0 ? 'in staff list' : 'not in staff list') + ' | ' + tracked);
+  });
+  const drive = driveSeconds_(34.0688, -118.3093, '6839 Lennox Ave, Van Nuys', '91405');
+  lines.push('Google Maps drive time: ' + (drive ? 'OK (' + Math.round(drive / 60) + ' min store to store)' : 'FAILED'));
+  lines.push('Email: ' + MailApp.getRemainingDailyQuota() + ' alert emails left today');
+  const props = PropertiesService.getScriptProperties();
+  lines.push('Staff PIN set: ' + (STAFF_PIN ? 'yes' : 'NO'));
+  if (!props.getProperty('SQUARE_TOKEN')) lines.push('Square: NO KEY SAVED');
+  else {
+    try { const loc = sq_('get', '/locations/' + SQUARE_LOCATION).location; lines.push('Square: OK (' + loc.name + ', ' + loc.status + ')'); }
+    catch (e) { lines.push('Square: ERROR ' + e); }
+  }
+  const v = table_('Visits');
+  if (v) {
+    const today = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd');
+    lines.push('Site visits logged today: ' + v.rows.filter(function (r) { return r.at && Utilities.formatDate(new Date(r.at), tz, 'yyyy-MM-dd') === today; }).length);
+  }
+  Logger.log(lines.join('\n'));
+  return lines.join('\n');
+}
+
 // Run this from the editor to check the Google Maps drive-time lookup works (store to store).
 function checkDriveTime() {
   const s = driveSeconds_(34.0688, -118.3093, '6839 Lennox Ave, Van Nuys', '91405');
