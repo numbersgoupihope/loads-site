@@ -45,6 +45,8 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 a.next{text-decoration:none}
 .next.alt{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
 .etaline{margin:12px 0 0;font-size:15px}
+.yesbox{margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff7d6;font-size:15px}
+.yesbox .next{margin-top:10px}
 .cancelask{margin-top:12px;padding:12px;border-radius:12px;background:#fff0f3;font-size:15px}
 .cancelask div{display:flex;gap:8px;margin-top:10px}
 .cancelask button{flex:1;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:650;cursor:pointer}
@@ -124,7 +126,7 @@ details.done[open] summary::after{content:'Hide'}
 <p style="text-align:center;margin:16px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
-<script src="config.js?v=5"></script>
+<script src="config.js?v=6"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -156,12 +158,14 @@ details.done[open] summary::after{content:'Hide'}
       return await res.json();
     } finally { clearTimeout(timer); }
   }
+  let lastRun = null;
   async function run(req) {
     if (busy) return; busy = true; $('#err').textContent = '';
     if (req.action !== 'list') $('#note').textContent = '';
     try {
       const data = await api(req);
       if (!data.ok && data.error === 'pin') { forgetPin(); return showPin('That PIN didn’t work.'); }
+      lastRun = null;
       if (!data.ok && data.error === 'cant_cancel') { orders = data.orders || orders; render(); $('#err').textContent = 'That order is already picked up, so it can’t be canceled here.'; return; }
       if (!data.ok && data.error === 'no_eta') { orders = data.orders || orders; etaAsk[req.id] = req.stage; render(); return; }
       if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'That order isn’t paid yet. Send the bill first, or mark it paid if they paid another way.'; return; }
@@ -170,7 +174,8 @@ details.done[open] summary::after{content:'Hide'}
       const fresh = data.orders || [];
       newOrders(fresh);
       orders = fresh; showApp(); render();
-      if (data.bill) billNote(req.id, data.bill);
+      lastRun = data;
+      if (data.bill && req.action !== 'no_show') billNote(req.id, data.bill);
     } catch (e) {
       $('#err').textContent = "Couldn't reach the Sheet. Check the connection and tap Refresh.";
     } finally { busy = false; }
@@ -234,7 +239,7 @@ details.done[open] summary::after{content:'Hide'}
 
   /* ---------- preview data ---------- */
   const demoOrders = [
-    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '9 to 11am', dropoff_label: 'Tue, Nov 18', dropoff_window: '11am to 1pm', wash_temp: 'Cold', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
+    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '9 to 11am', dropoff_label: 'Tue, Nov 18', dropoff_window: '11am to 1pm', wash_temp: 'Cold', needs_yes: true, confirmed: false, stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
     { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '1 to 3pm', dropoff_label: 'Tue, Nov 18', dropoff_window: '5 to 7pm', wash_temp: 'Hot', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
     { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys store', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', pickup_window: '7 to 9pm', dropoff_label: 'Mon, Nov 17', dropoff_window: '9pm to midnight', wash_temp: 'Cold', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
     { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' }
@@ -244,6 +249,12 @@ details.done[open] summary::after{content:'Hide'}
     const copy = () => demoOrders.filter(x => x.stage !== 'canceled').map(x => Object.assign({}, x));
     if (o && req.action === 'cancel') { if (o.stage !== 'booked' && o.stage !== 'on_the_way') return Promise.resolve({ ok: false, error: 'cant_cancel', orders: copy() }); o.canceled_from = o.stage; o.stage = 'canceled'; }
     if (o && req.action === 'uncancel' && o.stage === 'canceled') o.stage = o.canceled_from || 'booked';
+    if (o && req.action === 'confirmed') o.confirmed = req.on !== false;
+    if (o && req.action === 'no_show') {
+      if (o.stage !== 'on_the_way') return Promise.resolve({ ok: false, error: 'cant_no_show', message: 'Tap On my way first.', orders: copy() });
+      o.stage = 'canceled';
+      return Promise.resolve({ ok: true, orders: copy(), bill: o.first_order === 'no' ? { kind: 'charged', amount: NO_SHOW, card: 'VISA ending 4242' } : { kind: 'link', amount: NO_SHOW, url: 'https://squareup.com/pay-invoice/demo-noshow' } });
+    }
     if (o && req.action === 'set_stage') {
       if (idxOf(req.stage) >= idxOf('out_for_delivery') && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
       o.stage = req.stage;
@@ -310,6 +321,7 @@ details.done[open] summary::after{content:'Hide'}
   };
   const clockEn = d => d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }).replace(/\s/g, '').toLowerCase();
   const clockEs = d => { const c = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }); return (/^1:/.test(c) ? 'la ' : 'las ') + c.replace(' AM', ' a.m.').replace(' PM', ' p.m.'); };
+  const askYes = o => o.needs_yes && !o.confirmed;           // new customer who hasn't replied YES yet
   const driverName = () => { try { return (localStorage.getItem('loads_driver') || '').trim(); } catch (e) { return ''; } };
   function smsBody(o, stage) {
     stage = stage || o.stage;
@@ -344,14 +356,14 @@ details.done[open] summary::after{content:'Hide'}
       ? hi + 'tu ropa limpia va de regreso. ' + (who ? who + ' está' : 'Tu chofer está') + ' como a ' + eta.min + ' minutos, llega alrededor de ' + clockEs(eta.at) + '.' + link
       : hi + 'your clean laundry is on the way back. ' + (who ? who + ' is' : 'Your driver is') + ' about ' + eta.min + ' minutes out, arriving around ' + clockEn(eta.at) + '.' + link;
     const msgs = es ? {
-      booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (o.pickup_window ? ', de ' + winEs(o.pickup_window) : '') + '. Te mandamos un texto cuando tu chofer vaya en camino, como una hora antes. Deja tu bolsa en la puerta.' + link,
+      booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (o.pickup_window ? ', de ' + winEs(o.pickup_window) : '') + '.' + (askYes(o) ? ' Por favor responde SÍ para confirmar.' : '') + ' Te mandamos un texto cuando tu chofer vaya en camino. Deja tu bolsa en la puerta.' + link,
       on_the_way: hi + 'somos Loads. Tu chofer va en camino y llega en aproximadamente una hora. Por favor ten tu bolsa en la puerta.' + link,
       picked_up: hi + 'ya tenemos tu ropa. Va camino a nuestra lavandería.' + link,
       at_store: hi + 'tu ropa ya llegó a nuestra lavandería.' + link,
       out_for_delivery: hi + 'tu ropa limpia va de regreso. Tu chofer llega en aproximadamente una hora.' + link,
       delivered: hi + 'tu ropa ya está en tu puerta. ¡Gracias por usar Loads!' + (CONFIG.googleReviewUrl ? ' Si tienes un momento, una reseña nos ayuda mucho: ' + CONFIG.googleReviewUrl : '')
     } : {
-      booked: hi + "it's Loads. You're booked for pickup " + when(o.pickup_label, o.pickup_window) + ". We'll text you when your driver is on the way, about an hour before. Leave your bag by the door." + link,
+      booked: hi + "it's Loads. You're booked for pickup " + when(o.pickup_label, o.pickup_window) + '.' + (askYes(o) ? ' Please reply YES to confirm.' : '') + " We'll text you when your driver is on the way. Leave your bag by the door." + link,
       on_the_way: hi + "it's Loads. Your driver is on the way and will be there within about an hour. Please have your bag by the door." + link,
       picked_up: hi + "we've got your load. It's on the way to our laundromat." + link,
       at_store: hi + 'your load made it to our laundromat.' + link,
@@ -365,6 +377,26 @@ details.done[open] summary::after{content:'Hide'}
   const TEXT_STEPS = { on_the_way: 'On my way', out_for_delivery: 'Out for delivery' };
   const etaAsk = {};                        // order id -> stage, when the drive time couldn't be worked out
   const cancelAsk = {};                     // order id -> true while "Cancel this pickup?" is showing
+  const noShowAsk = {};                     // order id -> true while "No bag and no answer?" is showing
+  const NO_SHOW = Number(CONFIG.noShowFee) || 10;
+  const noShowText = (o, bill) => {
+    const es = isEs(o), fee = '$' + NO_SHOW;
+    if (es) return 'Hola ' + firstName(o) + ', somos Loads. Pasamos por tu recogida pero no encontramos tu bolsa ni pudimos comunicarnos contigo, así que la cancelamos. Como dicen nuestros términos, hay un cargo de ' + fee + ' por no estar. ' +
+      (bill.kind === 'charged' ? 'Se cobró a tu tarjeta guardada.' : 'Puedes pagarlo aquí: ' + bill.url) + ' Agenda de nuevo cuando quieras en loadspickup.com.';
+    return 'Hi ' + firstName(o) + ", it's Loads. We came by for your pickup but couldn't find your bag or reach you, so we've canceled it. As in our terms, there's a " + fee + ' no-show fee. ' +
+      (bill.kind === 'charged' ? 'It was charged to your card on file.' : 'You can pay it here: ' + bill.url) + ' Book again anytime at loadspickup.com.';
+  };
+  async function noShow(id) {
+    const o = Object.assign({}, orders.find(x => x.id === id));
+    delete noShowAsk[id];
+    await new Promise(r => { const go = () => busy ? setTimeout(go, 250) : r(); go(); });
+    await run({ action: 'no_show', id });
+    const bill = lastRun && lastRun.bill;
+    if (!bill || orders.some(x => x.id === id)) return;    // didn't go through; the error shows at the top
+    const done = bill.kind === 'charged' ? 'Charged the $' + NO_SHOW + ' no-show fee to ' + esc(firstName(o)) + '’s ' + esc(bill.card) + '.' : 'No card on file, so the text has a payment link for the $' + NO_SHOW + ' fee.';
+    $('#note').innerHTML = '<div class="canceled"><b>No-show: canceled ' + esc(o.name) + '’s pickup.</b> ' + done + '<div><a class="cbtn" href="sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(noShowText(o, bill)) + '">Text ' + esc(firstName(o)) + '</a></div></div>';
+    $('#note').scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
   const canCancel = o => o.stage === 'booked' || o.stage === 'on_the_way';
   const cancelText = o => isEs(o)
     ? 'Hola ' + firstName(o) + ', somos Loads. Tu recogida quedó cancelada. Agenda de nuevo cuando quieras en loadspickup.com.'
@@ -396,6 +428,9 @@ details.done[open] summary::after{content:'Hide'}
     }
     if (!nxt) return out;
     if (needsPay) return out + '<button class="next" type="button" disabled>Waiting on payment</button>';
+    if (nxt.key === 'on_the_way' && askYes(o)) return out +
+      '<div class="yesbox"><b>New customer.</b> Tap <b>Text update</b> to send the confirmation, then wait for their YES before heading out. No reply? Call them.' +
+      '<button class="next" type="button" data-act="yes">They replied YES</button></div>';
     if (TEXT_STEPS[nxt.key]) {
       if (etaAsk[o.id] === nxt.key) return out + '<p class="etaline"><b>Couldn’t get the drive time.</b> How far away are you?</p>' + minButtons(nxt.key);
       return out + '<button class="next" type="button" data-act="omw" data-stage="' + nxt.key + '"' + (finding[o.id] ? ' disabled>Working out your arrival time…' : '>' + TEXT_STEPS[nxt.key]) + '</button>';
@@ -482,11 +517,12 @@ details.done[open] summary::after{content:'Hide'}
             : '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>') + otherWay + '</div>';
       }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + dropoff + '</p></div><div class="chips">' + wash + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + dropoff + '</p></div><div class="chips">' + (o.needs_yes && o.confirmed && o.stage === 'booked' ? '<span class="chip">✓ Confirmed</span>' : '') + wash + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
         '<p class="meta">' + esc(o.address) + ', ' + esc(o.zip) + ' · <a href="' + maps + '" target="_blank" rel="noopener">Directions</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         stepBlock(o, nxt, needsPay) +
-        '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span><span>' + (canCancel(o) ? '<button class="undo" type="button" data-act="cancel">Cancel order</button>' : '') + (i > 0 ? (canCancel(o) ? ' · ' : '') + '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</span></div>' +
+        '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span><span>' + (o.stage === 'on_the_way' ? '<button class="undo" type="button" data-act="noshow">No-show</button> · ' : '') + (canCancel(o) ? '<button class="undo" type="button" data-act="cancel">Cancel order</button>' : '') + (i > 0 ? (canCancel(o) ? ' · ' : '') + '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</span></div>' +
+        (noShowAsk[o.id] ? '<div class="cancelask"><b>No bag and no answer?</b> This cancels the pickup and charges the $' + NO_SHOW + ' no-show fee (card on file, or a payment link to text them).<div><button type="button" class="yes" data-act="noshow-yes">Charge $' + NO_SHOW + ' no-show fee</button><button type="button" data-act="noshow-no">Keep it</button></div></div>' : '') +
         (cancelAsk[o.id] ? '<div class="cancelask"><b>Cancel ' + esc(firstName(o)) + '’s pickup?</b><div><button type="button" class="yes" data-act="cancel-yes">Yes, cancel it</button><button type="button" data-act="cancel-no">Keep it</button></div></div>' : '') +
         (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as ' + priceHelp(o) + '. Edit it if needed.</small></div>' : '') +
         pay +
@@ -507,7 +543,11 @@ details.done[open] summary::after{content:'Hide'}
     // The arrival-time text: Messages opens (the link does that), and the card notes it was sent.
     if (b.dataset.act === 'texted') { markTexted(b.dataset.key); return setTimeout(render, 400); }
     if (b.dataset.act === 'omw') return onMyWay(id, b.dataset.stage);
-    if (b.dataset.act === 'cancel') { cancelAsk[id] = true; return render(); }
+    if (b.dataset.act === 'cancel') { cancelAsk[id] = true; delete noShowAsk[id]; return render(); }
+    if (b.dataset.act === 'noshow') { noShowAsk[id] = true; delete cancelAsk[id]; return render(); }
+    if (b.dataset.act === 'noshow-no') { delete noShowAsk[id]; return render(); }
+    if (b.dataset.act === 'noshow-yes') { b.disabled = true; b.textContent = 'Charging...'; return noShow(id); }
+    if (b.dataset.act === 'yes') { b.disabled = true; return run({ action: 'confirmed', id }); }
     if (b.dataset.act === 'cancel-no') { delete cancelAsk[id]; return render(); }
     if (b.dataset.act === 'cancel-yes') { b.disabled = true; return cancelOrder(id); }
     if (b.dataset.act === 'eta') { delete etaAsk[id]; b.disabled = true; return onMyWay(id, b.dataset.stage, Number(b.dataset.min)); }
@@ -535,7 +575,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24f';
+  const PAGE_VERSION = '2026-11-24g';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();

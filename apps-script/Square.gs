@@ -21,6 +21,7 @@ const SQUARE_VERSION = '2026-07-15';
 
 // Prices, in cents. Keep these the same as config.js.
 const PRICE_PER_LB_CENTS = 225;
+const NO_SHOW_CENTS = 1000;                // no bag and no answer when the driver arrives (see terms.html)
 const TRIP_FEE_CENTS = 699;                // per trip: pickup is one trip, drop-off another
 const MIN_ORDER_CENTS = 3000;              // wash and fold minimum, before delivery
 
@@ -106,6 +107,55 @@ function sendBill_(id) {
   const inv = sq_('post', '/invoices/' + draft.id + '/publish', { version: draft.version, idempotency_key: key_('pub', draft.id) }).invoice;
   write_(t, r, Object.assign(base, { square_invoice_id: inv.id, square_bill_url: inv.public_url || '' }));
   return { bill: { kind: 'link', url: inv.public_url, amount: amount, declined: declined } };
+}
+
+/* ---------------- No-show fee ---------------- */
+
+// Driver went out ("Driver on the way"), no bag, no answer: cancel the pickup and bill the no-show fee.
+// Charges a saved card when there is one, otherwise makes a payment link to text them.
+function noShow_(id) {
+  const t = table_('Bookings');
+  const r = t && find_(t, id);
+  if (!r) return { error: 'not_found' };
+  if (r.stage !== 'on_the_way') return { error: 'cant_no_show', message: 'Tap On my way first. The no-show fee is only for when a driver went out.' };
+  const cents = /^test\b/i.test(String(r.name || '').trim()) ? 100 : NO_SHOW_CENTS;
+  const money = { amount: cents, currency: 'USD' };
+  const customerId = sqCustomer_(r);
+  const order = sq_('post', '/orders', {
+    idempotency_key: key_('noshow', r.booking_id),
+    order: { location_id: SQUARE_LOCATION, reference_id: String(r.booking_id), customer_id: customerId,
+      line_items: [{ name: 'No-show fee (no bag at pickup)', quantity: '1', base_price_money: money }] }
+  }).order;
+  const now = new Date();
+  const base = { stage: 'canceled', canceled_from: r.stage, canceled_at: now, no_show_at: now, stage_updated_at: now,
+    square_customer_id: customerId, square_order_id: order.id, square_bill_total: cents / 100, bill_sent_at: now };
+  const card = savedCard_(customerId);
+  if (card) {
+    try {
+      const pay = sq_('post', '/payments', {
+        idempotency_key: key_('nspay', order.id), source_id: card.id, customer_id: customerId, order_id: order.id,
+        location_id: SQUARE_LOCATION, amount_money: money, autocomplete: true,
+        reference_id: String(r.booking_id), note: 'Loads no-show fee ' + r.booking_id
+      }).payment;
+      if (pay.status === 'COMPLETED') {
+        write_(t, r, Object.assign(base, { square_payment_id: pay.id, paid_at: now }));
+        return { bill: { kind: 'charged', amount: cents / 100, card: (card.card_brand || 'Card').replace(/_/g, ' ') + ' ending ' + (card.last_4 || '') } };
+      }
+    } catch (e) { /* declined: send a link instead */ }
+  }
+  const today = Utilities.formatDate(now, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const draft = sq_('post', '/invoices', {
+    idempotency_key: key_('nsinv', order.id),
+    invoice: {
+      location_id: SQUARE_LOCATION, order_id: order.id, primary_recipient: { customer_id: customerId },
+      payment_requests: [{ request_type: 'BALANCE', due_date: today }], delivery_method: 'SHARE_MANUALLY',
+      accepted_payment_methods: { card: true, square_gift_card: false, bank_account: false, buy_now_pay_later: false, cash_app_pay: false },
+      title: 'Loads no-show fee', description: 'No bag at pickup. Order ' + r.booking_id + '.', sale_or_service_date: today
+    }
+  }).invoice;
+  const inv = sq_('post', '/invoices/' + draft.id + '/publish', { version: draft.version, idempotency_key: key_('nspub', draft.id) }).invoice;
+  write_(t, r, Object.assign(base, { square_invoice_id: inv.id, square_bill_url: inv.public_url || '' }));
+  return { bill: { kind: 'link', url: inv.public_url, amount: cents / 100 } };
 }
 
 // What the customer owes, in cents. TEST orders (name starts with "TEST") are $1 so the setup can be tried for real.

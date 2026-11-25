@@ -38,6 +38,7 @@ window.LOADS_CONFIG = {
     overPerLb: 2.25,           // pounds over 30 on the week's pickup
     extraPickupPerLb: 1.75     // any extra pickup that week
   },
+  noShowFee: 10,               // charged when a driver arrives and there's no bag and no answer (keep the same as apps-script/Square.gs)
   firstOrderOffer: true,       // "First load? Delivery's on us."
   estOrderValue: 40,           // average order value sent to ad platforms with each booking
   daysAhead: 7,                // how many days of pickup dates to offer

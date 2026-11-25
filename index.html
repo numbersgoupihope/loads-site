@@ -244,7 +244,8 @@ footer .wordmark{color:var(--cream)}
 <label class="check"><input type="checkbox" id="consentMarketing"><span data-i18n="consentMkt">Also text me reminders and offers, up to 4 a month. Optional. Reply STOP anytime.</span></label>
 </div>
 <input class="hp" type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-<p data-i18n="legal" class="muted" style="margin:6px 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
+<p data-i18n="noshowLine" class="muted" style="margin:6px 0 8px;font-size:14px"><b>New customers:</b> reply YES to our confirmation text and we'll send a driver. If we arrive and there's no bag and no answer, there's a $<span data-fill="noshow"></span> no-show fee.</p>
+<p data-i18n="legal" class="muted" style="margin:0 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
 <div class="row"><button data-i18n="bookBtn" class="btn" type="submit" id="bookBtn">Pick up my load</button><button data-i18n="back" class="link-btn" type="button" id="back">Back</button></div>
 <p class="msg" id="msg2" role="status" aria-live="polite" hidden></p>
 </form>
@@ -252,7 +253,7 @@ footer .wordmark{color:var(--cream)}
 <div id="step3" hidden>
 <div class="done">
 <div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-<div style="flex:1 1 300px"><h2 data-i18n="s3Title">Your load's on the schedule.</h2><p data-i18n="doneDefault" class="muted" style="margin:0" id="doneText">We'll text you when your driver is on the way, about an hour before. Leave your bag by the door.</p></div>
+<div style="flex:1 1 300px"><h2 data-i18n="s3Title">Your load's on the schedule.</h2><p data-i18n="doneDefault" class="muted" style="margin:0" id="doneText">Watch for our text. New customers, reply YES to confirm. Leave your bag by the door.</p></div>
 <a data-i18n="trackLink" class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
 <button data-i18n="again" class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
 </div>
@@ -398,8 +399,9 @@ footer .wordmark{color:var(--cream)}
 <div class="faq">
 <h2 data-i18n="faqH2" class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
 <details open><summary data-i18n="q1">Do I need to be home?</summary><p data-i18n="a1">Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
-<details><summary data-i18n="q2">When do I get it back?</summary><p data-i18n="a2">Back <span data-fill="turnaround"></span>. You pick a two-hour window for pickup and another for drop-off, any time from 9am to midnight. We text you when the driver is about an hour away.</p></details>
+<details><summary data-i18n="q2">When do I get it back?</summary><p data-i18n="a2">Back <span data-fill="turnaround"></span>. You pick a two-hour window for pickup and another for drop-off, any time from 9am to midnight. We text you when the driver is on the way, with an arrival time.</p></details>
 <details><summary data-i18n="q3">How do you charge?</summary><p data-i18n="a3">No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> each way for pickup and drop-off. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p data-i18n="a3b">First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
+<details><summary data-i18n="qCancel">Can I cancel? What if I miss the pickup?</summary><p data-i18n="aCancel">Cancel or change your pickup by text any time before your window starts, free. New customers reply YES to our confirmation text before we send a driver. If our driver arrives and there's no bag and we can't reach you, we cancel the pickup and charge a $<span data-fill="noshow"></span> no-show fee.</p></details>
 <details><summary data-i18n="qPlan">How does Loads Weekly work?</summary><p data-i18n="aPlan">It's $<span data-plan="monthly"></span> a month, charged to your card by Square. Each week, one pickup of up to <span data-plan="lbs"></span> lb is included, and delivery on that order is $<span data-plan="delivery"></span>. If that pickup weighs more, only the extra pounds are charged, at $<span data-plan="over"></span> each. A second pickup in the same week is $<span data-plan="extra"></span> a pound plus $<span data-plan="delivery"></span> delivery. Unused pounds don't roll over. Book each pickup on this page like normal, and cancel anytime by text or email.</p></details>
 <details><summary data-i18n="q4">What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
 <details><summary data-i18n="q5">What areas do you serve?</summary><p data-i18n="a5">Anywhere within about 30 miles of our laundromats in Koreatown and Van Nuys. That covers the Westside, Hollywood, Downtown, East LA, Pasadena, the South Bay, the whole Valley, Burbank, Santa Clarita and Simi Valley. Enter your zip in the booking form to check.</p></details>
@@ -435,8 +437,8 @@ footer .wordmark{color:var(--cream)}
 
 <div class="mbar"><div><b>$<span data-price></span>/lb</b><small data-i18n="mbarSmall">All over LA</small></div><a data-i18n="bookShort" href="#book" class="btn">Book a pickup</a></div>
 
-<script src="config.js?v=5"></script>
-<script src="i18n.js?v=8"></script>
+<script src="config.js?v=6"></script>
+<script src="i18n.js?v=9"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -458,7 +460,7 @@ const CONFIG = window.LOADS_CONFIG;
     const pick = k => (es && CONFIG[k + 'Es']) || CONFIG[k];
     const fills = {
       phone: CONFIG.phoneDisplay, email: CONFIG.email, turnaround: pick('turnaround'),
-      window: pick('pickupWindow'), guarantee: pick('guarantee'), bulky: pick('bulkyPrice'),
+      window: pick('pickupWindow'), guarantee: pick('guarantee'), bulky: pick('bulkyPrice'), noshow: String(CONFIG.noShowFee || 10),
       rating: CONFIG.googleRating ? t('rating', { r: CONFIG.googleRating }) : '',
       store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || ''
     };
@@ -629,6 +631,7 @@ const CONFIG = window.LOADS_CONFIG;
   /* ---------- booking flow ---------- */
   const s1 = $('#step1'), s2 = $('#step2'), s3 = $('#step3');
   const booking = {};
+  const pageOpened = Date.now();             // bots fill the form in a blink; the server drops anything under 4 seconds
   let lastDone = null;
   buildWindows();
   s1.addEventListener('submit', e => {
@@ -677,7 +680,7 @@ const CONFIG = window.LOADS_CONFIG;
       sms_order_consent: 'yes', sms_marketing_consent: $('#consentMarketing').checked ? 'yes' : 'no',
       first_order_offer: CONFIG.firstOrderOffer ? 'yes' : 'no', user_agent: navigator.userAgent,
       track_token: token, track_url: trackUrl,
-      wash_temp: $('#temp').value, dropoff_window: dwinSel.value
+      wash_temp: $('#temp').value, dropoff_window: dwinSel.value, form_ms: Date.now() - pageOpened
     }, booking, attribution());
     try {
       await send(payload);

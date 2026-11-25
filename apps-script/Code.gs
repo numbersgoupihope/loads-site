@@ -34,7 +34,7 @@ const BOOKING_HEADERS = [
   'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at',
   'subscriber',
   'pickup_window', 'dropoff_label', 'dropoff_window', 'wash_temp', 'on_the_way_at',
-  'eta_at', 'eta_stage', 'canceled_at', 'canceled_from'
+  'eta_at', 'eta_stage', 'canceled_at', 'canceled_from', 'needs_yes', 'confirmed_at', 'form_seconds', 'no_show_at'
 ];
 
 // Loads Weekly sign-ups from the website. Square keeps the subscription itself.
@@ -79,10 +79,19 @@ function saveForm_(p) {
   lock.tryLock(10000);
   try {
     if (p.company) return json_({ ok: true });            // spam trap field
+    // Bots fill the whole form in a blink; people take a while. Drop bookings sent in under 4 seconds.
+    const formMs = p.form_ms === undefined || p.form_ms === '' ? null : Number(p.form_ms);
+    if (p.type !== 'waitlist' && formMs !== null && formMs < 4000) return json_({ ok: true });
+    if (formMs !== null) p.form_seconds = Math.round(formMs / 1000);
     const isWaitlist = p.type === 'waitlist';
     const sheet = sheet_(isWaitlist ? 'Waitlist' : 'Bookings', isWaitlist ? WAITLIST_HEADERS : BOOKING_HEADERS);
     if (!isWaitlist) p.first_order = isFirstOrder_(p.phone) ? 'yes' : 'no';
     if (!isWaitlist) p.subscriber = planFlag_(p.phone);   // Loads Weekly member? Asks Square by mobile number
+    if (!isWaitlist) {
+      const seen = phoneHistory_(p.phone);
+      p.needs_yes = seen.delivered ? 'no' : 'yes';         // no finished order yet: they reply YES before a driver goes out
+      p.open_before = seen.open;                           // other open bookings on this number (flagged in the email)
+    }
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const now = new Date();
     const row = headers.map(function (h) {
@@ -111,17 +120,21 @@ function notify_(p) {
     'Notes: ' + (p.notes || '-'),
     'Heard about us: ' + (p.heard || '-'),
     'First order: ' + (p.first_order || ''),
+    p.open_before ? 'Heads-up: this number already has ' + p.open_before + ' other open booking' + (p.open_before > 1 ? 's' : '') + '. Could be a duplicate.' : null,
     'Loads Weekly member: ' + (p.subscriber === 'yes' ? 'yes' : 'no'),
     'Reminder texts OK: ' + (p.sms_marketing_consent || 'no'),
     'Source: ' + [p.utm_source, p.utm_medium, p.utm_campaign].filter(String).join(' / '),
     '',
     'Tracking link for the customer: ' + (p.track_url || ''),
     'Booking ID: ' + (p.booking_id || ''),
+    p.needs_yes === 'yes'
+      ? 'New customer: tap Text update in the staff app to send the confirmation, and wait for their YES before anyone heads out.'
+      : 'Tap Text update in the staff app to send the confirmation.',
     'When you head out for this pickup, tap "On my way" in the staff app. It texts the customer your arrival time.'
-  ];
+  ].filter(function (l) { return l !== null; });
   MailApp.sendEmail({
     to: NOTIFY_EMAIL,
-    subject: 'New pickup: ' + (p.name || 'customer') + ', ' + when_(p.pickup_label || p.pickup_date, p.pickup_window),
+    subject: (p.open_before ? 'Possible duplicate: ' : 'New pickup: ') + (p.name || 'customer') + ', ' + when_(p.pickup_label || p.pickup_date, p.pickup_window),
     body: lines.join('\n')
   });
 }
@@ -184,6 +197,15 @@ function staff_(req) {
     if (req.action === 'eta') { const res = eta_(req); if (res.error) error = res.error; else eta = res.eta; }
     if (req.action === 'cancel') error = cancel_(req.id, true) || '';
     if (req.action === 'uncancel') error = cancel_(req.id, false) || '';
+    if (req.action === 'confirmed') { const ct = table_('Bookings'), cr = ct && find_(ct, req.id); if (cr) write_(ct, cr, { confirmed_at: req.on === false ? '' : new Date() }); }
+    if (req.action === 'no_show') {
+      try {
+        const res = noShow_(req.id);
+        if (res.error) { error = res.error; message = res.message || ''; } else bill = res.bill;
+      } catch (e) {
+        error = 'square'; message = String(e && e.message || e);
+      }
+    }
     if (req.action === 'send_bill') {
       try {
         const res = sendBill_(req.id);
@@ -301,12 +323,25 @@ function setPaid_(id, paid) {
 }
 
 // A booking is a first order when no earlier booking has the same mobile number.
+// Has this number finished an order before, and how many of its bookings are still open?
+function phoneHistory_(phone) {
+  const d = String(phone || '').replace(/\D/g, '').slice(-10), out = { delivered: false, open: 0 };
+  const t = d.length === 10 && table_('Bookings');
+  if (!t) return out;
+  t.rows.forEach(function (r) {
+    if (String(r.phone || '').replace(/\D/g, '').slice(-10) !== d) return;
+    if (r.stage === 'delivered' || r.delivered_at) out.delivered = true;
+    else if (r.stage !== 'canceled') out.open++;
+  });
+  return out;
+}
+
 function isFirstOrder_(phone) {
   const d = String(phone || '').replace(/\D/g, '').slice(-10);
   if (d.length < 10) return true;
   const t = table_('Bookings');
   if (!t) return true;
-  return !t.rows.some(function (r) { return String(r.phone || '').replace(/\D/g, '').slice(-10) === d; });
+  return !t.rows.some(function (r) { return r.stage !== 'canceled' && String(r.phone || '').replace(/\D/g, '').slice(-10) === d; });
 }
 
 function list_() {
@@ -328,6 +363,7 @@ function list_() {
         pickup_window: String(r.pickup_window || ''), dropoff_label: label_(r.dropoff_label, tz),
         dropoff_window: String(r.dropoff_window || ''), wash_temp: String(r.wash_temp || ''),
         eta_at: r.eta_stage && r.eta_stage === r.stage ? iso_(r.eta_at) : '',
+        needs_yes: String(r.needs_yes) === 'yes', confirmed: !!r.confirmed_at,
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,
         first_order_offer: String(r.first_order_offer || ''), first_order: String(r.first_order || ''),
         paid: !!r.paid_at, track_url: String(r.track_url || ''),
