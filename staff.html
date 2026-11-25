@@ -45,6 +45,11 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 a.next{text-decoration:none}
 .next.alt{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
 .etaline{margin:12px 0 0;font-size:15px}
+.cancelask{margin-top:12px;padding:12px;border-radius:12px;background:#fff0f3;font-size:15px}
+.cancelask div{display:flex;gap:8px;margin-top:10px}
+.cancelask button{flex:1;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:650;cursor:pointer}
+.cancelask button.yes{background:#9f1239;border-color:#9f1239;color:#fff}
+.okmsg a{color:#1d6b3a}
 .mins{display:flex;gap:8px;margin-top:8px}
 .mins button{flex:1;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:650;cursor:pointer}
 .driver{display:flex;align-items:center;gap:10px;justify-content:center;margin:20px 0 0;font-size:14px;color:var(--muted)}
@@ -155,6 +160,7 @@ details.done[open] summary::after{content:'Hide'}
     try {
       const data = await api(req);
       if (!data.ok && data.error === 'pin') { forgetPin(); return showPin('That PIN didn’t work.'); }
+      if (!data.ok && data.error === 'cant_cancel') { orders = data.orders || orders; render(); $('#err').textContent = 'That order is already picked up, so it can’t be canceled here.'; return; }
       if (!data.ok && data.error === 'no_eta') { orders = data.orders || orders; etaAsk[req.id] = req.stage; render(); return; }
       if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'That order isn’t paid yet. Send the bill first, or mark it paid if they paid another way.'; return; }
       if (!data.ok && data.message) { orders = data.orders || orders; showApp(); render(); $('#err').textContent = data.message; return; }
@@ -233,7 +239,9 @@ details.done[open] summary::after{content:'Hide'}
   ];
   function demoApi(req) {
     const o = demoOrders.find(x => x.id === req.id);
-    const copy = () => demoOrders.map(x => Object.assign({}, x));
+    const copy = () => demoOrders.filter(x => x.stage !== 'canceled').map(x => Object.assign({}, x));
+    if (o && req.action === 'cancel') { if (o.stage !== 'booked' && o.stage !== 'on_the_way') return Promise.resolve({ ok: false, error: 'cant_cancel', orders: copy() }); o.canceled_from = o.stage; o.stage = 'canceled'; }
+    if (o && req.action === 'uncancel' && o.stage === 'canceled') o.stage = o.canceled_from || 'booked';
     if (o && req.action === 'set_stage') {
       if (idxOf(req.stage) >= idxOf('out_for_delivery') && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
       o.stage = req.stage;
@@ -354,6 +362,20 @@ details.done[open] summary::after{content:'Hide'}
   // "On my way" and "Out for delivery": the app works out the arrival time, then one tap texts it.
   const TEXT_STEPS = { on_the_way: 'On my way', out_for_delivery: 'Out for delivery' };
   const etaAsk = {};                        // order id -> stage, when the drive time couldn't be worked out
+  const cancelAsk = {};                     // order id -> true while "Cancel this pickup?" is showing
+  const canCancel = o => o.stage === 'booked' || o.stage === 'on_the_way';
+  const cancelText = o => isEs(o)
+    ? 'Hola ' + firstName(o) + ', somos Loads. Tu recogida quedó cancelada. Agenda de nuevo cuando quieras en loadspickup.com.'
+    : 'Hi ' + firstName(o) + ", it's Loads. Your pickup is canceled. Book again anytime at loadspickup.com.";
+  async function cancelOrder(id) {
+    const o = Object.assign({}, orders.find(x => x.id === id));
+    delete cancelAsk[id];
+    await new Promise(r => { const go = () => busy ? setTimeout(go, 250) : r(); go(); });
+    await run({ action: 'cancel', id });
+    if (orders.some(x => x.id === id)) return;           // didn't go through; the error shows at the top
+    $('#note').innerHTML = 'Canceled ' + esc(o.name) + '’s pickup. <a href="sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(cancelText(o)) + '">Text ' + esc(firstName(o)) + '</a> · <button class="undo" type="button" data-undo-cancel="' + esc(id) + '">Undo</button>';
+    $('#note').scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
   const finding = {};                       // order id -> true while the drive time is being worked out
   const texted = new Set((() => { try { return JSON.parse(localStorage.getItem('loads_texted') || '[]'); } catch (e) { return []; } })());
   const markTexted = k => { texted.add(k); try { localStorage.setItem('loads_texted', JSON.stringify(Array.from(texted).slice(-60))); } catch (e) {} };
@@ -462,7 +484,8 @@ details.done[open] summary::after{content:'Hide'}
         '<p class="meta">' + esc(o.address) + ', ' + esc(o.zip) + ' · <a href="' + maps + '" target="_blank" rel="noopener">Directions</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         stepBlock(o, nxt, needsPay) +
-        '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span>' + (i > 0 ? '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</div>' +
+        '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span><span>' + (canCancel(o) ? '<button class="undo" type="button" data-act="cancel">Cancel order</button>' : '') + (i > 0 ? (canCancel(o) ? ' · ' : '') + '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</span></div>' +
+        (cancelAsk[o.id] ? '<div class="cancelask"><b>Cancel ' + esc(firstName(o)) + '’s pickup?</b><div><button type="button" class="yes" data-act="cancel-yes">Yes, cancel it</button><button type="button" data-act="cancel-no">Keep it</button></div></div>' : '') +
         (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as ' + priceHelp(o) + '. Edit it if needed.</small></div>' : '') +
         pay +
         '</article>';
@@ -482,6 +505,9 @@ details.done[open] summary::after{content:'Hide'}
     // The arrival-time text: Messages opens (the link does that), and the card notes it was sent.
     if (b.dataset.act === 'texted') { markTexted(b.dataset.key); return setTimeout(render, 400); }
     if (b.dataset.act === 'omw') return onMyWay(id, b.dataset.stage);
+    if (b.dataset.act === 'cancel') { cancelAsk[id] = true; return render(); }
+    if (b.dataset.act === 'cancel-no') { delete cancelAsk[id]; return render(); }
+    if (b.dataset.act === 'cancel-yes') { b.disabled = true; return cancelOrder(id); }
     if (b.dataset.act === 'eta') { delete etaAsk[id]; b.disabled = true; return onMyWay(id, b.dataset.stage, Number(b.dataset.min)); }
     if (b.dataset.act === 'weight') return run({ action: 'set_weight', id, weight_lbs: card.querySelector('[data-w]').value, order_total: card.querySelector('[data-t]').value });
     if (b.dataset.act === 'paid' || b.dataset.act === 'unpaid') { b.disabled = true; return run({ action: 'set_paid', id, paid: b.dataset.act === 'paid' }); }
@@ -494,6 +520,10 @@ details.done[open] summary::after{content:'Hide'}
     const b = $('#refresh'); b.disabled = true; b.textContent = 'Refreshing...';
     location.reload();
   });
+  $('#note').addEventListener('click', e => {
+    const u = e.target.closest('[data-undo-cancel]'); if (!u) return;
+    u.disabled = true; run({ action: 'uncancel', id: u.dataset.undoCancel });
+  });
   $('#driver').value = driverName();
   $('#driver').addEventListener('input', e => { try { localStorage.setItem('loads_driver', e.target.value.trim()); } catch (x) {} render(); });
   $('#signout').addEventListener('click', () => { forgetPin(); orders = []; known = null; $('#list').innerHTML = ''; showPin(''); });
@@ -503,7 +533,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24d';
+  const PAGE_VERSION = '2026-11-24e';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();

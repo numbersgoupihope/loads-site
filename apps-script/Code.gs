@@ -34,7 +34,7 @@ const BOOKING_HEADERS = [
   'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at',
   'subscriber',
   'pickup_window', 'dropoff_label', 'dropoff_window', 'wash_temp', 'on_the_way_at',
-  'eta_at', 'eta_stage'
+  'eta_at', 'eta_stage', 'canceled_at', 'canceled_from'
 ];
 
 // Loads Weekly sign-ups from the website. Square keeps the subscription itself.
@@ -182,6 +182,8 @@ function staff_(req) {
     if (req.action === 'set_weight') setWeight_(req.id, req.weight_lbs, req.order_total);
     if (req.action === 'set_paid') setPaid_(req.id, req.paid);
     if (req.action === 'eta') { const res = eta_(req); if (res.error) error = res.error; else eta = res.eta; }
+    if (req.action === 'cancel') error = cancel_(req.id, true) || '';
+    if (req.action === 'uncancel') error = cancel_(req.id, false) || '';
     if (req.action === 'send_bill') {
       try {
         const res = sendBill_(req.id);
@@ -245,6 +247,21 @@ function checkDriveTime() {
   return s;
 }
 
+// Cancel an order that hasn't been picked up yet (or undo that). Canceled orders leave the
+// staff list and the tracker says canceled. The row stays in the Sheet.
+function cancel_(id, on) {
+  const t = table_('Bookings');
+  const r = t && find_(t, id);
+  if (!r) return 'not_found';
+  if (on) {
+    if (r.stage !== 'booked' && r.stage !== 'on_the_way') return 'cant_cancel';
+    write_(t, r, { stage: 'canceled', canceled_from: r.stage, canceled_at: new Date(), stage_updated_at: new Date() });
+  } else {
+    if (r.stage !== 'canceled') return;
+    write_(t, r, { stage: STAGES.indexOf(String(r.canceled_from)) >= 0 ? String(r.canceled_from) : 'booked', canceled_at: '', stage_updated_at: new Date() });
+  }
+}
+
 // Returns 'unpaid' when an order would go out for delivery before it's marked paid.
 function setStage_(id, stage) {
   const i = STAGES.indexOf(stage);
@@ -299,7 +316,7 @@ function list_() {
   const today = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd');
   return t.rows
     .filter(function (r) {
-      if (!r.booking_id) return false;
+      if (!r.booking_id || r.stage === 'canceled') return false;
       if (r.stage !== 'delivered') return true;
       return r.delivered_at instanceof Date && Utilities.formatDate(r.delivered_at, tz, 'yyyy-MM-dd') === today;
     })

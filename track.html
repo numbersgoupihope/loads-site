@@ -93,7 +93,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
 </main>
 
 <script src="config.js?v=5"></script>
-<script src="i18n.js?v=7"></script>
+<script src="i18n.js?v=8"></script>
 <script src="preview-nav.js"></script>
 <script>
 (function () {
@@ -143,6 +143,17 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
   let lastOrder = null;
   function render(o) {
     lastOrder = o;
+    const canceled = o.stage === 'canceled';
+    ['#bar', '#timeline'].forEach(s => { $(s).hidden = canceled; });
+    $('.bar-meta').hidden = canceled;
+    if (canceled) {
+      $('#loading').hidden = true; $('#notfound').hidden = true; $('#order').hidden = false; $('#weight').hidden = true; $('#review').hidden = true;
+      $('#orderId').textContent = t('trkOrder', { id: o.id });
+      $('#icon').className = 'icon'; $('#icon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></svg>';
+      $('#headline').textContent = t('trkCanceled'); $('#detail').textContent = t('trkCanceledDetail');
+      $('#updated').textContent = ''; document.title = t('trkCanceled');
+      return;
+    }
     const idx = Math.max(0, STAGES.findIndex(s => s.key === o.stage));
     const st = S(STAGES[idx]);
     $('#loading').hidden = true; $('#notfound').hidden = true; $('#order').hidden = false;
