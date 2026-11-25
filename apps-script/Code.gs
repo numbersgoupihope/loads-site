@@ -18,7 +18,7 @@ const NOTIFY_EMAIL = 'loadspickup@gmail.com,dimitri@dpzwest.com';
 const STAFF_PIN = '';
 
 // Order stages, in order. Must match LOADS_STAGES in config.js.
-const STAGES = ['booked', 'picked_up', 'at_store', 'washing', 'drying', 'folding', 'out_for_delivery', 'delivered'];
+const STAGES = ['booked', 'on_the_way', 'picked_up', 'at_store', 'washing', 'drying', 'folding', 'out_for_delivery', 'delivered'];
 
 const BOOKING_HEADERS = [
   'received_at', 'booking_id', 'stage', 'stage_updated_at', 'pickup_date', 'pickup_label', 'zone', 'zip',
@@ -32,7 +32,8 @@ const BOOKING_HEADERS = [
   'first_utm_source', 'first_utm_medium', 'first_utm_campaign', 'first_utm_content',
   'landing_page', 'referrer', 'first_seen', 'submitted_at', 'user_agent', 'lang',
   'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at',
-  'subscriber'
+  'subscriber',
+  'pickup_window', 'dropoff_label', 'dropoff_window', 'wash_temp', 'on_the_way_at'
 ];
 
 // Loads Weekly sign-ups from the website. Square keeps the subscription itself.
@@ -100,7 +101,9 @@ function notify_(p) {
   const lines = [
     'New Loads pickup booking',
     '',
-    'Pickup: ' + (p.pickup_label || p.pickup_date || '') + '  (' + (p.zone || '') + ')',
+    'Pickup: ' + when_(p.pickup_label || p.pickup_date, p.pickup_window) + '  (' + (p.zone || '') + ')',
+    'Drop-off: ' + (when_(p.dropoff_label, p.dropoff_window) || '-'),
+    'Wash: ' + (p.wash_temp || '-'),
     'Name: ' + (p.name || ''),
     'Mobile: ' + (p.phone || ''),
     'Address: ' + (p.address || '') + '  ' + (p.zip || ''),
@@ -113,13 +116,18 @@ function notify_(p) {
     '',
     'Tracking link for the customer: ' + (p.track_url || ''),
     'Booking ID: ' + (p.booking_id || ''),
-    'Text the customer to confirm the pickup window.'
+    'About an hour before pickup, tap "On my way" in the staff app. It texts the customer.'
   ];
   MailApp.sendEmail({
     to: NOTIFY_EMAIL,
-    subject: 'New pickup: ' + (p.name || 'customer') + ', ' + (p.pickup_label || p.pickup_date || ''),
+    subject: 'New pickup: ' + (p.name || 'customer') + ', ' + when_(p.pickup_label || p.pickup_date, p.pickup_window),
     body: lines.join('\n')
   });
+}
+
+// "Mon, Nov 17, 9 to 11am"
+function when_(day, win) {
+  return [day, win].filter(function (v) { return v; }).join(', ');
 }
 
 /* ---------------- customer tracking ---------------- */
@@ -140,6 +148,9 @@ function track_(id, token) {
       first_name: String(r.name || '').trim().split(/\s+/)[0],
       stage: r.stage || 'booked',
       pickup_label: label_(r.pickup_label, Session.getScriptTimeZone()),
+      pickup_window: String(r.pickup_window || ''),
+      dropoff_label: label_(r.dropoff_label, Session.getScriptTimeZone()),
+      dropoff_window: String(r.dropoff_window || ''),
       zone: r.zone || '',
       weight_lbs: r.weight_lbs === '' ? '' : Number(r.weight_lbs),
       order_total: r.order_total === '' ? '' : Number(r.order_total),
@@ -249,6 +260,8 @@ function list_() {
         id: String(r.booking_id), name: String(r.name || ''), phone: String(r.phone || ''),
         address: String(r.address || ''), zip: String(r.zip || ''), notes: String(r.notes || ''),
         zone: String(r.zone || ''), pickup_date: day_(r.pickup_date, tz), pickup_label: label_(r.pickup_label, tz),
+        pickup_window: String(r.pickup_window || ''), dropoff_label: label_(r.dropoff_label, tz),
+        dropoff_window: String(r.dropoff_window || ''), wash_temp: String(r.wash_temp || ''),
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,
         first_order_offer: String(r.first_order_offer || ''), first_order: String(r.first_order || ''),
         paid: !!r.paid_at, track_url: String(r.track_url || ''),
@@ -310,7 +323,7 @@ function clean_(v) {
 }
 
 // Sheets turns text like "2026-11-23" or "Mon, Nov 23" into dates. These columns are saved as plain text.
-const TEXT_FIELDS = ['pickup_date', 'pickup_label', 'zip'];
+const TEXT_FIELDS = ['pickup_date', 'pickup_label', 'zip', 'pickup_window', 'dropoff_label', 'dropoff_window'];
 
 function text_(v) {
   v = clean_(v);

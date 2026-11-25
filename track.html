@@ -92,8 +92,8 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
 <div class="foot"><span data-i18n="trkQuestions">Questions? Text <a id="sms" href="#"><span id="phone"></span></a></span><span id="updated"></span></div>
 </main>
 
-<script src="config.js?v=4"></script>
-<script src="i18n.js?v=5"></script>
+<script src="config.js?v=5"></script>
+<script src="i18n.js?v=6"></script>
 <script src="preview-nav.js"></script>
 <script>
 (function () {
@@ -102,6 +102,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
   const $ = s => document.querySelector(s);
   const ICONS = {
     booked: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    on_the_way: '<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
     picked_up: '<path d="M6.5 9h11l1 11h-13z"/><path d="M9.5 9V7.5a2.5 2.5 0 0 1 5 0V9"/>',
     at_store: '<path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/>',
     washing: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3.5v4"/>',
@@ -110,7 +111,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     out_for_delivery: '<path d="M3 6h11v10H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
     delivered: '<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M9.5 15l2 2 3.5-4"/>'
   };
-  const MOTION = { washing: 'spin', drying: 'spin', picked_up: 'bob', out_for_delivery: 'bob' };
+  const MOTION = { washing: 'spin', drying: 'spin', on_the_way: 'bob', picked_up: 'bob', out_for_delivery: 'bob' };
   const I18N = window.LOADS_I18N || { lang: 'en', locale: () => 'en-US', t: (k, v, f) => f || k };
   const t = (k, v, f) => I18N.t(k, v, f);
   const es = () => I18N.lang === 'es';
@@ -127,6 +128,12 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     const m = label.match(/^(\w{3}), (\w{3}) (\d{1,2})$/);
     return m && DAYS[m[1]] && MONTHS[m[2]] ? DAYS[m[1]] + ' ' + m[3] + ' de ' + MONTHS[m[2]] : label;
   }
+  // pickup windows are stored in English ("9 to 11am"); config.js has the Spanish
+  function winLabel(w) {
+    const hit = (CONFIG.windows || []).find(x => x.en === w);
+    return es() && hit && hit.es ? hit.es : String(w || '');
+  }
+  const pickupWhen = o => dayLabel(o.pickup_label) + (o.pickup_window ? ', ' + winLabel(o.pickup_window) : '');
   function setPhone() {
     if (CONFIG.phoneDisplay) { $('#phone').textContent = CONFIG.phoneDisplay; $('#sms').href = 'sms:' + CONFIG.phoneSms; }
     else { $('#phone').textContent = '[PHONE]'; $('#phone').className = 'todo-chip'; }
@@ -139,11 +146,11 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     const idx = Math.max(0, STAGES.findIndex(s => s.key === o.stage));
     const st = S(STAGES[idx]);
     $('#loading').hidden = true; $('#notfound').hidden = true; $('#order').hidden = false;
-    $('#orderId').textContent = t('trkOrder', { id: o.id }) + (o.pickup_label ? t('trkPickupOn', { day: dayLabel(o.pickup_label) }) : '');
+    $('#orderId').textContent = t('trkOrder', { id: o.id }) + (o.pickup_label ? t('trkPickupOn', { day: pickupWhen(o) }) : '');
     $('#icon').className = 'icon ' + (MOTION[st.key] || '');
     $('#icon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[st.key] + '</svg>';
     $('#headline').textContent = (o.first_name && idx === STAGES.length - 1 ? o.first_name + ', ' + st.headline.charAt(0).toLowerCase() + st.headline.slice(1) : st.headline);
-    $('#detail').textContent = st.key === 'booked' && o.pickup_label ? t('trkBookedDetail', { day: dayLabel(o.pickup_label) }) : st.detail;
+    $('#detail').textContent = st.key === 'booked' && o.pickup_label ? t('trkBookedDetail', { day: pickupWhen(o) }) : st.detail;
     $('#bar').innerHTML = STAGES.map((s, i) => '<i class="' + (i < idx ? 'done' : i === idx ? (idx === STAGES.length - 1 ? 'done' : 'now') : '') + '"></i>').join('');
     $('#stageLabel').textContent = st.label;
     $('#stepCount').textContent = t('trkStep', { n: idx + 1, total: STAGES.length });
@@ -178,7 +185,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     const demo = () => {
       const times = {};
       STAGES.forEach((s, n) => { if (n <= i) times[s.key] = new Date(start + n * 40 * 60e3).toISOString(); });
-      render({ id: id || 'DEMO', first_name: 'Sam', stage: STAGES[i].key, pickup_label: 'Mon, Nov 17', weight_lbs: i >= 2 ? 14.2 : '', order_total: i >= 2 ? 31.95 : '', paid: i >= 5, times });
+      render({ id: id || 'DEMO', first_name: 'Sam', stage: STAGES[i].key, pickup_label: 'Mon, Nov 17', pickup_window: '9 to 11am', weight_lbs: i >= 3 ? 14.2 : '', order_total: i >= 3 ? 31.95 : '', paid: i >= 6, times });
       i = (i + 1) % STAGES.length;
     };
     demo(); setInterval(demo, 3500);

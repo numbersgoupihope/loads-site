@@ -211,7 +211,8 @@ footer .wordmark{color:var(--cream)}
 <div class="row">
 <div class="field"><label data-i18n="zipLabel" for="zip">Your zip code</label><input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="90005" required></div>
 <div class="field"><label data-i18n="dayLabel" for="day">Pickup day</label><select id="day" name="day" required><option value="">Choose a day</option></select></div>
-<button data-i18n="seeTimes" class="btn field" type="submit">See pickup times</button>
+<div class="field"><label data-i18n="winLabel" for="win">Pickup time</label><select id="win" name="pickup_window" required><option value="">Choose a time</option></select></div>
+<button data-i18n="seeTimes" class="btn field" type="submit">Continue</button>
 </div>
 <p class="msg" id="msg1" role="status" aria-live="polite" hidden></p>
 <div id="outzone" hidden>
@@ -234,6 +235,10 @@ footer .wordmark{color:var(--cream)}
 <div class="field wide"><label data-i18n="notesLabel" for="notes">Pickup notes (optional)</label><input data-i18n-attr="placeholder:notesPh" id="notes" name="notes" type="text" placeholder="Gate code, where the bag will be"></div>
 <div class="field"><label data-i18n="heardLabel" for="heard">How did you hear about us?</label><select id="heard" name="heard"><option value="" data-i18n="heard0">Pick one</option><option value="Google search" data-i18n="heard1">Google search</option><option value="Instagram or Facebook" data-i18n="heard2">Instagram or Facebook</option><option value="TikTok" data-i18n="heard3">TikTok</option><option value="Flyer or door hanger" data-i18n="heard4">Flyer or door hanger</option><option value="Saw your laundromat" data-i18n="heard5">Saw your laundromat</option><option value="A friend" data-i18n="heard6">A friend</option><option value="Nextdoor" data-i18n="heard7">Nextdoor</option><option value="Other" data-i18n="heard8">Other</option></select></div>
 </div>
+<div class="row" style="margin-top:12px">
+<div class="field"><label data-i18n="tempLabel" for="temp">Wash in</label><select id="temp" name="wash_temp" required><option value="" data-i18n="temp0">Hot or cold?</option><option value="Cold" data-i18n="tempCold">Cold water</option><option value="Hot" data-i18n="tempHot">Hot water</option></select></div>
+<div class="field"><label for="dwin"><span data-i18n="dwinLabel">Drop-off time</span> <span id="dwinDay" style="font-weight:400"></span></label><select id="dwin" name="dropoff_window" required><option value="">Choose a time</option></select></div>
+</div>
 <div class="consents">
 <label class="check"><input type="checkbox" id="consentOrder" required><span data-i18n="consentOrder">Text me about this order (confirmation, pickup and delivery updates). Reply STOP anytime. Msg &amp; data rates may apply.</span></label>
 <label class="check"><input type="checkbox" id="consentMarketing"><span data-i18n="consentMkt">Also text me reminders and offers, up to 4 a month. Optional. Reply STOP anytime.</span></label>
@@ -247,7 +252,7 @@ footer .wordmark{color:var(--cream)}
 <div id="step3" hidden>
 <div class="done">
 <div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-<div style="flex:1 1 300px"><h2 data-i18n="s3Title">Your load's on the schedule.</h2><p data-i18n="doneDefault" class="muted" style="margin:0" id="doneText">We'll text you to confirm your pickup window. Leave your bag by the door.</p></div>
+<div style="flex:1 1 300px"><h2 data-i18n="s3Title">Your load's on the schedule.</h2><p data-i18n="doneDefault" class="muted" style="margin:0" id="doneText">We'll text you when your driver is on the way, about an hour before. Leave your bag by the door.</p></div>
 <a data-i18n="trackLink" class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Track your load</a>
 <button data-i18n="again" class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Book another</button>
 </div>
@@ -393,7 +398,7 @@ footer .wordmark{color:var(--cream)}
 <div class="faq">
 <h2 data-i18n="faqH2" class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">Questions? <span class="serif">We've got loads.</span></h2>
 <details open><summary data-i18n="q1">Do I need to be home?</summary><p data-i18n="a1">Nope. Leave your bag outside your door, or tell us where to find it when you book.</p></details>
-<details><summary data-i18n="q2">When do I get it back?</summary><p data-i18n="a2">Back <span data-fill="turnaround"></span>. We run one pickup route and one drop-off route every day.</p></details>
+<details><summary data-i18n="q2">When do I get it back?</summary><p data-i18n="a2">Back <span data-fill="turnaround"></span>. You pick a two-hour window for pickup and another for drop-off, any time from 9am to midnight. We text you when the driver is about an hour away.</p></details>
 <details><summary data-i18n="q3">How do you charge?</summary><p data-i18n="a3">No card needed to book. We weigh your laundry dry at the store, before washing, and charge $<span data-price></span> a pound<span data-minline> with a $<span data-min></span> minimum</span>, plus $<span data-fee></span> each way for pickup and drop-off. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total.</p><p data-i18n="a3b">First order: you get a secure payment link from Square. Tick “save card” when you pay, and after that we just charge your saved card, so there's nothing to do. Your laundry comes back as soon as it's paid.</p></details>
 <details><summary data-i18n="qPlan">How does Loads Weekly work?</summary><p data-i18n="aPlan">It's $<span data-plan="monthly"></span> a month, charged to your card by Square. Each week, one pickup of up to <span data-plan="lbs"></span> lb is included, and delivery on that order is $<span data-plan="delivery"></span>. If that pickup weighs more, only the extra pounds are charged, at $<span data-plan="over"></span> each. A second pickup in the same week is $<span data-plan="extra"></span> a pound plus $<span data-plan="delivery"></span> delivery. Unused pounds don't roll over. Book each pickup on this page like normal, and cancel anytime by text or email.</p></details>
 <details><summary data-i18n="q4">What if something comes back wrong?</summary><p><span data-fill="guarantee"></span></p></details>
@@ -430,8 +435,8 @@ footer .wordmark{color:var(--cream)}
 
 <div class="mbar"><div><b>$<span data-price></span>/lb</b><small data-i18n="mbarSmall">All over LA</small></div><a data-i18n="bookShort" href="#book" class="btn">Book a pickup</a></div>
 
-<script src="config.js?v=4"></script>
-<script src="i18n.js?v=5"></script>
+<script src="config.js?v=5"></script>
+<script src="i18n.js?v=6"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -602,20 +607,44 @@ const CONFIG = window.LOADS_CONFIG;
   }
   buildDays();
 
+  /* ---------- pickup and drop-off windows ---------- */
+  const winSel = $('#win'), dwinSel = $('#dwin');
+  const WINDOWS = CONFIG.windows || [];
+  const winText = w => I18N.lang === 'es' ? (w.es || w.en) : w.en;
+  const winLocal = en => { const w = WINDOWS.find(x => x.en === en); return w ? winText(w) : en; };
+  const nextDay = v => { const d = dayOf(v); d.setDate(d.getDate() + 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  function fillWindows(sel) {
+    const keep = sel.value;
+    sel.innerHTML = '';
+    const first = document.createElement('option'); first.value = ''; first.textContent = t('chooseWin');
+    sel.appendChild(first);
+    WINDOWS.forEach(w => { const o = document.createElement('option'); o.value = w.en; o.textContent = winText(w); sel.appendChild(o); });
+    sel.value = keep;
+  }
+  function buildWindows() {
+    fillWindows(winSel); fillWindows(dwinSel);
+    $('#dwinDay').textContent = booking.pickup_date ? '(' + localDay(nextDay(booking.pickup_date)) + ')' : '';
+  }
+
   /* ---------- booking flow ---------- */
   const s1 = $('#step1'), s2 = $('#step2'), s3 = $('#step3');
   const booking = {};
   let lastDone = null;
+  buildWindows();
   s1.addEventListener('submit', e => {
     e.preventDefault();
     const zip = digits($('#zip').value).slice(0, 5);
     show($('#outzone'), false);
     if (zip.length !== 5) return msg($('#msg1'), t('eZip'), true);
     if (!daySel.value) return msg($('#msg1'), t('eDay'), true);
+    if (WINDOWS.length && !winSel.value) return msg($('#msg1'), t('eWin'), true);
     const zone = zipZone(zip);
     if (!zone) { msg($('#msg1'), ''); $('#outzip').textContent = zip; return show($('#outzone'), true); }
     msg($('#msg1'), '');
-    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: fmtEn.format(dayOf(daySel.value)) });
+    const back = nextDay(daySel.value);
+    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: fmtEn.format(dayOf(daySel.value)), pickup_window: winSel.value, dropoff_label: fmtEn.format(dayOf(back)) });
+    $('#dwinDay').textContent = '(' + localDay(back) + ')';
+    if (!dwinSel.value) dwinSel.value = winSel.value;     // same time the next day, unless they change it
     track('begin_booking', { zone });
     show(s1, false); show(s2, true); $('#name').focus();
   });
@@ -633,6 +662,8 @@ const CONFIG = window.LOADS_CONFIG;
     if (!$('#name').value.trim()) return msg(m, t('eName'), true);
     if (!validPhone($('#phone').value)) return msg(m, t('ePhone'), true);
     if (!$('#street').value.trim()) return msg(m, t('eAddr'), true);
+    if (!$('#temp').value) return msg(m, t('eTemp'), true);
+    if (WINDOWS.length && !dwinSel.value) return msg(m, t('eDwin'), true);
     if (!$('#consentOrder').checked) return msg(m, t('eConsent'), true);
     const btn = $('#bookBtn'); btn.disabled = true; msg(m, t('booking'));
     const id = 'L' + Date.now().toString(36).toUpperCase();
@@ -645,20 +676,25 @@ const CONFIG = window.LOADS_CONFIG;
       notes: (I18N.lang === 'es' ? '[Español] ' : '') + $('#notes').value.trim(), heard: $('#heard').value, lang: I18N.lang,
       sms_order_consent: 'yes', sms_marketing_consent: $('#consentMarketing').checked ? 'yes' : 'no',
       first_order_offer: CONFIG.firstOrderOffer ? 'yes' : 'no', user_agent: navigator.userAgent,
-      track_token: token, track_url: trackUrl
+      track_token: token, track_url: trackUrl,
+      wash_temp: $('#temp').value, dropoff_window: dwinSel.value
     }, booking, attribution());
     try {
       await send(payload);
       track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
-      lastDone = { phone: payload.phone, date: booking.pickup_date };
-      $('#doneText').textContent = t('done', { phone: lastDone.phone, day: localDay(lastDone.date) });
+      lastDone = { phone: payload.phone, date: booking.pickup_date, win: booking.pickup_window };
+      doneText();
       $('#trackLink').href = trackUrl;
       show(s2, false); show(s3, true); msg(m, '');
     } catch (err) {
       msg(m, t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
     } finally { btn.disabled = false; }
   });
-  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; show(s3, false); show(s1, true); });
+  function doneText() {
+    const day = localDay(lastDone.date) + (lastDone.win ? ', ' + winLocal(lastDone.win) : '');
+    $('#doneText').textContent = t('done', { phone: lastDone.phone, day });
+  }
+  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; Object.keys(booking).forEach(k => delete booking[k]); buildWindows(); show(s3, false); show(s1, true); });
 
   /* ---------- Loads Weekly sign-up ---------- */
   // Back from Square's checkout: point them at booking their first pickup.
@@ -729,7 +765,8 @@ const CONFIG = window.LOADS_CONFIG;
   /* ---------- language switch ---------- */
   document.addEventListener('loads:lang', () => {
     fillAll(); buildDays(); estimate();
-    if (lastDone) $('#doneText').textContent = t('done', { phone: lastDone.phone, day: localDay(lastDone.date) });
+    buildWindows();
+    if (lastDone) doneText();
     ['#msg1', '#msg2', '#msgw'].forEach(id => msg($(id), ''));
   });
 

@@ -42,6 +42,10 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 .links a{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border-radius:12px;background:#f1f4f0;text-decoration:none;font-size:14px;font-weight:600}
 .next{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;margin-top:14px;border:none;border-radius:14px;background:var(--cta);color:#fff;font-size:18px;font-weight:650;cursor:pointer}
 .next:disabled{opacity:.6}
+a.next{text-decoration:none}
+a.next.sent{opacity:.6;pointer-events:none}
+.chip.hot{background:#ffe2d6;color:#9a3412}
+.chip.cold{background:#dbeafe;color:#1e3a8a}
 .under{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:6px}
 .undo{min-height:40px;padding:4px 0;border:none;background:none;color:var(--muted);font-size:14px;text-decoration:underline;cursor:pointer}
 .weigh{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #eef0ec}
@@ -107,7 +111,7 @@ details.done[open] summary::after{content:'Hide'}
 <p style="text-align:center;margin:24px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
-<script src="config.js?v=4"></script>
+<script src="config.js?v=5"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -215,9 +219,9 @@ details.done[open] summary::after{content:'Hide'}
 
   /* ---------- preview data ---------- */
   const demoOrders = [
-    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
-    { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
-    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys store', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
+    { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '9 to 11am', dropoff_label: 'Tue, Nov 18', dropoff_window: '11am to 1pm', wash_temp: 'Cold', stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
+    { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '1 to 3pm', dropoff_label: 'Tue, Nov 18', dropoff_window: '5 to 7pm', wash_temp: 'Hot', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
+    { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys store', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', pickup_window: '7 to 9pm', dropoff_label: 'Mon, Nov 17', dropoff_window: '9pm to midnight', wash_temp: 'Cold', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
     { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' }
   ];
   function demoApi(req) {
@@ -270,13 +274,17 @@ details.done[open] summary::after{content:'Hide'}
   const DAYS_ES = { Mon: 'lun', Tue: 'mar', Wed: 'mié', Thu: 'jue', Fri: 'vie', Sat: 'sáb', Sun: 'dom' };
   const MONTHS_ES = { Jan: 'ene', Feb: 'feb', Mar: 'mar', Apr: 'abr', May: 'may', Jun: 'jun', Jul: 'jul', Aug: 'ago', Sep: 'sep', Oct: 'oct', Nov: 'nov', Dec: 'dic' };
   const dayEs = l => { const m = String(l || '').match(/^(\w{3}), (\w{3}) (\d{1,2})$/); return m && DAYS_ES[m[1]] && MONTHS_ES[m[2]] ? DAYS_ES[m[1]] + ' ' + m[3] + ' de ' + MONTHS_ES[m[2]] : String(l || ''); };
-  function smsBody(o) {
+  // Pickup windows are stored in English ("9 to 11am"); config.js has the Spanish.
+  const winEs = w => { const hit = (CONFIG.windows || []).find(x => x.en === w); return hit && hit.es ? hit.es : String(w || ''); };
+  const when = (day, win) => [day, win].filter(Boolean).join(', ');
+  function smsBody(o, stage) {
+    stage = stage || o.stage;
     const es = isEs(o);
     const first = (o.name || '').trim().split(/\s+/)[0] || (es ? '' : 'there');
     const hi = es ? 'Hola ' + first + ', ' : 'Hi ' + first + ', ';
     const link = o.track_url ? (es ? ' Sigue tu pedido aquí: ' : ' Track it here: ') + o.track_url : '';
-    const st = STAGES[idxOf(o.stage)];
-    const atStore = idxOf(o.stage) >= idxOf('at_store') && idxOf(o.stage) < idxOf('out_for_delivery');
+    const st = STAGES[idxOf(stage)];
+    const atStore = idxOf(stage) >= idxOf('at_store') && idxOf(stage) < idxOf('out_for_delivery');
     const money = o.bill_url ? billMoney(o) : '$' + Number(o.order_total || 0).toFixed(2);
     const minNote = underMin(o) ? (es ? ', que incluye nuestro mínimo de $' + minOrder : ', which includes our $' + minOrder + ' minimum') : '';
     if (atStore && hasTotal(o) && o.subscriber && Number(o.order_total) === 0) {
@@ -294,23 +302,26 @@ details.done[open] summary::after{content:'Hide'}
         : 'Pay here: ' + o.bill_url + ' . Tick “Save my card on file” and next time we’ll charge it automatically. We’ll deliver as soon as it’s paid.');
       return weighed + (es ? 'En un momento te mando el enlace de pago.' : 'Payment link coming next.') + link;
     }
-    const win = es ? (CONFIG.pickupWindowEs || CONFIG.pickupWindow) : CONFIG.pickupWindow;
     const msgs = es ? {
-      booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (win ? ', de ' + win : '') + '. Deja tu bolsa en la puerta.' + link,
+      booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (o.pickup_window ? ', de ' + winEs(o.pickup_window) : '') + '. Te mandamos un texto cuando tu chofer vaya en camino, como una hora antes. Deja tu bolsa en la puerta.' + link,
+      on_the_way: hi + 'somos Loads. Tu chofer va en camino y llega en aproximadamente una hora. Por favor ten tu bolsa en la puerta.' + link,
       picked_up: hi + 'ya tenemos tu ropa. Va camino a nuestra lavandería.' + link,
       at_store: hi + 'tu ropa ya llegó a nuestra lavandería.' + link,
-      out_for_delivery: hi + 'tu ropa va en camino de regreso a tu casa.' + link,
+      out_for_delivery: hi + 'tu ropa limpia va de regreso. Tu chofer llega en aproximadamente una hora.' + link,
       delivered: hi + 'tu ropa ya está en tu puerta. ¡Gracias por usar Loads!' + (CONFIG.googleReviewUrl ? ' Si tienes un momento, una reseña nos ayuda mucho: ' + CONFIG.googleReviewUrl : '')
     } : {
-      booked: hi + "it's Loads. You're booked for pickup " + (o.pickup_label || '') + (win ? ', ' + win : '') + '. Leave your bag by the door.' + link,
+      booked: hi + "it's Loads. You're booked for pickup " + when(o.pickup_label, o.pickup_window) + ". We'll text you when your driver is on the way, about an hour before. Leave your bag by the door." + link,
+      on_the_way: hi + "it's Loads. Your driver is on the way and will be there within about an hour. Please have your bag by the door." + link,
       picked_up: hi + "we've got your load. It's on the way to our laundromat." + link,
       at_store: hi + 'your load made it to our laundromat.' + link,
-      out_for_delivery: hi + 'your load is out for delivery and headed back to you.' + link,
+      out_for_delivery: hi + 'your clean laundry is on the way back to you. Your driver will be there within about an hour.' + link,
       delivered: hi + 'your load is back at your door. Thanks for using Loads!' + (CONFIG.googleReviewUrl ? ' If you have a sec, a quick review helps a lot: ' + CONFIG.googleReviewUrl : '')
     };
-    return msgs[o.stage] || hi + (es ? 'una actualización de Loads: ' : 'quick update from Loads: ') + st.label.toLowerCase() + '.' + link;
+    return msgs[stage] || hi + (es ? 'una actualización de Loads: ' : 'quick update from Loads: ') + st.label.toLowerCase() + '.' + link;
   }
-  const smsHref = o => 'sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(smsBody(o));
+  const smsHref = (o, stage) => 'sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(smsBody(o, stage));
+  // These steps text the customer in the same tap: the stage updates and Messages opens.
+  const TEXT_STEPS = { on_the_way: 'On my way', out_for_delivery: 'Out for delivery' };
 
   /* ---------- screens ---------- */
   function showPin(err) { $('#app').hidden = true; $('#pinForm').hidden = false; $('#pinErr').textContent = err || ''; $('#pin').focus(); }
@@ -329,7 +340,7 @@ details.done[open] summary::after{content:'Hide'}
     // Open orders grouped by what happens next; finished ones fold away at the bottom.
     const stageIn = (o, a, b) => idxOf(o.stage) >= idxOf(a) && idxOf(o.stage) <= idxOf(b);
     const groups = [
-      { title: 'To pick up', items: shown.filter(o => o.stage === 'booked') },
+      { title: 'To pick up', items: shown.filter(o => stageIn(o, 'booked', 'on_the_way')) },
       { title: 'At the store', items: shown.filter(o => stageIn(o, 'picked_up', 'folding')) },
       { title: 'Out for delivery', items: shown.filter(o => o.stage === 'out_for_delivery') }
     ].filter(g => g.items.length);
@@ -346,9 +357,11 @@ details.done[open] summary::after{content:'Hide'}
   function card(o) {
     {
       const i = idxOf(o.stage), st = STAGES[i], nxt = STAGES[i + 1];
-      const chip = o.stage === 'delivered' ? 'done' : o.stage === 'out_for_delivery' ? 'out' : '';
+      const chip = o.stage === 'delivered' ? 'done' : o.stage === 'out_for_delivery' || o.stage === 'on_the_way' ? 'out' : '';
       const weighed = i >= idxOf('at_store');
-      const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(o.address + ' ' + o.zip);
+      const maps = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(o.address + ' ' + o.zip);
+      const wash = o.wash_temp ? '<span class="chip ' + (/hot/i.test(o.wash_temp) ? 'hot' : 'cold') + '">' + esc(o.wash_temp) + ' wash</span>' : '';
+      const dropoff = o.dropoff_window ? '<br>Drop-off ' + esc(when(o.dropoff_label, o.dropoff_window)) : '';
       const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
       const money = '$' + Number(o.order_total || 0).toFixed(2);
       const payChip = o.paid ? '<span class="chip paid">✓ Paid</span>' : (weighed && hasTotal(o) ? '<span class="chip unpaid">Not paid</span>' : '');
@@ -371,12 +384,14 @@ details.done[open] summary::after{content:'Hide'}
             : '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>') + otherWay + '</div>';
       }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(o.pickup_label) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + '</p></div><div class="chips">' + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
-        '<p class="meta"><a href="' + maps + '" target="_blank" rel="noopener">' + esc(o.address) + ', ' + esc(o.zip) + '</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + dropoff + '</p></div><div class="chips">' + wash + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
+        '<p class="meta">' + esc(o.address) + ', ' + esc(o.zip) + ' · <a href="' + maps + '" target="_blank" rel="noopener">Directions</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         (nxt ? (needsPay
           ? '<button class="next" type="button" disabled>Waiting on payment</button>'
-          : '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>') : '') +
+          : TEXT_STEPS[nxt.key]
+            ? '<a class="next" href="' + smsHref(o, nxt.key) + '" data-act="next" data-stage="' + nxt.key + '">' + TEXT_STEPS[nxt.key] + ' · text ' + esc((o.name || '').trim().split(/\s+/)[0] || 'customer') + '</a>'
+            : '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>') : '') +
         '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span>' + (i > 0 ? '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</div>' +
         (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as ' + priceHelp(o) + '. Edit it if needed.</small></div>' : '') +
         pay +
@@ -392,14 +407,17 @@ details.done[open] summary::after{content:'Hide'}
     if (o && w > 0) card.querySelector('[data-t]').value = totalFor(o, w).toFixed(2);
   });
   $('#list').addEventListener('click', e => {
-    const b = e.target.closest('button[data-act]'); if (!b) return;
+    const b = e.target.closest('[data-act]'); if (!b) return;
     const card = b.closest('.order'), id = card.dataset.id;
+    // "On my way" and "Out for delivery" are links: Messages opens with the text, and the stage updates here.
+    if (b.tagName === 'A') { b.classList.add('sent'); return runSoon({ action: 'set_stage', id, stage: b.dataset.stage }); }
     if (b.dataset.act === 'weight') return run({ action: 'set_weight', id, weight_lbs: card.querySelector('[data-w]').value, order_total: card.querySelector('[data-t]').value });
     if (b.dataset.act === 'paid' || b.dataset.act === 'unpaid') { b.disabled = true; return run({ action: 'set_paid', id, paid: b.dataset.act === 'paid' }); }
     if (b.dataset.act === 'bill') { b.disabled = true; b.textContent = 'Sending bill...'; return run({ action: 'send_bill', id }); }
     b.disabled = true;
     run({ action: 'set_stage', id, stage: b.dataset.stage });
   });
+  const runSoon = req => busy ? setTimeout(() => runSoon(req), 300) : run(req);
   // Refresh reloads the whole page: newest orders and the newest version of the app. The PIN is remembered.
   $('#refresh').addEventListener('click', () => {
     const b = $('#refresh'); b.disabled = true; b.textContent = 'Refreshing...';
@@ -412,7 +430,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24b';
+  const PAGE_VERSION = '2026-11-24c';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();

@@ -13,12 +13,12 @@ window.LOADS_CONFIG = {
   phoneSms: '+18054073309',                // same number for texting links, e.g. '+12135550123'
   email: 'hello@loadspickup.com', // forwards to loadspickup@gmail.com (Cloudflare Email Routing)
   turnaround: 'the next day',              // finishes the sentence "Back ___", e.g. 'the next evening'
-  pickupWindow: '8 to 11am',            // e.g. '8 to 11am'
+  pickupWindow: '9am to midnight, every day',   // hours we pick up and drop off, finishes "Pickups run ___"
   guarantee: "If something comes back wrong, text us within 48 hours and we'll rewash it free.",               // e.g. "If something comes back wrong, we'll rewash it free. Just text us within 48 hours."
   bulkyPrice: '',              // e.g. '$8 per comforter'. Leave empty to hide the line.
   // Spanish versions of the lines above, used when a visitor switches to Español
   turnaroundEs: 'al día siguiente',
-  pickupWindowEs: '8 a 11 de la mañana',
+  pickupWindowEs: '9 a.m. a medianoche, todos los días',
   guaranteeEs: 'Si algo regresa mal, mándanos un texto dentro de 48 horas y lo volvemos a lavar gratis.',
   bulkyPriceEs: '',
   googleRating: '',            // e.g. '4.7'. Leave empty to hide it.
@@ -41,6 +41,17 @@ window.LOADS_CONFIG = {
   firstOrderOffer: true,       // "First load? Delivery's on us."
   estOrderValue: 40,           // average order value sent to ad platforms with each booking
   daysAhead: 7,                // how many days of pickup dates to offer
+  // Time windows customers pick for pickup and for drop-off. The English text is what
+  // staff see in the Sheet and the staff app; Spanish is shown to Spanish speakers.
+  windows: [
+    { en: '9 to 11am',       es: '9 a 11 a.m.' },
+    { en: '11am to 1pm',     es: '11 a.m. a 1 p.m.' },
+    { en: '1 to 3pm',        es: '1 a 3 p.m.' },
+    { en: '3 to 5pm',        es: '3 a 5 p.m.' },
+    { en: '5 to 7pm',        es: '5 a 7 p.m.' },
+    { en: '7 to 9pm',        es: '7 a 9 p.m.' },
+    { en: '9pm to midnight', es: '9 p.m. a medianoche' }
+  ],
   closedDays: [],              // days with no pickups: 0 = Sunday ... 6 = Saturday
   // Every zip within about 30 miles of either laundromat (measured from each store).
   // Each zip is listed under the closer store, so staff can split routes by store.
@@ -82,11 +93,12 @@ window.LOADS_CONFIG = {
 /* Order stages, in order. The keys must match STAGES in apps-script/Code.gs. */
 window.LOADS_STAGES = [
   { key: 'booked',           label: 'Booked',            headline: 'Your load is booked.',          detail: "We'll pick it up on your pickup day." },
+  { key: 'on_the_way',       label: 'Driver on the way', headline: 'Your driver is on the way.',    detail: 'Arriving within about an hour. Have your bag by the door.' },
   { key: 'picked_up',        label: 'Picked up',         headline: 'Your load is on the move.',     detail: 'Picked up and headed to our laundromat.' },
   { key: 'at_store',         label: 'At the laundromat', headline: 'Your load made it to the store.', detail: "We're weighing and sorting it now." },
   { key: 'washing',          label: 'Washing',           headline: 'Your load is in the wash.',     detail: 'In one of our commercial washers.' },
   { key: 'drying',           label: 'Drying',            headline: 'Your load is in the dryer.',    detail: 'Tumbling dry.' },
   { key: 'folding',          label: 'Folding',           headline: 'Your load is getting folded.',  detail: 'Folded by hand at our counter.' },
-  { key: 'out_for_delivery', label: 'Out for delivery',  headline: 'Your load is out the door.',    detail: 'Headed back to you now.' },
+  { key: 'out_for_delivery', label: 'Out for delivery',  headline: 'Your load is out the door.',    detail: 'Headed back to you. Arriving within about an hour.' },
   { key: 'delivered',        label: 'Delivered',         headline: 'Your load is back.',            detail: 'Dropped off. Enjoy the clean clothes.' }
 ];
