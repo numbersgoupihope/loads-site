@@ -553,6 +553,18 @@ const CONFIG = window.LOADS_CONFIG;
     return out;
   }
 
+  /* ---------- count the visit once per browser session (source only, nothing personal) ---------- */
+  try {
+    if (CONFIG.endpoint && !sessionStorage.getItem('loads_hit')) {
+      sessionStorage.setItem('loads_hit', '1');
+      let src = visit.utm_source || '';
+      const ref = (document.referrer || '').replace(/^https?:\/\//, '').split('/')[0];
+      if (!src) src = /instagram/.test(ref) ? 'instagram' : /google\./.test(ref) ? 'google' : /facebook|fb\.com/.test(ref) ? 'facebook' : /tiktok/.test(ref) ? 'tiktok' : /nextdoor/.test(ref) ? 'nextdoor' : ref && ref !== location.host ? ref : '(direct)';
+      const q = new URLSearchParams({ action: 'hit', src, med: visit.utm_medium || '', camp: visit.utm_campaign || '', cont: visit.utm_content || '', ref, page: location.pathname });
+      fetch(CONFIG.endpoint + '?' + q.toString(), { mode: 'no-cors', keepalive: true }).catch(() => {});
+    }
+  } catch (e) {}
+
   /* ---------- helpers ---------- */
   const zipZone = zip => Object.keys(CONFIG.zones).find(z => CONFIG.zones[z].includes(zip)) || '';
   const digits = v => (v || '').replace(/\D/g, '');

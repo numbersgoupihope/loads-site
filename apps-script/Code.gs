@@ -65,6 +65,8 @@ function doPost(e) {
 function doGet(e) {
   const p = (e && e.parameter) || {};
   if (p.action === 'track') return json_(track_(p.id, p.t));
+  if (p.action === 'hit') return json_(hit_(p));
+  if (p.action === 'stats') return json_(stats_(p));
   return ContentService.createTextOutput('Loads booking endpoint is running.');
 }
 
@@ -329,4 +331,48 @@ function day_(v, tz) {
 
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/* ---------------- visit counts and weekly stats (no personal info) ---------------- */
+
+const VISIT_HEADERS = ['at', 'source', 'medium', 'campaign', 'content', 'referrer', 'page'];
+
+// One row per website visit (the site sends this once per browser session).
+function hit_(p) {
+  const cut = (v, n) => clean_(v).slice(0, n);
+  sheet_('Visits', VISIT_HEADERS).appendRow([new Date(), cut(p.src, 60), cut(p.med, 60), cut(p.camp, 80), cut(p.cont, 80), cut(p.ref, 120), cut(p.page, 200)]);
+  return { ok: true };
+}
+
+// Weekly totals by source: visits, bookings, Loads Weekly sign-ups, waitlist. Counts only.
+// GET ?action=stats&weeks=8
+function stats_(p) {
+  const weeks = Math.max(1, Math.min(26, Number(p.weeks) || 8));
+  const since = new Date(); since.setDate(since.getDate() - weeks * 7 - 7);
+  const out = {};
+  const bump = function (w, key, src) {
+    if (!w) return;
+    if (!out[w]) out[w] = { week_of: w, visits: {}, bookings: {}, plan_signups: {}, waitlist: 0 };
+    if (key === 'waitlist') out[w].waitlist++;
+    else out[w][key][src] = (out[w][key][src] || 0) + 1;
+  };
+  function scan(name, dateCol, key, srcCols) {
+    const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
+    if (!sh || sh.getLastRow() < 2) return;
+    const vals = sh.getDataRange().getValues(), h = vals[0];
+    const di = h.indexOf(dateCol), ni = h.indexOf('name');
+    for (let i = 1; i < vals.length; i++) {
+      const d = vals[i][di];
+      if (!(d instanceof Date) || d < since) continue;
+      if (ni >= 0 && /^test/i.test(String(vals[i][ni] || ''))) continue;      // staff test orders
+      let src = '';
+      (srcCols || []).forEach(function (c) { const j = h.indexOf(c); if (!src && j >= 0) src = String(vals[i][j] || '').replace(/^'/, ''); });
+      bump(weekOf_(d), key, (src || '(direct)').toLowerCase());
+    }
+  }
+  scan('Visits', 'at', 'visits', ['source']);
+  scan('Bookings', 'received_at', 'bookings', ['utm_source', 'first_utm_source']);
+  scan('Subscribers', 'received_at', 'plan_signups', ['utm_source']);
+  scan('Waitlist', 'received_at', 'waitlist', []);
+  return { ok: true, generated_at: new Date().toISOString(), weeks: Object.keys(out).sort().reverse().slice(0, weeks).map(function (k) { return out[k]; }) };
 }
