@@ -376,3 +376,16 @@ function stats_(p) {
   scan('Waitlist', 'received_at', 'waitlist', []);
   return { ok: true, generated_at: new Date().toISOString(), weeks: Object.keys(out).sort().reverse().slice(0, weeks).map(function (k) { return out[k]; }) };
 }
+
+// Monday-morning data email for the weekly report (set up as a time-driven trigger: Triggers > Add Trigger >
+// emailWeeklyStats, Time-driven, Week timer, Monday, 7am to 8am). Counts only, goes to Mick's personal inbox.
+const STATS_EMAIL = 'mick.mathis@gmail.com';
+function emailWeeklyStats() {
+  const s = stats_({ weeks: 4 });
+  const fmt = function (o) { return Object.keys(o).sort(function (a, b) { return o[b] - o[a]; }).map(function (k) { return k + ' ' + o[k]; }).join(', ') || 'none'; };
+  const lines = s.weeks.map(function (w) {
+    return 'Week of ' + w.week_of + '\n  Visits: ' + fmt(w.visits) + '\n  Bookings: ' + fmt(w.bookings) +
+      '\n  Loads Weekly sign-ups: ' + fmt(w.plan_signups) + '\n  Waitlist: ' + w.waitlist;
+  });
+  MailApp.sendEmail(STATS_EMAIL, 'Loads weekly stats (data)', 'Website numbers by source, counts only.\n\n' + lines.join('\n\n') + '\n\nSTATS_JSON ' + JSON.stringify(s));
+}
