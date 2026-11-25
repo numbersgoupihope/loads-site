@@ -44,7 +44,8 @@ Everything is in `config.js`. Each line has an example.
 | `phoneDisplay`, `phoneSms` | The business number that can send and receive texts |
 | `email` | Contact email |
 | `turnaround` | Finishes "Back ___", e.g. `the next evening` |
-| `pickupWindow` | e.g. `8 to 11am` |
+| `pickupWindow` | hours you pick up and drop off, e.g. `9am to midnight, every day` |
+| `windows` | the time slots customers choose for pickup and drop-off |
 | `guarantee` | e.g. `If something comes back wrong, we'll rewash it free.` |
 | `bulkyPrice` | e.g. `$8 per comforter` |
 | `googleRating` | The stores' Google rating, e.g. `4.7` |
@@ -82,11 +83,12 @@ Every booking row also stores UTM tags, Google and Meta click IDs, landing page 
 ## 4. How staff use the tracker
 
 1. Staff open `yoursite.com/staff.html` on their phone and enter the PIN. Add it to the home screen so it opens like an app.
-2. Each open order shows the customer, address (tap for directions), notes and current stage.
-3. As each step happens, tap the big button: **Picked up > At the laundromat > Washing > Drying > Folding > Out for delivery > Delivered**. A wrong tap? **Undo** steps back one.
-4. At the laundromat, weigh the bag **dry, before washing**, and take a photo of the scale. Type the weight. The total fills in automatically: $2.25/lb with a $30 minimum, plus $6.99 delivery (free on a customer's first order). Tap **Save**. The customer sees both on their tracker.
-5. **Text update** opens the phone's Messages app with a ready-made text for the current stage and the customer's tracking link. Send it at pickup, after weighing, out for delivery and delivered.
-6. **Getting paid.** Each order says **first order** or **repeat customer**.
+2. Each open order shows the customer, pickup and drop-off windows, hot or cold wash, address (tap **Directions**), notes and current stage.
+3. About an hour before you get there, tap **On my way · text (name)**. It marks the order and opens Messages with a text saying the driver is about an hour out. Hit send. **Out for delivery** works the same way on the way back.
+4. As each other step happens, tap the big button: **Picked up > At the laundromat > Washing > Drying > Folding > Out for delivery > Delivered**. A wrong tap? **Undo** steps back one.
+5. At the laundromat, weigh the bag **dry, before washing**, and take a photo of the scale. Type the weight. The total fills in automatically: $2.25/lb with a $30 minimum, plus $6.99 delivery (free on a customer's first order). Tap **Save**. The customer sees both on their tracker.
+6. **Text update** opens the phone's Messages app with a ready-made text for the current stage and the customer's tracking link. Send it right after booking (it confirms their window), at pickup, after weighing and when delivered.
+7. **Getting paid.** Each order says **first order** or **repeat customer**.
    - **First order:** tap **Text update** (it has the weight and total), attach the scale photo, send. Then in the Square Invoices app or Dashboard, switch to the **Loads** location, tap **Create invoice**, add the customer by name and mobile, enter the same total, tick **Allow customer to save card on file**, and send it by text.
    - **Repeat customer:** tap **Text update**, attach the scale photo, send. In Square (Loads location), open the customer and charge their saved card for the total. No saved card? Send an invoice like a first order.
    - When Square shows it paid, tap **Mark paid** on the staff page. **Out for delivery** stays locked until you do.
