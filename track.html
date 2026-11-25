@@ -93,7 +93,7 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
 </main>
 
 <script src="config.js?v=5"></script>
-<script src="i18n.js?v=6"></script>
+<script src="i18n.js?v=7"></script>
 <script src="preview-nav.js"></script>
 <script>
 (function () {
@@ -150,7 +150,12 @@ li time{font-size:14px;color:var(--muted);white-space:nowrap}
     $('#icon').className = 'icon ' + (MOTION[st.key] || '');
     $('#icon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[st.key] + '</svg>';
     $('#headline').textContent = (o.first_name && idx === STAGES.length - 1 ? o.first_name + ', ' + st.headline.charAt(0).toLowerCase() + st.headline.slice(1) : st.headline);
-    $('#detail').textContent = st.key === 'booked' && o.pickup_label ? t('trkBookedDetail', { day: pickupWhen(o) }) : st.detail;
+    const eta = o.eta_at && (st.key === 'on_the_way' || st.key === 'out_for_delivery') ? new Date(o.eta_at) : null;
+    const etaOk = eta && eta.getTime() > Date.now() - 3 * 3600e3;
+    const etaTime = etaOk ? clock().format(new Date(Math.round(Math.max(eta.getTime(), Date.now() + 5 * 60000) / 300000) * 300000)) : '';
+    const etaSay = es() && etaTime ? (/^1:/.test(etaTime) ? 'la ' : 'las ') + etaTime : etaTime;   // "la 1:10 p.m.", "las 2:40 p.m."
+    $('#detail').textContent = etaOk ? t(st.key === 'on_the_way' ? 'trkEtaPickup' : 'trkEtaDrop', { time: etaSay })
+      : st.key === 'booked' && o.pickup_label ? t('trkBookedDetail', { day: pickupWhen(o) }) : st.detail;
     $('#bar').innerHTML = STAGES.map((s, i) => '<i class="' + (i < idx ? 'done' : i === idx ? (idx === STAGES.length - 1 ? 'done' : 'now') : '') + '"></i>').join('');
     $('#stageLabel').textContent = st.label;
     $('#stepCount').textContent = t('trkStep', { n: idx + 1, total: STAGES.length });

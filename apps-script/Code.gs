@@ -33,7 +33,8 @@ const BOOKING_HEADERS = [
   'landing_page', 'referrer', 'first_seen', 'submitted_at', 'user_agent', 'lang',
   'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at',
   'subscriber',
-  'pickup_window', 'dropoff_label', 'dropoff_window', 'wash_temp', 'on_the_way_at'
+  'pickup_window', 'dropoff_label', 'dropoff_window', 'wash_temp', 'on_the_way_at',
+  'eta_at', 'eta_stage'
 ];
 
 // Loads Weekly sign-ups from the website. Square keeps the subscription itself.
@@ -116,7 +117,7 @@ function notify_(p) {
     '',
     'Tracking link for the customer: ' + (p.track_url || ''),
     'Booking ID: ' + (p.booking_id || ''),
-    'About an hour before pickup, tap "On my way" in the staff app. It texts the customer.'
+    'When you head out for this pickup, tap "On my way" in the staff app. It texts the customer your arrival time.'
   ];
   MailApp.sendEmail({
     to: NOTIFY_EMAIL,
@@ -151,6 +152,7 @@ function track_(id, token) {
       pickup_window: String(r.pickup_window || ''),
       dropoff_label: label_(r.dropoff_label, Session.getScriptTimeZone()),
       dropoff_window: String(r.dropoff_window || ''),
+      eta_at: r.eta_stage && r.eta_stage === r.stage ? iso_(r.eta_at) : '',
       zone: r.zone || '',
       weight_lbs: r.weight_lbs === '' ? '' : Number(r.weight_lbs),
       order_total: r.order_total === '' ? '' : Number(r.order_total),
@@ -174,11 +176,12 @@ function staff_(req) {
   lock.tryLock(10000);
   try {
     sheet_('Bookings', BOOKING_HEADERS);                  // adds any new columns to an older sheet
-    let error = '', message = '', bill = null;
+    let error = '', message = '', bill = null, eta = null;
     if (req.action === 'list') syncPaid_();
     if (req.action === 'set_stage') error = setStage_(req.id, req.stage) || '';
     if (req.action === 'set_weight') setWeight_(req.id, req.weight_lbs, req.order_total);
     if (req.action === 'set_paid') setPaid_(req.id, req.paid);
+    if (req.action === 'eta') { const res = eta_(req); if (res.error) error = res.error; else eta = res.eta; }
     if (req.action === 'send_bill') {
       try {
         const res = sendBill_(req.id);
@@ -191,10 +194,55 @@ function staff_(req) {
     if (error) out.error = error;
     if (message) out.message = message;
     if (bill) out.bill = bill;
+    if (eta) out.eta = eta;
     return out;
   } finally {
     lock.releaseLock();
   }
+}
+
+// Driver taps "On my way" (pickup) or "Out for delivery": work out when they'll get there.
+// The staff app sends the phone's location; Google Maps gives the drive time in traffic.
+// If that fails the app asks the driver instead and sends minutes. Returns 'no_eta' when
+// there's neither, and leaves the stage alone so the driver can pick a time.
+function eta_(req) {
+  const stage = req.stage === 'out_for_delivery' ? 'out_for_delivery' : 'on_the_way';
+  const t = table_('Bookings');
+  const r = t && find_(t, req.id);
+  if (!r) return { error: 'not_found' };
+  let minutes = Math.round(Number(req.minutes) || 0), source = 'driver';
+  if (!minutes) {
+    const drive = driveSeconds_(Number(req.lat), Number(req.lng), String(r.address || ''), String(r.zip || ''));
+    if (drive) { minutes = Math.ceil((drive + 180) / 300) * 5; source = 'maps'; }   // +3 min to park, rounded up to 5
+  }
+  if (!minutes) return { error: 'no_eta' };
+  minutes = Math.min(Math.max(minutes, 5), 240);
+  if (r.stage !== stage) {
+    const err = setStage_(req.id, stage);
+    if (err) return { error: err };
+  }
+  const at = new Date(Date.now() + minutes * 60000);
+  write_(t, r, { eta_at: at, eta_stage: stage });
+  return { eta: { minutes: minutes, at: at.toISOString(), source: source } };
+}
+
+function driveSeconds_(lat, lng, street, zip) {
+  if (!isFinite(lat) || !isFinite(lng) || (lat === 0 && lng === 0) || !street.trim()) return 0;
+  try {
+    const res = Maps.newDirectionFinder().setOrigin(lat, lng).setDestination(street.trim() + ', CA ' + zip)
+      .setMode(Maps.DirectionFinder.Mode.DRIVING).setDepart(new Date()).getDirections();
+    const leg = res && res.routes && res.routes[0] && res.routes[0].legs && res.routes[0].legs[0];
+    return leg ? Number((leg.duration_in_traffic || leg.duration || {}).value) || 0 : 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+// Run this from the editor to check the Google Maps drive-time lookup works (store to store).
+function checkDriveTime() {
+  const s = driveSeconds_(34.0688, -118.3093, '6839 Lennox Ave, Van Nuys', '91405');
+  Logger.log(s ? 'Koreatown store to Van Nuys store: ' + Math.round(s / 60) + ' min' : 'Drive time lookup failed');
+  return s;
 }
 
 // Returns 'unpaid' when an order would go out for delivery before it's marked paid.
@@ -262,6 +310,7 @@ function list_() {
         zone: String(r.zone || ''), pickup_date: day_(r.pickup_date, tz), pickup_label: label_(r.pickup_label, tz),
         pickup_window: String(r.pickup_window || ''), dropoff_label: label_(r.dropoff_label, tz),
         dropoff_window: String(r.dropoff_window || ''), wash_temp: String(r.wash_temp || ''),
+        eta_at: r.eta_stage && r.eta_stage === r.stage ? iso_(r.eta_at) : '',
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,
         first_order_offer: String(r.first_order_offer || ''), first_order: String(r.first_order || ''),
         paid: !!r.paid_at, track_url: String(r.track_url || ''),

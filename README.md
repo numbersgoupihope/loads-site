@@ -84,7 +84,7 @@ Every booking row also stores UTM tags, Google and Meta click IDs, landing page 
 
 1. Staff open `yoursite.com/staff.html` on their phone and enter the PIN. Add it to the home screen so it opens like an app.
 2. Each open order shows the customer, pickup and drop-off windows, hot or cold wash, address (tap **Directions**), notes and current stage.
-3. About an hour before you get there, tap **On my way · text (name)**. It marks the order and opens Messages with a text saying the driver is about an hour out. Hit send. **Out for delivery** works the same way on the way back.
+3. When you head to a pickup, tap **On my way**. The app uses your phone's location and Google Maps traffic to work out when you'll get there (allow location the first time), then shows **Text (name): arriving 2:40pm**. Tap it and hit send. The customer's tracker shows the same time. If it can't get your location, tap 15, 30, 45 or 60 min. **Out for delivery** works the same way. Type your first name at the bottom of the app once so texts say who's coming.
 4. As each other step happens, tap the big button: **Picked up > At the laundromat > Washing > Drying > Folding > Out for delivery > Delivered**. A wrong tap? **Undo** steps back one.
 5. At the laundromat, weigh the bag **dry, before washing**, and take a photo of the scale. Type the weight. The total fills in automatically: $2.25/lb with a $30 minimum, plus $6.99 delivery (free on a customer's first order). Tap **Save**. The customer sees both on their tracker.
 6. **Text update** opens the phone's Messages app with a ready-made text for the current stage and the customer's tracking link. Send it right after booking (it confirms their window), at pickup, after weighing and when delivered.

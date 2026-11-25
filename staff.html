@@ -43,7 +43,12 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 48px}
 .next{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;margin-top:14px;border:none;border-radius:14px;background:var(--cta);color:#fff;font-size:18px;font-weight:650;cursor:pointer}
 .next:disabled{opacity:.6}
 a.next{text-decoration:none}
-a.next.sent{opacity:.6;pointer-events:none}
+.next.alt{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.etaline{margin:12px 0 0;font-size:15px}
+.mins{display:flex;gap:8px;margin-top:8px}
+.mins button{flex:1;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:650;cursor:pointer}
+.driver{display:flex;align-items:center;gap:10px;justify-content:center;margin:20px 0 0;font-size:14px;color:var(--muted)}
+.driver input{width:130px;min-height:40px;padding:6px 10px;border-radius:10px;border:1.5px solid var(--line);font-size:16px}
 .chip.hot{background:#ffe2d6;color:#9a3412}
 .chip.cold{background:#dbeafe;color:#1e3a8a}
 .under{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:6px}
@@ -108,7 +113,8 @@ details.done[open] summary::after{content:'Hide'}
 <p class="err" id="err" role="alert"></p>
 <p class="okmsg" id="note" role="status"></p>
 <div id="list"></div>
-<p style="text-align:center;margin:24px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
+<label class="driver">Your first name for texts <input id="driver" type="text" autocomplete="given-name" placeholder="Carlos"></label>
+<p style="text-align:center;margin:16px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
 <script src="config.js?v=5"></script>
@@ -149,6 +155,7 @@ details.done[open] summary::after{content:'Hide'}
     try {
       const data = await api(req);
       if (!data.ok && data.error === 'pin') { forgetPin(); return showPin('That PIN didn’t work.'); }
+      if (!data.ok && data.error === 'no_eta') { orders = data.orders || orders; etaAsk[req.id] = req.stage; render(); return; }
       if (!data.ok && data.error === 'unpaid') { orders = data.orders || orders; render(); $('#err').textContent = 'That order isn’t paid yet. Send the bill first, or mark it paid if they paid another way.'; return; }
       if (!data.ok && data.message) { orders = data.orders || orders; showApp(); render(); $('#err').textContent = data.message; return; }
       if (!data.ok) throw new Error(data.error || 'failed');
@@ -233,6 +240,12 @@ details.done[open] summary::after{content:'Hide'}
     }
     if (o && req.action === 'set_weight') { o.weight_lbs = Number(req.weight_lbs) || ''; o.order_total = String(req.order_total).trim() === '' ? '' : Number(req.order_total); }
     if (o && req.action === 'set_paid') o.paid = req.paid === true;
+    if (o && req.action === 'eta') {
+      if (!req.minutes && req.lat === undefined) return Promise.resolve({ ok: false, error: 'no_eta', orders: copy() });
+      if (req.stage === 'out_for_delivery' && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
+      o.stage = req.stage; o.eta_at = new Date(Date.now() + (Number(req.minutes) || 20) * 60000).toISOString();
+      return Promise.resolve({ ok: true, orders: copy(), eta: { minutes: Number(req.minutes) || 20, at: o.eta_at } });
+    }
     if (o && req.action === 'send_bill') {
       if (o.subscriber && Number(o.order_total) === 0) { o.paid = true; return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'covered', amount: 0 } }); }
       if (o.first_order === 'no') { o.paid = true; return Promise.resolve({ ok: true, orders: copy(), bill: { kind: 'charged', amount: o.order_total, card: 'VISA ending 4242' } }); }
@@ -277,8 +290,20 @@ details.done[open] summary::after{content:'Hide'}
   // Pickup windows are stored in English ("9 to 11am"); config.js has the Spanish.
   const winEs = w => { const hit = (CONFIG.windows || []).find(x => x.en === w); return hit && hit.es ? hit.es : String(w || ''); };
   const when = (day, win) => [day, win].filter(Boolean).join(', ');
+  // Arrival estimate from "On my way" / "Out for delivery" (set by the server from the phone's location).
+  const etaOf = (o, stage) => {
+    if (!o.eta_at || o.stage !== stage) return null;
+    const at = new Date(o.eta_at).getTime(), now = Date.now();
+    if (!(at > now - 3 * 3600e3)) return null;                       // stale after 3 hours
+    const when = Math.round(Math.max(at, now + 5 * 60000) / 300000) * 300000;   // nearest 5 minutes
+    return { min: Math.max(5, Math.round((when - now) / 300000) * 5), at: new Date(when) };
+  };
+  const clockEn = d => d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }).replace(/\s/g, '').toLowerCase();
+  const clockEs = d => { const c = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }); return (/^1:/.test(c) ? 'la ' : 'las ') + c.replace(' AM', ' a.m.').replace(' PM', ' p.m.'); };
+  const driverName = () => { try { return (localStorage.getItem('loads_driver') || '').trim(); } catch (e) { return ''; } };
   function smsBody(o, stage) {
     stage = stage || o.stage;
+    const eta = etaOf(o, stage), who = driverName();
     const es = isEs(o);
     const first = (o.name || '').trim().split(/\s+/)[0] || (es ? '' : 'there');
     const hi = es ? 'Hola ' + first + ', ' : 'Hi ' + first + ', ';
@@ -302,6 +327,12 @@ details.done[open] summary::after{content:'Hide'}
         : 'Pay here: ' + o.bill_url + ' . Tick “Save my card on file” and next time we’ll charge it automatically. We’ll deliver as soon as it’s paid.');
       return weighed + (es ? 'En un momento te mando el enlace de pago.' : 'Payment link coming next.') + link;
     }
+    if (eta && stage === 'on_the_way') return es
+      ? hi + 'somos Loads. ' + (who ? who + ' va' : 'Tu chofer va') + ' en camino, como a ' + eta.min + ' minutos. Llega alrededor de ' + clockEs(eta.at) + '. Por favor ten tu bolsa en la puerta.' + link
+      : hi + "it's Loads. " + (who ? who + ' is' : 'Your driver is') + ' on the way, about ' + eta.min + ' minutes out. Arriving around ' + clockEn(eta.at) + '. Please have your bag by the door.' + link;
+    if (eta && stage === 'out_for_delivery') return es
+      ? hi + 'tu ropa limpia va de regreso. ' + (who ? who + ' está' : 'Tu chofer está') + ' como a ' + eta.min + ' minutos, llega alrededor de ' + clockEs(eta.at) + '.' + link
+      : hi + 'your clean laundry is on the way back. ' + (who ? who + ' is' : 'Your driver is') + ' about ' + eta.min + ' minutes out, arriving around ' + clockEn(eta.at) + '.' + link;
     const msgs = es ? {
       booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (o.pickup_window ? ', de ' + winEs(o.pickup_window) : '') + '. Te mandamos un texto cuando tu chofer vaya en camino, como una hora antes. Deja tu bolsa en la puerta.' + link,
       on_the_way: hi + 'somos Loads. Tu chofer va en camino y llega en aproximadamente una hora. Por favor ten tu bolsa en la puerta.' + link,
@@ -320,8 +351,51 @@ details.done[open] summary::after{content:'Hide'}
     return msgs[stage] || hi + (es ? 'una actualización de Loads: ' : 'quick update from Loads: ') + st.label.toLowerCase() + '.' + link;
   }
   const smsHref = (o, stage) => 'sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(smsBody(o, stage));
-  // These steps text the customer in the same tap: the stage updates and Messages opens.
+  // "On my way" and "Out for delivery": the app works out the arrival time, then one tap texts it.
   const TEXT_STEPS = { on_the_way: 'On my way', out_for_delivery: 'Out for delivery' };
+  const etaAsk = {};                        // order id -> stage, when the drive time couldn't be worked out
+  const finding = {};                       // order id -> true while the drive time is being worked out
+  const texted = new Set((() => { try { return JSON.parse(localStorage.getItem('loads_texted') || '[]'); } catch (e) { return []; } })());
+  const markTexted = k => { texted.add(k); try { localStorage.setItem('loads_texted', JSON.stringify(Array.from(texted).slice(-60))); } catch (e) {} };
+  const firstName = o => (o.name || '').trim().split(/\s+/)[0] || 'customer';
+  const minButtons = (stage) => '<div class="mins">' + [15, 30, 45, 60].map(m => '<button type="button" data-act="eta" data-stage="' + stage + '" data-min="' + m + '">' + m + ' min</button>').join('') + '</div>';
+  function stepBlock(o, nxt, needsPay) {
+    // At "Driver on the way" / "Out for delivery" with an arrival time: text it, then carry on.
+    const etaHere = TEXT_STEPS[o.stage] && etaOf(o, o.stage);
+    let out = '';
+    if (etaHere) {
+      const key = o.id + '|' + o.eta_at, done = texted.has(key);
+      out += done
+        ? '<p class="etaline">✓ Texted ' + esc(firstName(o)) + ': arriving around ' + clockEn(etaHere.at) + ' · <a href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text again</a></p>'
+        : '<a class="next" href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text ' + esc(firstName(o)) + ': arriving ' + clockEn(etaHere.at) + '</a>' +
+          '<p class="etaline">Wrong time? Pick how far out you are:</p>' + minButtons(o.stage);
+    }
+    if (!nxt) return out;
+    if (needsPay) return out + '<button class="next" type="button" disabled>Waiting on payment</button>';
+    if (TEXT_STEPS[nxt.key]) {
+      if (etaAsk[o.id] === nxt.key) return out + '<p class="etaline"><b>Couldn’t get the drive time.</b> How far away are you?</p>' + minButtons(nxt.key);
+      return out + '<button class="next" type="button" data-act="omw" data-stage="' + nxt.key + '"' + (finding[o.id] ? ' disabled>Working out your arrival time…' : '>' + TEXT_STEPS[nxt.key]) + '</button>';
+    }
+    const waiting = etaHere && !texted.has(o.id + '|' + o.eta_at);
+    return out + '<button class="next' + (waiting ? ' alt' : '') + '" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>';
+  }
+  const getPos = () => new Promise(res => {
+    if (!navigator.geolocation) return res(null);
+    navigator.geolocation.getCurrentPosition(p => res({ lat: p.coords.latitude, lng: p.coords.longitude }), () => res(null), { enableHighAccuracy: false, timeout: 10000, maximumAge: 120000 });
+  });
+  async function onMyWay(id, stage, minutes) {
+    const req = { action: 'eta', id, stage };
+    if (minutes) req.minutes = minutes;
+    else {
+      finding[id] = true; render();
+      const pos = await getPos();
+      if (pos) { req.lat = pos.lat; req.lng = pos.lng; }
+    }
+    if (!req.minutes && !req.lat) { delete finding[id]; etaAsk[id] = stage; return render(); }
+    await new Promise(r => { const go = () => busy ? setTimeout(go, 250) : r(); go(); });
+    await run(req);
+    delete finding[id]; render();
+  }
 
   /* ---------- screens ---------- */
   function showPin(err) { $('#app').hidden = true; $('#pinForm').hidden = false; $('#pinErr').textContent = err || ''; $('#pin').focus(); }
@@ -387,11 +461,7 @@ details.done[open] summary::after{content:'Hide'}
         '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + dropoff + '</p></div><div class="chips">' + wash + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
         '<p class="meta">' + esc(o.address) + ', ' + esc(o.zip) + ' · <a href="' + maps + '" target="_blank" rel="noopener">Directions</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
-        (nxt ? (needsPay
-          ? '<button class="next" type="button" disabled>Waiting on payment</button>'
-          : TEXT_STEPS[nxt.key]
-            ? '<a class="next" href="' + smsHref(o, nxt.key) + '" data-act="next" data-stage="' + nxt.key + '">' + TEXT_STEPS[nxt.key] + ' · text ' + esc((o.name || '').trim().split(/\s+/)[0] || 'customer') + '</a>'
-            : '<button class="next" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>') : '') +
+        stepBlock(o, nxt, needsPay) +
         '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span>' + (i > 0 ? '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</div>' +
         (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as ' + priceHelp(o) + '. Edit it if needed.</small></div>' : '') +
         pay +
@@ -409,20 +479,23 @@ details.done[open] summary::after{content:'Hide'}
   $('#list').addEventListener('click', e => {
     const b = e.target.closest('[data-act]'); if (!b) return;
     const card = b.closest('.order'), id = card.dataset.id;
-    // "On my way" and "Out for delivery" are links: Messages opens with the text, and the stage updates here.
-    if (b.tagName === 'A') { b.classList.add('sent'); return runSoon({ action: 'set_stage', id, stage: b.dataset.stage }); }
+    // The arrival-time text: Messages opens (the link does that), and the card notes it was sent.
+    if (b.dataset.act === 'texted') { markTexted(b.dataset.key); return setTimeout(render, 400); }
+    if (b.dataset.act === 'omw') return onMyWay(id, b.dataset.stage);
+    if (b.dataset.act === 'eta') { delete etaAsk[id]; b.disabled = true; return onMyWay(id, b.dataset.stage, Number(b.dataset.min)); }
     if (b.dataset.act === 'weight') return run({ action: 'set_weight', id, weight_lbs: card.querySelector('[data-w]').value, order_total: card.querySelector('[data-t]').value });
     if (b.dataset.act === 'paid' || b.dataset.act === 'unpaid') { b.disabled = true; return run({ action: 'set_paid', id, paid: b.dataset.act === 'paid' }); }
     if (b.dataset.act === 'bill') { b.disabled = true; b.textContent = 'Sending bill...'; return run({ action: 'send_bill', id }); }
     b.disabled = true;
     run({ action: 'set_stage', id, stage: b.dataset.stage });
   });
-  const runSoon = req => busy ? setTimeout(() => runSoon(req), 300) : run(req);
   // Refresh reloads the whole page: newest orders and the newest version of the app. The PIN is remembered.
   $('#refresh').addEventListener('click', () => {
     const b = $('#refresh'); b.disabled = true; b.textContent = 'Refreshing...';
     location.reload();
   });
+  $('#driver').value = driverName();
+  $('#driver').addEventListener('input', e => { try { localStorage.setItem('loads_driver', e.target.value.trim()); } catch (x) {} render(); });
   $('#signout').addEventListener('click', () => { forgetPin(); orders = []; known = null; $('#list').innerHTML = ''; showPin(''); });
   $('#pinForm').addEventListener('submit', e => {
     e.preventDefault(); pin = $('#pin').value.trim();
@@ -430,7 +503,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24c';
+  const PAGE_VERSION = '2026-11-24d';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
