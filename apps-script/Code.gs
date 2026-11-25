@@ -304,6 +304,48 @@ function checkHealth() {
   return lines.join('\n');
 }
 
+// Run this from the editor to see what staff did on recent orders: when each step was tapped,
+// the arrival estimate vs. the actual pickup, weighing, billing and payment. First names only.
+function checkActivity() {
+  const t = table_('Bookings'), tz = Session.getScriptTimeZone(), lines = [];
+  if (!t) { Logger.log('No bookings yet.'); return; }
+  const clock = function (v) { return v ? Utilities.formatDate(new Date(v), tz, 'EEE h:mm a') : ''; };
+  const mins = function (a, b) { return Math.round((new Date(b) - new Date(a)) / 60000); };
+  const weekAgo = Date.now() - 7 * 864e5;
+  t.rows.filter(function (r) { return r.booking_id && new Date(r.received_at || 0).getTime() > weekAgo; }).forEach(function (r) {
+    const first = String(r.name || '').trim().split(/\s+/)[0];
+    lines.push(r.booking_id + ' ' + first + ' | booked ' + clock(r.received_at) + ' | pickup ' + [label_(r.pickup_label, tz), r.pickup_window].filter(String).join(', ') +
+      ' | ' + (String(r.first_order) === 'yes' ? 'new customer' : 'repeat') + ' | now: ' + r.stage);
+    const steps = [], flags = [];
+    let prev = null;
+    STAGES.slice(1).forEach(function (s) {
+      const at = r[s + '_at'];
+      if (!at) return;
+      steps.push(s.replace(/_/g, ' ') + ' ' + clock(at) + (prev ? ' (+' + mins(prev, at) + ' min)' : ''));
+      prev = at;
+    });
+    lines.push('  steps: ' + (steps.join(' > ') || 'none yet'));
+    if (r.confirmed_at) lines.push('  YES confirmed ' + clock(r.confirmed_at));
+    if (r.eta_at && r.eta_stage) {
+      const done = r.eta_stage === 'on_the_way' ? r.picked_up_at : r.delivered_at;
+      lines.push('  arrival estimate (' + r.eta_stage.replace(/_/g, ' ') + '): ' + clock(r.eta_at) +
+        (done ? ', actual ' + clock(done) + ' (' + Math.abs(mins(r.eta_at, done)) + ' min ' + (new Date(done) <= new Date(r.eta_at) ? 'early' : 'late') + ')' : ''));
+    }
+    if (r.weight_lbs) lines.push('  weighed ' + r.weight_lbs + ' lb, total $' + Number(r.order_total || 0).toFixed(2) +
+      (r.bill_sent_at ? ' | bill sent ' + clock(r.bill_sent_at) : '') +
+      (r.paid_at ? ' | paid ' + clock(r.paid_at) + ' (' + (r.square_payment_id && !r.square_invoice_id ? 'saved card' : r.square_invoice_id ? 'payment link' : 'marked paid by staff: cash/Zelle') + ')' : ' | not paid yet'));
+    if (r.canceled_at || r.stage === 'canceled') lines.push('  ' + (r.no_show_at ? 'NO-SHOW' : 'canceled') + ' ' + clock(r.canceled_at || r.stage_updated_at) + (r.canceled_from ? ' (was: ' + String(r.canceled_from).replace(/_/g, ' ') + ')' : ''));
+    if (r.picked_up_at && !r.on_the_way_at) flags.push('picked up without tapping On my way, so no arrival text');
+    if (r.at_store_at && !r.weight_lbs && Date.now() - new Date(r.at_store_at) > 2 * 3600e3) flags.push('at the store 2+ hours and not weighed');
+    if (r.weight_lbs && !r.paid_at && !r.bill_sent_at && r.stage !== 'canceled') flags.push('weighed but no bill sent');
+    if (r.out_for_delivery_at && r.stage === 'out_for_delivery' && Date.now() - new Date(r.out_for_delivery_at) > 3 * 3600e3) flags.push('out for delivery 3+ hours, not marked delivered');
+    if (String(r.needs_yes) === 'yes' && !r.confirmed_at && r.on_the_way_at) flags.push('driver went out before the YES');
+    lines.push('  ' + (flags.length ? 'CHECK: ' + flags.join('; ') : 'nothing off'));
+  });
+  Logger.log(lines.join('\n') || 'No orders in the last 7 days.');
+  return lines.join('\n');
+}
+
 // Run this from the editor to check the Google Maps drive-time lookup works (store to store).
 function checkDriveTime() {
   const s = driveSeconds_(34.0688, -118.3093, '6839 Lennox Ave, Van Nuys', '91405');
