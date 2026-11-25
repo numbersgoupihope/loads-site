@@ -49,7 +49,9 @@ a.next{text-decoration:none}
 .cancelask div{display:flex;gap:8px;margin-top:10px}
 .cancelask button{flex:1;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:650;cursor:pointer}
 .cancelask button.yes{background:#9f1239;border-color:#9f1239;color:#fff}
-.okmsg a{color:#1d6b3a}
+.canceled{margin:4px 0 8px;padding:12px 14px;border-radius:14px;background:#fff;border:1.5px solid var(--line);color:var(--ink);font-size:15px;font-weight:400}
+.canceled div{display:flex;align-items:center;gap:16px;margin-top:10px}
+.cbtn{display:inline-flex;align-items:center;min-height:46px;padding:6px 20px;border-radius:12px;background:var(--cta);color:#fff!important;text-decoration:none;font-weight:650;font-size:16px}
 .mins{display:flex;gap:8px;margin-top:8px}
 .mins button{flex:1;min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:650;cursor:pointer}
 .driver{display:flex;align-items:center;gap:10px;justify-content:center;margin:20px 0 0;font-size:14px;color:var(--muted)}
@@ -373,7 +375,7 @@ details.done[open] summary::after{content:'Hide'}
     await new Promise(r => { const go = () => busy ? setTimeout(go, 250) : r(); go(); });
     await run({ action: 'cancel', id });
     if (orders.some(x => x.id === id)) return;           // didn't go through; the error shows at the top
-    $('#note').innerHTML = 'Canceled ' + esc(o.name) + '’s pickup. <a href="sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(cancelText(o)) + '">Text ' + esc(firstName(o)) + '</a> · <button class="undo" type="button" data-undo-cancel="' + esc(id) + '">Undo</button>';
+    $('#note').innerHTML = '<div class="canceled"><b>Canceled ' + esc(o.name) + '’s pickup.</b> Let them know:<div><a class="cbtn" href="sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(cancelText(o)) + '">Text ' + esc(firstName(o)) + '</a><button class="undo" type="button" data-undo-cancel="' + esc(id) + '">Undo</button></div></div>';
     $('#note').scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
   const finding = {};                       // order id -> true while the drive time is being worked out
@@ -533,7 +535,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24e';
+  const PAGE_VERSION = '2026-11-24f';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
