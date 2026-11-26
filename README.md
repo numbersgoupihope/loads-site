@@ -145,3 +145,11 @@ Put these on every link you control so each customer's source lands in the Sheet
 ## Texting customers
 
 The booking form collects two separate consents: texts about the order (required) and reminders and offers (optional, unchecked). The Sheet records both. Only send reorder reminders to rows where `sms_marketing_consent` is `yes`, and honor STOP replies. For the trial, staff send texts by hand from the business number (the staff page's **Text update** button). At higher volume, automatic texts at each stage can be added with a texting service. Have someone check the texting rules before sending marketing texts.
+
+## Search pages (SEO)
+
+- `koreatown.html`, `downtown-la.html`, `van-nuys.html`, `sherman-oaks.html` are neighborhood pages for Google, served at `/koreatown`, `/downtown-la`, etc.
+- `es.html` is the homepage in Spanish as its own page (`/es`), so Google can show it for Spanish searches. Its "English" button goes to the English homepage.
+- `sitemap.xml` lists every page Google should index; `robots.txt` points to it.
+- These are generated. After changing prices, zips, store addresses or homepage copy, rebuild them: `python3 tools/build_seo.py` (needs node and Playwright with Chrome).
+- The Google review link goes in `googleReviewUrl` in `config.js`. Once it's set, the "delivered" text from the staff app and the tracking page both ask for a review.

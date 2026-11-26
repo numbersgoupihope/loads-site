@@ -61,8 +61,11 @@
 
   var ES = {
     /* ---------- home page ---------- */
-    docTitle: 'Recogida y entrega de ropa en Los Ángeles | Loads',
-    metaDesc: 'Recogida y entrega de ropa por todo LA, del Westside y Downtown hasta el Valle. Lavada y doblada en nuestras propias lavanderías. $2.25 la libra, o $200 al mes por 30 libras cada semana.',
+    docTitle: 'Lavandería a domicilio en Los Ángeles | Recogida y entrega | Loads',
+    metaDesc: 'Lavandería a domicilio por todo LA, del Westside y Downtown hasta el Valle. Recogemos tu ropa, la lavamos y doblamos en nuestras propias lavanderías y te la regresamos. $2.25 la libra.',
+    heroKw: 'Lavandería a domicilio en Los Ángeles',
+    areaLinks: 'Recogemos en <a href="/koreatown">Koreatown</a>, <a href="/downtown-la">Downtown LA</a>, <a href="/van-nuys">Van Nuys</a> y <a href="/sherman-oaks">Sherman Oaks</a>.',
+    areasFootH3: 'Vecindarios',
     offer: '¿Primera carga? La entrega va por nuestra cuenta. Ya recogemos por todo LA y el Valle.',
     tagline: 'Recogida y entrega de ropa',
     getApp: 'Descarga la app',
@@ -301,7 +304,10 @@
   var saved = null;
   try { saved = localStorage.getItem('loads_lang'); } catch (e) {}
   var asked = qs.get('lang');
-  var lang = asked === 'es' || asked === 'en' ? asked
+  // A page written in one language (es.html) sets LOADS_PAGE_LANG, and its toggle goes to the other page.
+  var forced = window.LOADS_PAGE_LANG === 'es' || window.LOADS_PAGE_LANG === 'en' ? window.LOADS_PAGE_LANG : null;
+  var lang = forced ? forced
+    : asked === 'es' || asked === 'en' ? asked
     : saved === 'es' || saved === 'en' ? saved
     : (navigator.language || '').toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
 
@@ -348,6 +354,7 @@
     var b = e.target.closest && e.target.closest('[data-lang-toggle]');
     if (!b) return;
     e.preventDefault();
+    if (forced && window.LOADS_ALT_URL) { location.href = window.LOADS_ALT_URL; return; }
     setLang(lang === 'es' ? 'en' : 'es');
   });
 
@@ -358,6 +365,6 @@
     setLang: setLang,
     apply: apply
   };
-  if (asked === 'es' || asked === 'en') { try { localStorage.setItem('loads_lang', lang); } catch (e) {} }
+  if (forced || asked === 'es' || asked === 'en') { try { localStorage.setItem('loads_lang', lang); } catch (e) {} }
   apply();
 })();

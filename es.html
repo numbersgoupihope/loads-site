@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="es" data-app="customer"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="docTitle">Lavandería a domicilio en Los Ángeles | Recogida y entrega | Loads</title>
+<meta data-i18n-attr="content:metaDesc" name="description" content="Lavandería a domicilio por todo LA, del Westside y Downtown hasta el Valle. Recogemos tu ropa, la lavamos y doblamos en nuestras propias lavanderías y te la regresamos. $2.25 la libra.">
+<meta property="og:title" content="Loads | Lavandería a domicilio en Los Ángeles">
+<meta property="og:description" content="Deja tu bolsa en la puerta. Te la regresamos lavada, seca y doblada en nuestras propias lavanderías. $2.25 la libra.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://loadspickup.com/es">
+<link rel="alternate" hreflang="en" href="https://loadspickup.com/">
+<link rel="alternate" hreflang="es" href="https://loadspickup.com/es">
+<link rel="alternate" hreflang="x-default" href="https://loadspickup.com/">
+<meta property="og:url" content="https://loadspickup.com/es">
+<meta property="og:locale" content="es_US">
+<meta property="og:site_name" content="Loads">
+<meta property="og:image" content="https://loadspickup.com/img/share.jpg">
+<meta name="theme-color" content="#183a2e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/loads-180.png">
+<meta name="apple-mobile-web-app-title" content="Loads">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11.5' fill='%23183a2e'/%3E%3Ccircle cx='12' cy='12' r='6.6' fill='%23b9d6bb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/laundromat-1600.webp" imagesrcset="img/laundromat-900.webp 900w, img/laundromat-1600.webp 1600w" imagesizes="(max-width: 900px) 100vw, 1240px">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "DryCleaningOrLaundry", "@id": "https://loadspickup.com/#business", "name": "Loads", "alternateName": "Loads Laundry Co.", "url": "https://loadspickup.com/", "description": "Laundry pickup and delivery in Los Angeles. Washed, dried and folded at our own laundromats in Koreatown and Van Nuys, back the next day.", "telephone": "+18054073309", "email": "hello@loadspickup.com", "image": "https://loadspickup.com/img/share.jpg", "priceRange": "$$", "sameAs": ["https://www.instagram.com/loadspickup/"], "areaServed": [{"@type": "City", "name": "Los Angeles"}, {"@type": "Place", "name": "Koreatown"}, {"@type": "Place", "name": "Downtown Los Angeles"}, {"@type": "Place", "name": "Van Nuys"}, {"@type": "Place", "name": "Sherman Oaks"}, {"@type": "Place", "name": "Hollywood"}, {"@type": "Place", "name": "Westside"}, {"@type": "Place", "name": "East Los Angeles"}, {"@type": "Place", "name": "San Fernando Valley"}, {"@type": "Place", "name": "Pasadena"}, {"@type": "Place", "name": "Burbank"}, {"@type": "Place", "name": "Long Beach"}, {"@type": "Place", "name": "Santa Clarita"}, {"@type": "Place", "name": "Simi Valley"}], "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "09:00", "closes": "23:59"}]}</script>
+<style>
+:root{--ink:#183a2e;--muted:#4d5b54;--base:#fbf7f1;--mint:#d3e6d4;--mint2:#b9d6bb;--blush:#f2e2d5;--cream:#f3ede2;--cta:#c4235f;--line:#e2e3dc;--field:#d5ddd6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--base);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--ink)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.01em;font-stretch:normal}
+.display{font-weight:700;font-stretch:85%;letter-spacing:-.035em;line-height:.95;margin:0}
+.muted{color:var(--muted)}
+.todo{background:#fff0a0;border:1px dashed #8a6d00;border-radius:4px;padding:0 6px;color:var(--ink);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:12px 28px;border:none;border-radius:14px;background:var(--cta);color:#fff;font:inherit;font-weight:650;font-size:18px;text-decoration:none;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn-pill{border-radius:999px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* top bar + nav */
+.offer{background:var(--ink);color:var(--cream);text-align:center;padding:10px 24px;font-size:14px;font-weight:500}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;min-height:84px;padding:14px 0}
+.logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;color:var(--ink)}
+.wordmark{position:relative;display:inline-flex;align-items:baseline;font-weight:800;font-size:32px;letter-spacing:-.9px}
+.wordmark svg{margin:0 1px 0 1.5px}
+.logo small{margin-top:4px;font-size:12px;font-weight:500;letter-spacing:.4px;color:var(--muted)}
+.nav-right{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;font-size:15px}
+.mob-pills{display:none;gap:8px}
+.app-pill{display:none;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--ink);background:none;color:var(--ink);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
+.nav-right .btn{min-height:46px;padding:10px 22px;border-radius:999px;font-size:16px}
+/* hero */
+.hero-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px 56px;margin:24px 0 40px}
+.h1-kw{display:block;margin:0 0 18px;font-size:14px;font-weight:600;font-stretch:100%;letter-spacing:1.4px;line-height:1.3;text-transform:uppercase;color:var(--muted)}
+.area-links{margin:0 0 36px;font-size:17px;color:var(--muted)}
+.area-links a{font-weight:600}
+.hero-top h1{flex:1 1 620px;min-width:0;font-size:clamp(64px,10vw,150px);line-height:.9;letter-spacing:-.04em}
+.hero-side{flex:0 1 360px;min-width:0;padding-bottom:14px}
+.kicker{margin:0 0 10px;font-size:30px;line-height:1;color:var(--cta)}
+.price{display:flex;align-items:baseline;gap:10px}
+.price b{font-weight:700;font-stretch:85%;font-size:44px;line-height:1;letter-spacing:-.03em}
+.hero-img{width:100%;height:clamp(340px,50vw,640px);object-fit:cover;object-position:50% 58%;border-radius:28px}
+/* booking panel */
+.panel-wrap{position:relative;z-index:2;padding:0 24px}
+.panel{max-width:1040px;margin:-84px auto 0;background:#fff;border-radius:22px;padding:24px 26px 22px;box-shadow:0 2px 4px rgba(24,58,46,.06),0 24px 60px rgba(24,58,46,.16)}
+.panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;margin-bottom:16px}
+.panel-head h2{margin:0;font-weight:650;font-size:20px;letter-spacing:-.3px}
+.steps{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--muted)}
+.steps i{display:inline-block;width:28px;height:5px;border-radius:3px;background:#e4e9e4}
+.steps i.on{background:var(--cta)}
+.row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}
+.field{flex:1 1 220px;min-width:0}
+.field.wide{flex:2 1 300px}
+label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=tel],input[type=email],select,textarea{width:100%;min-height:56px;padding:12px 16px;border:1.5px solid var(--field);border-radius:14px;font:inherit;font-size:17px;color:var(--ink);background:var(--base)}
+textarea{min-height:0;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);margin:0;font-weight:400}
+.check input{width:20px;height:20px;margin:2px 0 0;flex:none;accent-color:var(--ink)}
+.consents{display:flex;flex-direction:column;gap:10px;margin:16px 0 4px}
+.panel-foot{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;padding-top:14px;border-top:1px solid #edf0ec;font-size:14px;color:var(--muted)}
+.msg{margin:12px 0 0;font-size:15px;font-weight:600}
+.msg.err{color:#a3123f}
+.link-btn{min-height:44px;padding:8px 0;border:none;background:none;cursor:pointer;font:inherit;font-size:14px;font-weight:600;color:var(--muted);text-decoration:underline}
+.done{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px;padding:6px 0}
+.done .tick{flex:none;width:52px;height:52px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.done h2{margin:0 0 2px;font-weight:700;font-stretch:85%;font-size:30px;letter-spacing:-.03em}
+.hp{position:absolute;left:-9999px}
+[hidden]{display:none!important}
+/* proof row */
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));padding:56px 24px 88px}
+.proof>div{padding:8px 28px;border-left:1px solid var(--line)}
+.proof>div:first-child{border-left:none;padding-left:0}
+.proof b{display:block;font-weight:700;font-stretch:85%;font-size:34px;letter-spacing:-.03em;line-height:1.1}
+.proof span{display:block;margin-top:6px;font-size:15px;color:var(--muted)}
+/* sections */
+.tile{background-color:var(--mint);background-image:linear-gradient(rgba(255,255,255,.6) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(255,255,255,.6) 1.5px,transparent 1.5px);background-size:46px 46px}
+.terrazzo{background-color:var(--blush);background-image:radial-gradient(circle at 12% 18%,#c98a6c 0 2.5px,transparent 3px),radial-gradient(circle at 63% 41%,#8aa48f 0 2px,transparent 2.6px),radial-gradient(circle at 37% 77%,#e2b49a 0 3.5px,transparent 4.2px),radial-gradient(circle at 84% 69%,#6e7f74 0 1.6px,transparent 2.1px),radial-gradient(circle at 25% 52%,#fff 0 2.2px,transparent 2.8px),radial-gradient(circle at 74% 12%,#b97a5e 0 1.8px,transparent 2.3px);background-size:140px 140px,110px 110px,170px 170px,90px 90px,120px 120px,150px 150px}
+.sec{padding:100px 0}
+.h2{font-size:clamp(42px,5.4vw,76px)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px;margin-top:52px}
+.card{background:var(--base);border-radius:22px;overflow:hidden;box-shadow:0 1px 2px rgba(24,58,46,.06),0 12px 32px rgba(24,58,46,.08)}
+.crop{height:220px;overflow:hidden}
+.crop img{width:100%;height:100%;object-fit:cover}
+.card-body{padding:24px 26px 28px}
+.num{font-size:30px;line-height:1;color:var(--cta);margin-bottom:10px}
+.card h3{margin:0 0 8px;font-weight:650;font-size:23px;letter-spacing:-.4px}
+.card p{margin:0;color:var(--muted)}
+.split{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:48px 72px}
+.split>*{flex:1 1 440px;min-width:0}
+/* ticket */
+.ticket{flex:1 1 400px;max-width:470px;background:var(--base);border-radius:22px;box-shadow:0 2px 4px rgba(24,58,46,.06),0 24px 50px rgba(24,58,46,.14)}
+.ticket-top{padding:28px 30px 24px}
+.ticket-label{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.big-price{display:flex;align-items:baseline;gap:8px;margin-top:12px}
+.big-price b{font-weight:700;font-stretch:85%;font-size:84px;line-height:.9;letter-spacing:-.04em}
+.perf{position:relative;height:0;border-top:2px dashed #ddd3c8;margin:0 24px}
+.perf::before,.perf::after{content:'';position:absolute;top:-15px;width:28px;height:28px;border-radius:50%;background:var(--blush)}
+.perf::before{left:-38px}.perf::after{right:-38px}
+.tile .perf::before,.tile .perf::after{background:var(--mint)}
+.compare p span:last-child{white-space:nowrap}
+#weekly .big-price span{white-space:nowrap}
+@media (max-width:760px){#weekly .big-price b{font-size:64px}}
+.ticket-bottom{padding:22px 30px 30px}
+input[type=range]{width:100%;height:44px;accent-color:var(--ink);cursor:pointer}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0 6px;border-top:1px solid #e8e0d6}
+.total b{font-weight:700;font-stretch:85%;font-size:42px;line-height:1;letter-spacing:-.03em}
+.ticket .btn{width:100%}
+/* why */
+.why-img{border-radius:28px;overflow:hidden;aspect-ratio:4/5;max-height:640px}
+.why-img img{width:100%;height:100%;object-fit:cover;object-position:80% 50%}
+.points{margin-top:32px}
+.points p{display:flex;gap:18px;align-items:baseline;margin:0;padding:18px 0;border-top:1px solid var(--line)}
+.points p:last-child{border-bottom:1px solid var(--line)}
+.points .serif{flex:none;width:28px;font-size:22px;color:var(--cta)}
+/* areas */
+.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:20px;margin:36px 0 40px}
+.zone{background:var(--ink);color:var(--cream);border-radius:22px;padding:32px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;min-height:190px}
+.zone small{display:block;font-size:13px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--mint2);margin-bottom:8px}
+.zone b{display:block;font-weight:700;font-stretch:85%;font-size:48px;line-height:1;letter-spacing:-.03em}
+.zone .serif{display:block;margin-top:8px;font-size:30px;line-height:1;color:#dfe7df}
+.zone a{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border-radius:999px;border:1.5px solid rgba(243,237,226,.5);color:var(--cream);font-weight:600;font-size:15px;text-decoration:none;white-space:nowrap}
+.wait{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px}
+.wait form{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
+.wait input{min-height:50px;border-radius:999px;background:#fff}
+.wait .btn{min-height:50px;background:var(--ink);color:var(--cream);font-size:16px;border-radius:999px}
+/* faq */
+.faq{max-width:900px;margin:0 auto;background:var(--base);border-radius:28px;padding:48px 44px;box-shadow:0 12px 32px rgba(24,58,46,.08)}
+details{border-top:1px solid #dfe2da}
+details:last-of-type{border-bottom:1px solid #dfe2da}
+summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;padding:18px 0;cursor:pointer;font-weight:600;font-size:19px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';flex:none;width:32px;height:32px;border-radius:50%;background:#e7ece6;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1}
+details[open] summary::after{content:'\2212';background:var(--ink);color:var(--base)}
+details p{margin:0 0 22px;color:var(--muted);max-width:40em}
+/* final cta */
+.final{position:relative;overflow:hidden;background:var(--ink);color:var(--cream)}
+.final>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.final::after{content:'';position:absolute;inset:0;background:rgba(18,44,35,.78)}
+.final .wrap{position:relative;z-index:1;padding-top:120px;padding-bottom:120px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:32px 56px}
+.final h2{font-size:clamp(52px,7.4vw,108px);line-height:.92;margin:0 0 16px}
+footer{background:var(--ink);color:#c9d6cc;padding:56px 0 104px;border-top:1px solid rgba(243,237,226,.12);font-size:15px}
+footer .wrap>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px 48px}
+footer a{color:#c9d6cc}
+footer h3{margin:0 0 8px;font-size:15px;color:var(--cream)}
+footer .wordmark{color:var(--cream)}
+.mbar{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fff;border-radius:18px;padding:10px 10px 10px 18px;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 10px 30px rgba(24,58,46,.22)}
+.mbar b{display:block;font-weight:700;font-stretch:85%;font-size:22px;line-height:1.1}
+.mbar small{font-size:13px;color:var(--muted)}
+.mbar .btn{min-height:48px;padding:10px 22px;border-radius:12px;font-size:16px}
+.mbar.away{display:none!important}
+@media (max-width:440px){.logo small{display:none}}
+@media (max-width:760px){.mbar{display:flex}.panel{padding:20px 18px;margin-top:-40px}.faq{padding:32px 22px}.proof>div{border-left:none;padding:8px 0}.sec{padding:72px 0}.offer{font-size:13px;padding:8px 16px}.nav{min-height:0;padding:14px 0 6px}.nav-right{display:none}.mob-pills{display:flex}.app-pill{display:inline-flex;align-items:center}.hero-top{margin:12px 0 24px;gap:16px}.hero-side{padding-bottom:0}.hero-side p.muted{font-size:17px!important}.kicker{font-size:26px}.price b{font-size:38px}.hero-img{height:240px;border-radius:20px}}
+</style>
+</head>
+<body>
+
+<div data-i18n="offer" class="offer" data-offer="">¿Primera carga? La entrega va por nuestra cuenta. Ya recogemos por todo LA y el Valle.</div>
+
+<header class="wrap">
+<nav class="nav" aria-label="Main">
+<a href="#top" class="logo">
+<span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#183a2e"></circle><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"></circle><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"></path></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
+<small data-i18n="tagline">Recogida y entrega de ropa</small>
+</a>
+<div class="mob-pills"><button type="button" class="app-pill" data-lang-toggle="" lang="en" aria-label="View this page in English">English</button><button type="button" class="app-pill" data-get-app="" data-i18n="getApp" hidden="">Descarga la app</button></div>
+<div class="nav-right">
+<button type="button" class="link-btn" data-lang-toggle="" lang="en" aria-label="View this page in English">English</button>
+<button type="button" class="link-btn" data-get-app="" data-i18n="getApp" hidden="">Descarga la app</button>
+<span data-i18n="questions" class="muted">¿Preguntas? Escríbenos al <a data-sms="" href="#"><span data-fill="phone"></span></a></span>
+<a data-i18n="bookPickup" href="#book" class="btn">Agenda tu recogida</a>
+</div>
+</nav>
+</header>
+
+<main id="top">
+<section class="wrap">
+<div class="hero-top">
+<h1 class="display"><span class="h1-kw" data-i18n="heroKw">Lavandería a domicilio en Los Ángeles</span><span data-i18n="heroH1">Quítate un <span class="serif">peso</span> de encima.</span></h1>
+<div class="hero-side">
+<p data-i18n="kicker" class="kicker serif">Nosotros nos encargamos.</p>
+<p data-i18n="heroP" class="muted" style="margin:0 0 18px;font-size:19px">Recogida y entrega por todo LA, del Westside y Downtown hasta el Valle. Lavamos y doblamos cada carga en nuestras propias lavanderías y te la regresamos a tu puerta.</p>
+<div class="price"><b>$2.25</b><span data-i18n="priceSub" class="muted">la libra: lavado, secado y doblado</span></div>
+</div>
+</div>
+<img data-i18n-attr="alt:heroAlt" class="hero-img" src="img/laundromat-1600.webp" srcset="img/laundromat-900.webp 900w, img/laundromat-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 1240px" width="1600" height="1067" fetchpriority="high" alt="Una lavandería iluminada por el sol, con lavadoras de acero inoxidable en una pared y palmeras afuera de las ventanas">
+</section>
+
+<section class="panel-wrap">
+<div class="panel" id="book">
+
+<p data-i18n="subscribedMsg" class="msg" id="subscribedMsg" hidden="" style="margin:0 0 14px">Ya tienes Loads Weekly. Agenda tu recogida aquí abajo; te reconocemos por tu número de celular.</p>
+<form id="step1" novalidate="">
+<div class="panel-head"><h2 data-i18n="s1Title">Mándanos tu carga</h2><div data-i18n="s1Steps" class="steps">Paso 1 de 2 <span><i class="on"></i> <i></i></span></div></div>
+<div class="row">
+<div class="field"><label data-i18n="zipLabel" for="zip">Tu código postal</label><input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="90005" required=""></div>
+<div class="field"><label data-i18n="dayLabel" for="day">Día de recogida</label><select id="day" name="day" required=""><option value="">Choose a day</option></select></div>
+<div class="field"><label data-i18n="winLabel" for="win">Hora de recogida</label><select id="win" name="pickup_window" required=""><option value="">Choose a time</option></select></div>
+<button data-i18n="seeTimes" class="btn field" type="submit">Continuar</button>
+</div>
+<p class="msg" id="msg1" role="status" aria-live="polite" hidden=""></p>
+<div id="outzone" hidden="">
+<p data-i18n="outzoneMsg" class="msg">Todavía no recogemos en <span id="outzip"></span>. Déjanos tu número y te mandamos un texto cuando lleguemos.</p>
+<div class="row" style="margin-top:10px">
+<div class="field"><label data-i18n="mobileNumber" for="outphone">Número de celular</label><input id="outphone" type="tel" autocomplete="tel" placeholder="(213) 555-0123"></div>
+<button data-i18n="outjoin" class="btn field" type="button" id="outjoin" style="background:var(--ink)">Avísenme cuando lleguen</button>
+</div>
+</div>
+</form>
+
+<form id="step2" novalidate="" hidden="">
+<div class="panel-head"><h2 data-i18n="s2Title">¿Dónde recogemos?</h2><div data-i18n="s2Steps" class="steps">Paso 2 de 2 <span><i class="on"></i> <i class="on"></i></span></div></div>
+<div class="row">
+<div class="field"><label data-i18n="nameLabel" for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required=""></div>
+<div class="field"><label data-i18n="mobileLabel" for="phone">Celular</label><input id="phone" name="phone" type="tel" autocomplete="tel" required=""></div>
+<div class="field wide"><label data-i18n="addrLabel" for="street">Dirección de recogida</label><input data-i18n-attr="placeholder:addrPh" id="street" name="address" type="text" autocomplete="street-address" placeholder="Calle y número de departamento" required=""></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field wide"><label data-i18n="notesLabel" for="notes">Notas para la recogida (opcional)</label><input data-i18n-attr="placeholder:notesPh" id="notes" name="notes" type="text" placeholder="Código de la reja, dónde dejarás la bolsa"></div>
+<div class="field"><label data-i18n="heardLabel" for="heard">¿Cómo supiste de nosotros?</label><select id="heard" name="heard"><option value="" data-i18n="heard0">Elige una</option><option value="Google search" data-i18n="heard1">Búsqueda en Google</option><option value="Instagram or Facebook" data-i18n="heard2">Instagram o Facebook</option><option value="TikTok" data-i18n="heard3">TikTok</option><option value="Flyer or door hanger" data-i18n="heard4">Volante o aviso en la puerta</option><option value="Saw your laundromat" data-i18n="heard5">Vi su lavandería</option><option value="A friend" data-i18n="heard6">Un amigo o amiga</option><option value="Nextdoor" data-i18n="heard7">Nextdoor</option><option value="Other" data-i18n="heard8">Otro</option></select></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field"><label data-i18n="tempLabel" for="temp">Lavar con</label><select id="temp" name="wash_temp" required=""><option value="" data-i18n="temp0">¿Caliente o fría?</option><option value="Cold" data-i18n="tempCold">Agua fría</option><option value="Hot" data-i18n="tempHot">Agua caliente</option></select></div>
+<div class="field"><label for="dwin"><span data-i18n="dwinLabel">Hora de entrega</span> <span id="dwinDay" style="font-weight:400"></span></label><select id="dwin" name="dropoff_window" required=""><option value="">Choose a time</option></select></div>
+</div>
+<div class="consents">
+<label class="check"><input type="checkbox" id="consentOrder" required=""><span data-i18n="consentOrder">Mándame textos sobre este pedido (confirmación, recogida y entrega). Responde STOP cuando quieras. Pueden aplicar tarifas de mensajes y datos.</span></label>
+<label class="check"><input type="checkbox" id="consentMarketing"><span data-i18n="consentMkt">También mándame recordatorios y ofertas, hasta 4 al mes. Opcional. Responde STOP cuando quieras.</span></label>
+</div>
+<input class="hp" type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+<p data-i18n="noshowLine" class="muted" style="margin:6px 0 8px;font-size:14px"><b>Clientes nuevos:</b> respondan SÍ a nuestro texto de confirmación y mandamos al chofer. Si llegamos y no hay bolsa ni nadie contesta, hay un cargo de $<span data-fill="noshow"></span> por no estar.</p>
+<p data-i18n="legal" class="muted" style="margin:0 0 16px;font-size:14px">Las recogidas son de <span data-fill="window"></span>. Al agendar aceptas nuestros <a href="terms.html">términos</a> y nuestra <a href="privacy.html">política de privacidad</a> (en inglés).</p>
+<div class="row"><button data-i18n="bookBtn" class="btn" type="submit" id="bookBtn">Agendar mi recogida</button><button data-i18n="back" class="link-btn" type="button" id="back">Atrás</button></div>
+<p class="msg" id="msg2" role="status" aria-live="polite" hidden=""></p>
+</form>
+
+<div id="step3" hidden="">
+<div class="done">
+<div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<div style="flex:1 1 300px"><h2 data-i18n="s3Title">Tu carga ya está agendada.</h2><p data-i18n="doneDefault" class="muted" style="margin:0" id="doneText">Te mandamos un texto. Si eres cliente nuevo, responde SÍ para confirmar. Deja tu bolsa en la puerta.</p></div>
+<a data-i18n="trackLink" class="btn btn-pill" id="trackLink" href="#" style="min-height:46px;font-size:16px">Sigue tu carga</a>
+<button data-i18n="again" class="btn btn-pill" type="button" id="again" style="background:#fff;color:var(--ink);border:1.5px solid var(--field);min-height:46px;font-size:16px">Agendar otra</button>
+</div>
+<button data-i18n="homeTip" type="button" class="link-btn" id="homeTip" data-get-app="" hidden="" style="margin-top:16px">La próxima vez, sin navegador: agrega Loads a tu pantalla de inicio</button>
+</div>
+
+<div class="panel-foot"><span data-i18n="foot1">Sin contratos</span><span data-i18n="foot2">Pagas por libra</span><span data-i18n="foot3">O manda PICKUP por texto al <a data-sms="" href="#"><span data-fill="phone"></span></a></span></div>
+</div>
+</section>
+
+<section data-i18n-attr="aria-label:proofAria" class="wrap proof" aria-label="Por qué confían en nosotros">
+<div data-optional=""><b><span data-fill="rating"></span></b><span data-i18n="proof1">calificación en Google de nuestras lavanderías</span></div>
+<div><b data-i18n="proof2b">Nuestras propias tiendas</b><span data-i18n="proof2">Cada carga se lava en lavanderías que nosotros manejamos</span></div>
+<div><b data-i18n="proof3b">Nuestros propios choferes</b><span data-i18n="proof3">Son de nuestro equipo, no de una app</span></div>
+<div><b data-i18n="proof4b">Dos veces al día</b><span data-i18n="proof4">Una ruta de recogida y una de entrega, todos los días</span></div>
+</section>
+
+<section class="sec tile" id="how">
+<div class="wrap">
+<h2 data-i18n="howH2" class="display h2" style="max-width:14ch">Nosotros nos encargamos. <span class="serif">Tú haces solo una cosa.</span></h2>
+<div class="cards">
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:6% 26%"></div><div class="card-body"><div class="num serif">01</div><h3 data-i18n="c1h">Agenda una recogida</h3><p data-i18n="c1p">Elige un día aquí o mándanos un texto, y deja cualquier bolsa en tu puerta. Eso es todo lo que tienes que hacer.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2);transform-origin:92% 64%"></div><div class="card-body"><div class="num serif">02</div><h3 data-i18n="c2h">Lavamos tu carga en nuestra tienda</h3><p data-i18n="c2p">Nuestro chofer la lleva a nuestra lavandería, donde nuestro propio personal la lava, la seca y la dobla.</p></div></article>
+<article class="card"><div class="crop"><img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async" style="transform:scale(2.4);transform-origin:17% 55%"></div><div class="card-body"><div class="num serif">03</div><h3 data-i18n="c3h">De vuelta en tu puerta</h3><p data-i18n="c3p">Doblada, en bolsa y entregada <span data-fill="turnaround"></span>.</p></div></article>
+</div>
+</div>
+</section>
+
+<section class="sec terrazzo" id="pricing">
+<div class="wrap split">
+<div>
+<h2 data-i18n="priceH2" class="display h2" style="max-width:12ch;margin-bottom:22px">Cobramos por libra, <span class="serif">no por carga.</span></h2>
+<p data-i18n="priceP" class="muted" style="font-size:19px;max-width:27em;margin:0 0 22px">Paga por lo que mandas, o si lavas cada semana, ahorra con Loads Weekly. El lavado, secado, doblado y embolsado siempre están incluidos.</p>
+<p data-i18n="bulky" class="muted" data-optional="" style="font-size:15px;margin:0">Edredones y artículos grandes: <span data-fill="bulky"></span></p>
+</div>
+<div class="ticket">
+<div class="ticket-top">
+<div class="ticket-label"><span data-i18n="ticketWash">Lavado y doblado</span><span data-i18n="ticketNo">Carga No. 0001</span></div>
+<div class="big-price"><b>$<span data-price=""></span></b><span data-i18n="perLb" class="serif muted" style="font-size:26px">la libra</span></div>
+<p data-i18n="feeLine" class="muted" style="margin:12px 0 0">+ $<span data-fee=""></span> de recogida y $<span data-fee=""></span> de entrega</p>
+<p data-i18n="minLine" class="muted" data-minline="" style="margin:4px 0 0;font-size:15px">Mínimo de $<span data-min=""></span> por pedido, sin contar la entrega</p>
+<p data-i18n="offerLine" data-offer="" style="margin:4px 0 0;font-weight:600;color:var(--cta)">Primer pedido: la entrega va por nuestra cuenta</p>
+</div>
+<div class="perf" aria-hidden="true"></div>
+<div class="ticket-bottom">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><label data-i18n="sizeLabel" for="lbs" style="font-size:16px;color:var(--ink)">¿Qué tan grande es tu carga?</label><span class="muted" style="font-size:15px" id="lbsText"></span></div>
+<input id="lbs" type="range" min="5" max="50" step="1" value="15">
+<div class="total"><span data-i18n="estTotal" style="font-weight:600">Estimado</span><b id="total"></b></div>
+<p class="muted" style="margin:0 0 10px;font-size:13px;text-align:right" id="tripNote"></p>
+<p class="muted" style="margin:0 0 20px;font-size:14px" id="totalNote"></p>
+<a data-i18n="bookMy" href="#book" class="btn">Agendar mi recogida</a>
+<p data-i18n="weeklyNudge" style="margin:14px 0 0;font-size:15px;text-align:center"><a href="#weekly">¿Cada semana? Con Loads Weekly ahorras unos $<span data-plan="save"></span> al mes</a></p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec tile" id="weekly">
+<div class="wrap split">
+<div style="flex:1 1 420px;max-width:560px">
+<p data-i18n="weeklyKicker" class="serif kicker">Para casas que lavan cada semana</p>
+<h2 data-i18n="weeklyH2" class="display h2" style="max-width:13ch;margin-bottom:22px">Loads Weekly. <span class="serif">Ahorra cada semana.</span></h2>
+<p data-i18n="weeklyP" class="muted" style="font-size:19px;max-width:28em;margin:0 0 8px">Por $<span data-plan="monthly"></span> al mes te lavamos y doblamos <span data-plan="lbs"></span> libras cada semana, recogidas y entregadas por nuestros propios choferes.</p>
+<div class="points">
+<p data-i18n="weeklyA"><span class="serif">1.</span><span><strong>Unos $<span data-plan="perlb"></span> la libra.</strong> <span class="muted">Si usas tus <span data-plan="lbs"></span> libras cada semana, en vez de $<span data-price=""></span>.</span></span></p>
+<p data-i18n="weeklyB"><span class="serif">2.</span><span><strong>La entrega cuesta $<span data-plan="delivery"></span> por pedido.</strong> <span class="muted">Sin plan son $<span data-fee=""></span> por cada viaje.</span></span></p>
+<p data-i18n="weeklyC"><span class="serif">3.</span><span><strong>¿Otra recogida esa semana? $<span data-plan="extra"></span> la libra.</strong> <span class="muted">Más $<span data-plan="delivery"></span> de entrega.</span></span></p>
+<p data-i18n="weeklyD"><span class="serif">4.</span><span><strong>¿Más de <span data-plan="lbs"></span> libras?</strong> <span class="muted">Solo se cobran las libras extra, a $<span data-plan="over"></span> la libra.</span></span></p>
+<p data-i18n="weeklyE"><span class="serif">5.</span><span><strong>Cobro mensual. Cancela cuando quieras.</strong> <span class="muted">Mándanos un texto o correo. Las libras que no uses no pasan a la siguiente semana.</span></span></p>
+</div>
+</div>
+<div class="ticket">
+<div class="ticket-top">
+<div class="ticket-label"><span data-i18n="weeklyLabel">Loads Weekly</span><span data-i18n="weeklyEvery">Cada semana</span></div>
+<div class="big-price"><b>$<span data-plan="monthly"></span></b><span data-i18n="perMonth" class="serif muted" style="font-size:26px">al mes</span></div>
+<p data-i18n="weeklyLine" class="muted" style="margin:12px 0 0"><span data-plan="lbs"></span> libras cada semana + $<span data-plan="delivery"></span> de entrega por pedido</p>
+<div class="compare" style="margin-top:18px;padding:14px 16px;border-radius:14px;background:#fff;font-size:15px">
+<p data-i18n="cmpHead" style="margin:0 0 8px;font-weight:600">Si mandas <span data-plan="lbs"></span> libras cada semana:</p>
+<p data-i18n="cmpGo" style="margin:0;display:flex;justify-content:space-between;gap:12px"><span class="muted">Sin plan</span><span class="muted">unos $<span data-plan="payg"></span> al mes</span></p>
+<p data-i18n="cmpPlan" style="margin:4px 0 0;display:flex;justify-content:space-between;gap:12px"><span>Loads Weekly, con entrega</span><span>unos $<span data-plan="planmo"></span> al mes</span></p>
+<p data-i18n="cmpSave" style="margin:8px 0 0;font-weight:650;color:var(--cta)">Ahorras unos $<span data-plan="save"></span> al mes.</p>
+</div>
+</div>
+<div class="perf" aria-hidden="true"></div>
+<div class="ticket-bottom">
+<form id="planForm" novalidate="">
+<div class="row">
+<div class="field"><label data-i18n="nameLabel" for="pname">Nombre</label><input id="pname" type="text" autocomplete="name" required=""></div>
+<div class="field"><label data-i18n="mobileLabel" for="pphone">Celular</label><input id="pphone" type="tel" autocomplete="tel" required=""></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field"><label data-i18n="emailLabel" for="pemail">Correo (para tus recibos)</label><input id="pemail" type="email" autocomplete="email" required=""></div>
+<div class="field" style="flex:0 1 130px"><label data-i18n="zipShort" for="pzip">Código postal</label><input id="pzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" required=""></div>
+</div>
+<div class="row" style="margin-top:12px">
+<div class="field wide"><label data-i18n="addrLabel" for="pstreet">Dirección de recogida</label><input data-i18n-attr="placeholder:addrPh" id="pstreet" type="text" autocomplete="street-address" placeholder="Calle y número de departamento" required=""></div>
+</div>
+<div class="consents"><label class="check"><input type="checkbox" id="pconsent" required=""><span data-i18n="consentPlan">Mándenme textos sobre mis recogidas y entregas. Responde STOP cuando quieras. Pueden aplicar cargos por mensajes y datos.</span></label></div>
+<input class="hp" type="text" id="pcompany" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button data-i18n="planBtn" class="btn" type="submit" id="planBtn" style="margin-top:8px">Empezar Loads Weekly</button>
+<p data-i18n="planFine" class="muted" style="margin:12px 0 0;font-size:13px">Terminas en la página de pago segura de Square. Se cobran $<span data-plan="monthly"></span> hoy y luego una vez al mes. Al inscribirte aceptas nuestros <a href="terms.html#weekly">términos</a>.</p>
+<p class="msg" id="msgp" role="status" aria-live="polite" hidden=""></p>
+</form>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="wrap split" style="gap:48px 80px">
+<div class="why-img"><img data-i18n-attr="alt:whyAlt" src="img/laundromat-900.webp" alt="Filas de lavadoras de acero inoxidable bajo lámparas colgantes" loading="lazy" decoding="async"></div>
+<div>
+<h2 data-i18n="whyH2" class="display h2" style="max-width:12ch;margin-bottom:22px">Tu ropa <span class="serif">nunca sale</span> de nuestras manos.</h2>
+<p data-i18n="whyP" class="muted" style="font-size:19px;max-width:30em;margin:0">Muchos servicios de entrega le pasan tu ropa a otras lavanderías o a contratistas independientes. Nosotros somos dueños de las lavanderías y nuestros choferes trabajan para nosotros, así que un solo equipo cuida cada carga, de puerta a puerta.</p>
+<div class="points">
+<p data-i18n="pointA"><span class="serif">a.</span><span><strong>Máquinas comerciales en nuestras propias tiendas.</strong> <span class="muted">No la lavadora del departamento de alguien.</span></span></p>
+<p data-i18n="pointB"><span class="serif">b.</span><span><strong>Los mismos choferes del barrio.</strong> <span class="muted">No quien esté libre en una app esta noche.</span></span></p>
+<p data-i18n="pointC"><span class="serif">c.</span><span><strong>Una persona de verdad cuando escribes.</strong> <a data-sms="" href="#"><span data-fill="phone"></span></a></span></p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="wrap" id="areas" style="padding-bottom:104px">
+<h2 data-i18n="areasH2" class="display h2">Ya recogemos <span class="serif">por todo</span> LA.</h2>
+<div class="zones">
+<div class="zone"><div><small data-i18n="daily">Recogemos a diario</small><b data-i18n="zoneCity">Del Westside al Este de LA</b><span class="serif">Hollywood, Downtown, Pasadena, Long Beach + more</span></div><a data-i18n="bookHere" href="#book">Agenda aquí</a></div>
+<div class="zone"><div><small data-i18n="daily">Recogemos a diario</small><b data-i18n="zoneValley">Todo el Valle</b><span class="serif">Burbank, Santa Clarita, Simi Valley, Thousand Oaks + more</span></div><a data-i18n="bookHere" href="#book">Agenda aquí</a></div>
+</div>
+<p class="area-links" data-i18n="areaLinks">Recogemos en <a href="/koreatown">Koreatown</a>, <a href="/downtown-la">Downtown LA</a>, <a href="/van-nuys">Van Nuys</a> y <a href="/sherman-oaks">Sherman Oaks</a>.</p>
+<div class="wait">
+<p data-i18n="waitP" class="muted" style="margin:0;font-size:18px;max-width:30em;flex:1 1 320px">¿Estás más lejos? Déjanos tu código postal y tu número, y te mandamos un texto cuando lleguemos.</p>
+<form id="waitlist" novalidate="">
+<div><label data-i18n="wzipLabel" for="wzip">Código postal</label><input id="wzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" style="width:130px"></div>
+<div><label data-i18n="mobileNumber" for="wphone">Número de celular</label><input id="wphone" type="tel" autocomplete="tel" style="width:190px"></div>
+<button data-i18n="letMeKnow" class="btn" type="submit">Avísenme</button>
+</form>
+<p class="msg" id="msgw" role="status" aria-live="polite" hidden="" style="flex-basis:100%"></p>
+</div>
+</section>
+
+<section class="sec tile">
+<div class="wrap">
+<div class="faq">
+<h2 data-i18n="faqH2" class="display" style="font-size:clamp(38px,4.6vw,60px);margin-bottom:28px">¿Preguntas? <span class="serif">Aquí te respondemos.</span></h2>
+<details open=""><summary data-i18n="q1">¿Tengo que estar en casa?</summary><p data-i18n="a1">No. Deja tu bolsa afuera de tu puerta, o dinos dónde encontrarla cuando agendes.</p></details>
+<details><summary data-i18n="q2">¿Cuándo me la regresan?</summary><p data-i18n="a2">De regreso <span data-fill="turnaround"></span>. Tú eliges un horario de dos horas para la recogida y otro para la entrega, de 9 a.m. a medianoche. Te mandamos un texto cuando el chofer vaya en camino, con la hora de llegada.</p></details>
+<details><summary data-i18n="q3">¿Cómo cobran?</summary><p data-i18n="a3">No necesitas tarjeta para agendar. Pesamos tu ropa seca en la tienda, antes de lavarla, y cobramos $<span data-price=""></span> la libra<span data-minline=""> con un mínimo de $<span data-min=""></span></span>, más $<span data-fee=""></span> por la recogida y $<span data-fee=""></span> por la entrega. Un cesto lleno normalmente pesa unas 10 libras. Te mandamos por texto el peso, una foto de la báscula y tu total.</p><p data-i18n="a3b">En tu primer pedido recibes un enlace de pago seguro de Square. Al pagar, marca la opción para guardar tu tarjeta, y después solo cobramos a tu tarjeta guardada, así que no tienes que hacer nada. Tu ropa regresa en cuanto esté pagada.</p></details>
+<details><summary data-i18n="qCancel">¿Puedo cancelar? ¿Y si no estoy para la recogida?</summary><p data-i18n="aCancel">Cancela o cambia tu recogida por texto en cualquier momento antes de que empiece tu horario, sin costo. Los clientes nuevos responden SÍ a nuestro texto de confirmación antes de que mandemos al chofer. Si el chofer llega y no hay bolsa y no podemos comunicarnos contigo, cancelamos la recogida y cobramos un cargo de $<span data-fill="noshow"></span> por no estar.</p></details>
+<details><summary data-i18n="qPlan">¿Cómo funciona Loads Weekly?</summary><p data-i18n="aPlan">Son $<span data-plan="monthly"></span> al mes, cobrados a tu tarjeta por Square. Cada semana incluye una recogida de hasta <span data-plan="lbs"></span> libras, y la entrega de ese pedido cuesta $<span data-plan="delivery"></span>. Si esa recogida pesa más, solo se cobran las libras extra, a $<span data-plan="over"></span> cada una. Una segunda recogida en la misma semana cuesta $<span data-plan="extra"></span> la libra más $<span data-plan="delivery"></span> de entrega. Las libras que no uses no se acumulan. Agenda cada recogida en esta página como siempre, y cancela cuando quieras por texto o correo.</p></details>
+<details><summary data-i18n="q4">¿Y si algo regresa mal?</summary><p><span data-fill="guarantee"></span></p></details>
+<details><summary data-i18n="q5">¿Qué zonas cubren?</summary><p data-i18n="a5">Cualquier lugar a unas 30 millas de nuestras lavanderías en Koreatown y Van Nuys. Eso incluye el Westside, Hollywood, Downtown, el Este de LA, Pasadena, el South Bay, todo el Valle, Burbank, Santa Clarita y Simi Valley. Escribe tu código postal en el formulario para revisar.</p></details>
+</div>
+</div>
+</section>
+
+<section class="final">
+<img src="img/laundromat-900.webp" alt="" loading="lazy" decoding="async">
+<div class="wrap">
+<div style="flex:1 1 560px;min-width:0">
+<h2 data-i18n="finalH2" class="display">Suelta la carga. <span class="serif">Disfruta el fin de semana.</span></h2>
+<p data-i18n="finalP" style="margin:0;font-size:19px;color:#dfe7df">Agenda en un minuto, o manda PICKUP por texto al <a data-sms="" href="#" style="color:#fff"><span data-fill="phone"></span></a>.</p>
+</div>
+<a data-i18n="bookMy" href="#book" class="btn btn-pill" style="min-height:60px;padding:14px 34px;font-size:19px">Agendar mi recogida</a>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+<div>
+<div style="flex:1 1 320px">
+<span class="wordmark"><span aria-hidden="true">L</span><svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#f3ede2"></circle><circle cx="12" cy="12" r="6.6" fill="#b9d6bb"></circle><path d="M8.3 10.4a4.2 4.2 0 0 1 3.7-2.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"></path></svg><span aria-hidden="true">ads</span><span class="sr-only">Loads</span></span>
+<p data-i18n="footP" style="margin:14px 0 0;max-width:26em">Recogida y entrega de ropa por todo LA y el Valle, lavada y doblada en nuestras propias lavanderías.</p>
+</div>
+<div><h3 data-i18n="areasFootH3">Vecindarios</h3><div><a href="/koreatown">Koreatown</a></div><div style="margin-top:6px"><a href="/downtown-la">Downtown LA</a></div><div style="margin-top:6px"><a href="/van-nuys">Van Nuys</a></div><div style="margin-top:6px"><a href="/sherman-oaks">Sherman Oaks</a></div></div>
+<div><h3 data-i18n="storesH3">Nuestras lavanderías</h3><div data-fill="store1"></div><div data-fill="store2" style="margin-top:6px"></div></div>
+<div><h3 data-i18n="contactH3">Contacto</h3><div><a data-sms="" href="#"><span data-fill="phone"></span></a></div><div style="margin-top:6px"><span data-fill="email"></span></div><div style="margin-top:6px"><a data-i18n="getApp" href="#" data-get-app="" hidden="">Descarga la app</a></div><div data-i18n="legalLinks" style="margin-top:14px"><a href="privacy.html">Privacidad</a> · <a href="terms.html">Términos</a></div></div>
+</div>
+<p data-i18n="copyright" style="margin:36px 0 0;font-size:14px;color:#93a89b">© <span id="year">2026</span> Loads Laundry Co. Nosotros nos encargamos.</p>
+</div>
+</footer>
+
+<div class="mbar"><div><b>$<span data-price=""></span>/lb</b><small data-i18n="mbarSmall">Por todo LA</small></div><a data-i18n="bookShort" href="#book" class="btn">Agendar</a></div>
+
+<script src="config.js?v=6"></script>
+<script>window.LOADS_PAGE_LANG = 'es'; window.LOADS_ALT_URL = '/?lang=en';</script>
+<script src="i18n.js?v=10"></script>
+<script src="app-install.js?v=4" defer=""></script>
+<script src="preview-nav.js"></script>
+<script>
+const CONFIG = window.LOADS_CONFIG;
+
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const show = (el, on) => { if (el) el.hidden = !on; };
+
+  /* ---------- fill business details (re-run when the language changes) ---------- */
+  const I18N = window.LOADS_I18N || { lang: 'en', locale: () => 'en-US', t: (k, v, f) => f || k };
+  const t = (k, v) => I18N.t(k, v);
+  const smsHref = CONFIG.phoneSms ? 'sms:' + CONFIG.phoneSms + '?&body=PICKUP' : '#';
+  let warned = false;
+  function fillAll() {
+    const es = I18N.lang === 'es';
+    const pick = k => (es && CONFIG[k + 'Es']) || CONFIG[k];
+    const fills = {
+      phone: CONFIG.phoneDisplay, email: CONFIG.email, turnaround: pick('turnaround'),
+      window: pick('pickupWindow'), guarantee: pick('guarantee'), bulky: pick('bulkyPrice'), noshow: String(CONFIG.noShowFee || 10),
+      rating: CONFIG.googleRating ? t('rating', { r: CONFIG.googleRating }) : '',
+      store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || ''
+    };
+    const missing = new Set();
+    $$('[data-fill]').forEach(el => {
+      const key = el.dataset.fill, val = fills[key];
+      const optional = el.closest('[data-optional]');
+      if (val) { el.textContent = val; el.classList.remove('todo'); show(optional, true); }
+      else if (optional) show(optional, false);
+      else { el.textContent = '[' + key.toUpperCase() + ']'; el.classList.add('todo'); missing.add(key); }
+    });
+    if (!warned) {
+      warned = true;
+      if (missing.size) console.warn('Loads: fill these in CONFIG before launch:', Array.from(missing).join(', '));
+      if (!CONFIG.endpoint) console.warn('Loads: no endpoint set. Preview mode: bookings are not saved.');
+    }
+    $$('[data-sms]').forEach(a => {
+      a.href = smsHref;
+      if (!a.dataset.bound) { a.dataset.bound = '1'; a.addEventListener('click', () => track('text_click')); }
+    });
+    $$('[data-price]').forEach(el => { el.textContent = CONFIG.pricePerLb.toFixed(2); });
+    $$('[data-fee]').forEach(el => { el.textContent = CONFIG.deliveryFee.toFixed(2); });
+    const P = CONFIG.plan, wk = 52 / 12, trip2 = CONFIG.deliveryFee * (CONFIG.tripsPerOrder || 2);
+    if (P) {
+      const payg = (P.lbsPerWeek * CONFIG.pricePerLb + trip2) * wk, planmo = P.monthly + P.deliveryPerOrder * wk;
+      const vals = {
+        monthly: P.monthly, lbs: P.lbsPerWeek, perlb: (P.monthly / (P.lbsPerWeek * wk)).toFixed(2),
+        delivery: P.deliveryPerOrder.toFixed(2), extra: P.extraPickupPerLb.toFixed(2), over: P.overPerLb.toFixed(2),
+        payg: Math.round(payg), planmo: Math.round(planmo), save: Math.round(payg - planmo)
+      };
+      $$('[data-plan]').forEach(el => { el.textContent = vals[el.dataset.plan]; });
+    }
+    $$('[data-min]').forEach(el => { el.textContent = Number(CONFIG.minOrder) || 0; });
+    $$('[data-minline]').forEach(el => show(el, Number(CONFIG.minOrder) > 0));
+    $$('[data-offer]').forEach(el => show(el, CONFIG.firstOrderOffer));
+    if ($('#year')) $('#year').textContent = new Date().getFullYear();
+  }
+  fillAll();
+
+  /* ---------- tracking tags (load only when IDs are set) ---------- */
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  const gId = CONFIG.ga4Id || CONFIG.googleAdsId;
+  if (gId) {
+    const s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gId);
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    if (CONFIG.ga4Id) gtag('config', CONFIG.ga4Id);
+    if (CONFIG.googleAdsId) gtag('config', CONFIG.googleAdsId);
+  }
+  if (CONFIG.metaPixelId) {
+    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', CONFIG.metaPixelId); fbq('track', 'PageView');
+  }
+  const META = { begin_booking: ['trackCustom', 'BeginBooking'], booking_completed: ['track', 'Schedule'], waitlist_join: ['track', 'Lead'], text_click: ['track', 'Contact'] };
+  function track(name, params, eventId) {
+    params = params || {};
+    try {
+      window.dataLayer.push({ event: name, ...params });
+      if (gId) gtag('event', name, params);
+      if (name === 'booking_completed' && CONFIG.googleAdsId && CONFIG.googleAdsBookingLabel) {
+        gtag('event', 'conversion', { send_to: CONFIG.googleAdsId + '/' + CONFIG.googleAdsBookingLabel, value: params.value, currency: 'USD', transaction_id: eventId });
+      }
+      if (window.fbq && META[name]) fbq(META[name][0], META[name][1], params, eventId ? { eventID: eventId } : undefined);
+    } catch (e) { console.warn('track failed', e); }
+  }
+
+  /* ---------- where did this visitor come from ---------- */
+  const KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'ttclid'];
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const qs = new URLSearchParams(location.search), now = new Date().toISOString();
+  const visit = { landing_page: location.pathname + location.search, referrer: document.referrer || '', seen_at: now };
+  KEYS.forEach(k => { if (qs.get(k)) visit[k] = qs.get(k); });
+  const hasTags = KEYS.some(k => visit[k]);
+  if (!store.get('loads_first')) store.set('loads_first', visit);
+  if (hasTags || !store.get('loads_last')) store.set('loads_last', visit);
+  function attribution() {
+    const first = store.get('loads_first') || visit, last = store.get('loads_last') || visit, out = {};
+    KEYS.forEach(k => { out[k] = last[k] || ''; out['first_' + k] = first[k] || ''; });
+    out.landing_page = last.landing_page; out.referrer = last.referrer; out.first_seen = first.seen_at;
+    return out;
+  }
+
+  /* ---------- count the visit once per browser session (source only, nothing personal) ---------- */
+  try {
+    if (CONFIG.endpoint && !sessionStorage.getItem('loads_hit')) {
+      sessionStorage.setItem('loads_hit', '1');
+      let src = visit.utm_source || '';
+      const ref = (document.referrer || '').replace(/^https?:\/\//, '').split('/')[0];
+      if (!src) src = /instagram/.test(ref) ? 'instagram' : /google\./.test(ref) ? 'google' : /facebook|fb\.com/.test(ref) ? 'facebook' : /tiktok/.test(ref) ? 'tiktok' : /nextdoor/.test(ref) ? 'nextdoor' : ref && ref !== location.host ? ref : '(direct)';
+      const q = new URLSearchParams({ action: 'hit', src, med: visit.utm_medium || '', camp: visit.utm_campaign || '', cont: visit.utm_content || '', ref, page: location.pathname });
+      fetch(CONFIG.endpoint + '?' + q.toString(), { mode: 'no-cors', keepalive: true }).catch(() => {});
+    }
+  } catch (e) {}
+
+  /* ---------- helpers ---------- */
+  const zipZone = zip => Object.keys(CONFIG.zones).find(z => CONFIG.zones[z].includes(zip)) || '';
+  const digits = v => (v || '').replace(/\D/g, '');
+  const validPhone = v => { const d = digits(v); return d.length === 10 || (d.length === 11 && d[0] === '1'); };
+  function msg(el, text, isErr) { el.textContent = text; el.classList.toggle('err', !!isErr); show(el, !!text); }
+  async function send(payload) {
+    if (!CONFIG.endpoint) { console.info('Loads preview mode, not sent:', payload); return true; }
+    const body = new URLSearchParams();
+    Object.keys(payload).forEach(k => body.append(k, payload[k] == null ? '' : String(payload[k])));
+    await fetch(CONFIG.endpoint, { method: 'POST', mode: 'no-cors', body });
+    return true;
+  }
+
+  /* ---------- pickup days ---------- */
+  const daySel = $('#day');
+  const DAY_OPTS = { weekday: 'short', month: 'short', day: 'numeric' };
+  const fmtEn = new Intl.DateTimeFormat('en-US', DAY_OPTS);     // what staff see in the Sheet
+  const dayOf = v => { const d = new Date(v + 'T12:00:00'); return d; };
+  const localDay = v => new Intl.DateTimeFormat(I18N.locale(), DAY_OPTS).format(dayOf(v));
+  function buildDays() {
+    const keep = daySel.value;
+    daySel.innerHTML = '';
+    const first = document.createElement('option'); first.value = ''; first.textContent = t('chooseDay');
+    daySel.appendChild(first);
+    let added = 0;
+    for (let i = 1; added < CONFIG.daysAhead && i < 30; i++) {
+      const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + i);
+      if (CONFIG.closedDays.includes(d.getDay())) continue;
+      const o = document.createElement('option');
+      o.value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      o.textContent = (i === 1 ? t('tomorrow') : '') + localDay(o.value);
+      daySel.appendChild(o); added++;
+    }
+    daySel.value = keep;
+  }
+  buildDays();
+
+  /* ---------- pickup and drop-off windows ---------- */
+  const winSel = $('#win'), dwinSel = $('#dwin');
+  const WINDOWS = CONFIG.windows || [];
+  const winText = w => I18N.lang === 'es' ? (w.es || w.en) : w.en;
+  const winLocal = en => { const w = WINDOWS.find(x => x.en === en); return w ? winText(w) : en; };
+  const nextDay = v => { const d = dayOf(v); d.setDate(d.getDate() + 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  function fillWindows(sel) {
+    const keep = sel.value;
+    sel.innerHTML = '';
+    const first = document.createElement('option'); first.value = ''; first.textContent = t('chooseWin');
+    sel.appendChild(first);
+    WINDOWS.forEach(w => { const o = document.createElement('option'); o.value = w.en; o.textContent = winText(w); sel.appendChild(o); });
+    sel.value = keep;
+  }
+  function buildWindows() {
+    fillWindows(winSel); fillWindows(dwinSel);
+    $('#dwinDay').textContent = booking.pickup_date ? '(' + localDay(nextDay(booking.pickup_date)) + ')' : '';
+  }
+
+  /* ---------- booking flow ---------- */
+  const s1 = $('#step1'), s2 = $('#step2'), s3 = $('#step3');
+  const booking = {};
+  const pageOpened = Date.now();             // bots fill the form in a blink; the server drops anything under 4 seconds
+  let lastDone = null;
+  buildWindows();
+  s1.addEventListener('submit', e => {
+    e.preventDefault();
+    const zip = digits($('#zip').value).slice(0, 5);
+    show($('#outzone'), false);
+    if (zip.length !== 5) return msg($('#msg1'), t('eZip'), true);
+    if (!daySel.value) return msg($('#msg1'), t('eDay'), true);
+    if (WINDOWS.length && !winSel.value) return msg($('#msg1'), t('eWin'), true);
+    const zone = zipZone(zip);
+    if (!zone) { msg($('#msg1'), ''); $('#outzip').textContent = zip; return show($('#outzone'), true); }
+    msg($('#msg1'), '');
+    const back = nextDay(daySel.value);
+    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: fmtEn.format(dayOf(daySel.value)), pickup_window: winSel.value, dropoff_label: fmtEn.format(dayOf(back)) });
+    $('#dwinDay').textContent = '(' + localDay(back) + ')';
+    if (!dwinSel.value) dwinSel.value = winSel.value;     // same time the next day, unless they change it
+    track('begin_booking', { zone });
+    show(s1, false); show(s2, true); $('#name').focus();
+  });
+  $('#outjoin').addEventListener('click', async () => {
+    const phone = $('#outphone').value;
+    if (!validPhone(phone)) return msg($('#msg1'), t('ePhone'), true);
+    await joinWaitlist(digits($('#zip').value).slice(0, 5), phone, $('#msg1'));
+    show($('#outzone'), false);
+  });
+  $('#back').addEventListener('click', () => { show(s2, false); show(s1, true); });
+  s2.addEventListener('submit', async e => {
+    e.preventDefault();
+    const m = $('#msg2');
+    if ($('#company').value) return;
+    if (!$('#name').value.trim()) return msg(m, t('eName'), true);
+    if (!validPhone($('#phone').value)) return msg(m, t('ePhone'), true);
+    if (!$('#street').value.trim()) return msg(m, t('eAddr'), true);
+    if (!$('#temp').value) return msg(m, t('eTemp'), true);
+    if (WINDOWS.length && !dwinSel.value) return msg(m, t('eDwin'), true);
+    if (!$('#consentOrder').checked) return msg(m, t('eConsent'), true);
+    const btn = $('#bookBtn'); btn.disabled = true; msg(m, t('booking'));
+    const id = 'L' + Date.now().toString(36).toUpperCase();
+    const letters = 'abcdefghjkmnpqrstuvwxyz';
+    const token = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(n => letters[n % letters.length]).join('');
+    const trackUrl = new URL('track.html?id=' + id + '&t=' + token, location.href).href;
+    const payload = Object.assign({
+      type: 'booking', booking_id: id, submitted_at: new Date().toISOString(),
+      name: $('#name').value.trim(), phone: $('#phone').value.trim(), address: $('#street').value.trim(),
+      notes: (I18N.lang === 'es' ? '[Español] ' : '') + $('#notes').value.trim(), heard: $('#heard').value, lang: I18N.lang,
+      sms_order_consent: 'yes', sms_marketing_consent: $('#consentMarketing').checked ? 'yes' : 'no',
+      first_order_offer: CONFIG.firstOrderOffer ? 'yes' : 'no', user_agent: navigator.userAgent,
+      track_token: token, track_url: trackUrl,
+      wash_temp: $('#temp').value, dropoff_window: dwinSel.value, form_ms: Date.now() - pageOpened
+    }, booking, attribution());
+    try {
+      await send(payload);
+      track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
+      lastDone = { phone: payload.phone, date: booking.pickup_date, win: booking.pickup_window };
+      doneText();
+      $('#trackLink').href = trackUrl;
+      show(s2, false); show(s3, true); msg(m, '');
+    } catch (err) {
+      msg(m, t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
+    } finally { btn.disabled = false; }
+  });
+  function doneText() {
+    const day = localDay(lastDone.date) + (lastDone.win ? ', ' + winLocal(lastDone.win) : '');
+    $('#doneText').textContent = t('done', { phone: lastDone.phone, day });
+  }
+  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; Object.keys(booking).forEach(k => delete booking[k]); buildWindows(); show(s3, false); show(s1, true); });
+
+  /* ---------- Loads Weekly sign-up ---------- */
+  // Back from Square's checkout: point them at booking their first pickup.
+  if (new URLSearchParams(location.search).get('subscribed') === '1') { show($('#subscribedMsg'), true); track('plan_subscribed'); }
+  $('#planForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const m = $('#msgp'), btn = $('#planBtn');
+    if ($('#pcompany').value) return;
+    const name = $('#pname').value.trim(), phone = $('#pphone').value.trim(), email = $('#pemail').value.trim();
+    const zip = digits($('#pzip').value).slice(0, 5), address = $('#pstreet').value.trim();
+    if (!name) return msg(m, t('eName'), true);
+    if (!validPhone(phone)) return msg(m, t('ePhone'), true);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return msg(m, t('eEmail'), true);
+    if (zip.length !== 5) return msg(m, t('eZip'), true);
+    const zone = zipZone(zip);
+    if (!zone) return msg(m, t('ePlanZone', { zip }), true);
+    if (!address) return msg(m, t('eAddr'), true);
+    if (!$('#pconsent').checked) return msg(m, t('eConsentPlan'), true);
+    if (!CONFIG.endpoint) return msg(m, 'Preview mode: sign-ups are not sent.');
+    btn.disabled = true; msg(m, t('planStarting'));
+    try {
+      const res = await fetch(CONFIG.endpoint, {
+        method: 'POST',
+        body: JSON.stringify(Object.assign({ action: 'subscribe', name, phone, email, zip, zone, address, lang: I18N.lang }, attribution()))
+      });
+      const data = await res.json();
+      if (data.ok && data.url) { track('plan_checkout', { zone }); location.href = data.url; return; }
+      const errs = { name: 'eName', phone: 'ePhone', email: 'eEmail' };
+      msg(m, errs[data.error] ? t(errs[data.error]) : t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
+    } catch (err) {
+      msg(m, t('eFail', { phone: CONFIG.phoneDisplay || t('us') }), true);
+    }
+    btn.disabled = false;
+  });
+
+  /* ---------- waitlist ---------- */
+  async function joinWaitlist(zip, phone, m) {
+    try {
+      await send(Object.assign({ type: 'waitlist', submitted_at: new Date().toISOString(), zip, phone }, attribution()));
+      track('waitlist_join', { zip });
+      msg(m, t('wlOk', { zip }));
+    } catch (e) { msg(m, t('wlFail'), true); }
+  }
+  $('#waitlist').addEventListener('submit', async e => {
+    e.preventDefault();
+    const zip = digits($('#wzip').value).slice(0, 5), phone = $('#wphone').value, m = $('#msgw');
+    if (zip.length !== 5) return msg(m, t('eZip'), true);
+    if (zipZone(zip)) return msg(m, t('wlInZone', { zip }));
+    if (!validPhone(phone)) return msg(m, t('ePhone'), true);
+    await joinWaitlist(zip, phone, m); e.target.reset();
+  });
+
+  /* ---------- price estimator ---------- */
+  const lbs = $('#lbs');
+  function estimate() {
+    const n = Number(lbs.value), h = Math.round(n / 5) / 2;
+    const hamper = h <= 0.5 ? t('hHalf') : h === 1 ? t('hOne') : t('hMany', { n: h });
+    $('#lbsText').textContent = t('lbsLine', { n, hamper });
+    const laundry = n * CONFIG.pricePerLb, min = Number(CONFIG.minOrder) || 0;
+    // Laundry only; the per-trip charge sits in small print under the number.
+    $('#total').textContent = '$' + Math.max(laundry, min).toFixed(2);
+    $('#tripNote').textContent = t('tripNote', { fee: CONFIG.deliveryFee.toFixed(2) });
+    const minNote = min && laundry < min ? t('estMin', { min }) : '';
+    $('#totalNote').textContent = minNote + (CONFIG.firstOrderOffer ? t('estFirst') : t('estPlain'));
+  }
+  lbs.addEventListener('input', estimate); estimate();
+
+  /* ---------- language switch ---------- */
+  document.addEventListener('loads:lang', () => {
+    fillAll(); buildDays(); estimate();
+    buildWindows();
+    if (lastDone) doneText();
+    ['#msg1', '#msg2', '#msgw'].forEach(id => msg($(id), ''));
+  });
+
+  /* ---------- hide the phone booking bar while the form is on screen ---------- */
+  const bar = $('.mbar');
+  if (bar && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => bar.classList.toggle('away', es[0].isIntersecting), { threshold: 0.15 }).observe($('#book'));
+  }
+})();
+</script>
+
+
+</body></html>
