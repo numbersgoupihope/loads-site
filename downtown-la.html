@@ -82,6 +82,12 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-off
 .done .tick{flex:none;width:52px;height:52px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center}
 .done h2{margin:0 0 2px;font-weight:700;font-stretch:85%;font-size:30px;letter-spacing:-.03em}
 .hp{position:absolute;left:-9999px}
+.mode{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;margin:0 0 16px;border-radius:999px;background:#eef2ee}
+.mode label{display:flex;margin:0;font-size:inherit;color:inherit}
+.mode input{position:absolute;opacity:0;width:1px;height:1px}
+.mode span{display:inline-flex;align-items:center;min-height:42px;padding:8px 18px;border-radius:999px;font-size:15px;font-weight:650;color:var(--muted);cursor:pointer}
+.mode input:checked+span{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(24,58,46,.16)}
+.mode input:focus-visible+span{outline:2px solid var(--ink);outline-offset:1px}
 [hidden]{display:none!important}
 /* proof row */
 .proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));padding:56px 24px 88px}

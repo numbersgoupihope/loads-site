@@ -38,6 +38,18 @@ window.LOADS_CONFIG = {
     overPerLb: 2.25,           // pounds over 30 on the week's pickup
     extraPickupPerLb: 1.75     // any extra pickup that week
   },
+  // Drop-off at the store, booked online. Same price per pound; delivering it back is one trip fee.
+  dropoff: {
+    hours: '5am to 10pm, every day',
+    hoursEs: '5 a.m. a 10 p.m., todos los días',
+    closeHour: 22,             // last drop-offs at 10pm (24-hour clock)
+    cutoffHour: 14,            // dropped off before 2pm: ready the same day; after 2pm: ready the next day
+    sameDayFrom: '5 to 7pm',   // earliest delivery window back for a load dropped off before 2pm
+    stores: [                  // index points into stores above; key matches the zones list
+      { key: 'Koreatown store', name: 'Koreatown', index: 0 },
+      { key: 'Van Nuys store',  name: 'Van Nuys',  index: 1 }
+    ]
+  },
   noShowFee: 10,               // charged when a driver arrives and there's no bag and no answer (keep the same as apps-script/Square.gs)
   firstOrderOffer: true,       // "First load? Delivery's on us."
   estOrderValue: 40,           // average order value sent to ad platforms with each booking
@@ -103,3 +115,18 @@ window.LOADS_STAGES = [
   { key: 'out_for_delivery', label: 'Out for delivery',  headline: 'Your load is out the door.',    detail: 'Headed back to you. Arriving within about an hour.' },
   { key: 'delivered',        label: 'Delivered',         headline: 'Your load is back.',            detail: 'Dropped off. Enjoy the clean clothes.' }
 ];
+
+/* Which steps an order goes through. Drop-offs skip the driver picking it up; a drop-off
+   the customer collects at the store uses "Ready for pickup" and "Picked up" for the last two steps. */
+window.LOADS_FLOW = function (o) {
+  var drop = o && o.order_type === 'dropoff', atStore = drop && o.return_method === 'store';
+  return window.LOADS_STAGES
+    .filter(function (s) { return !drop || (s.key !== 'on_the_way' && s.key !== 'picked_up'); })
+    .map(function (s) {
+      if (drop && s.key === 'booked') return Object.assign({}, s, { label: 'Booked', headline: 'Your drop-off is booked.', detail: 'Bring your bag to the store.' });
+      if (drop && s.key === 'at_store') return Object.assign({}, s, { label: 'Dropped off', headline: 'We have your load.', detail: "We're weighing and sorting it now." });
+      if (atStore && s.key === 'out_for_delivery') return Object.assign({}, s, { label: 'Ready for pickup', headline: 'Your load is ready.', detail: 'Come pick it up at the store.' });
+      if (atStore && s.key === 'delivered') return Object.assign({}, s, { label: 'Picked up', headline: 'You picked up your load.', detail: 'Enjoy the clean clothes.' });
+      return s;
+    });
+};

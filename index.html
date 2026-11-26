@@ -92,6 +92,12 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-off
 .done .tick{flex:none;width:52px;height:52px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center}
 .done h2{margin:0 0 2px;font-weight:700;font-stretch:85%;font-size:30px;letter-spacing:-.03em}
 .hp{position:absolute;left:-9999px}
+.mode{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;margin:0 0 16px;border-radius:999px;background:#eef2ee}
+.mode label{display:flex;margin:0;font-size:inherit;color:inherit}
+.mode input{position:absolute;opacity:0;width:1px;height:1px}
+.mode span{display:inline-flex;align-items:center;min-height:42px;padding:8px 18px;border-radius:999px;font-size:15px;font-weight:650;color:var(--muted);cursor:pointer}
+.mode input:checked+span{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(24,58,46,.16)}
+.mode input:focus-visible+span{outline:2px solid var(--ink);outline-offset:1px}
 [hidden]{display:none!important}
 /* proof row */
 .proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));padding:56px 24px 88px}
@@ -218,12 +224,23 @@ footer .wordmark{color:var(--cream)}
 <p data-i18n="subscribedMsg" class="msg" id="subscribedMsg" hidden style="margin:0 0 14px">You're on Loads Weekly. Book your pickup below, and we'll know it's you by your mobile number.</p>
 <form id="step1" novalidate>
 <div class="panel-head"><h2 data-i18n="s1Title">Send us a load</h2><div data-i18n="s1Steps" class="steps">Step 1 of 2 <span><i class="on"></i> <i></i></span></div></div>
-<div class="row">
+<div class="mode" role="radiogroup" data-i18n-attr="aria-label:modeAria" aria-label="How your laundry gets to us">
+<label><input type="radio" name="mode" value="pickup" checked><span data-i18n="modePickup">We pick it up</span></label>
+<label><input type="radio" name="mode" value="dropoff"><span data-i18n="modeDrop">I'll drop it off</span></label>
+</div>
+<div class="row" data-mode="pickup">
 <div class="field"><label data-i18n="zipLabel" for="zip">Your zip code</label><input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="90005" required></div>
 <div class="field"><label data-i18n="dayLabel" for="day">Pickup day</label><select id="day" name="day" required><option value="">Choose a day</option></select></div>
 <div class="field"><label data-i18n="winLabel" for="win">Pickup time</label><select id="win" name="pickup_window" required><option value="">Choose a time</option></select></div>
 <button data-i18n="seeTimes" class="btn field" type="submit">Continue</button>
 </div>
+<div class="row" data-mode="dropoff" hidden>
+<div class="field"><label data-i18n="storeLabel" for="store">Which store?</label><select id="store"></select></div>
+<div class="field"><label data-i18n="ddayLabel" for="dday">Drop-off day</label><select id="dday"></select></div>
+<div class="field"><label data-i18n="dtimeLabel" for="dtime">Drop-off time</label><select id="dtime"></select></div>
+<button data-i18n="seeTimes" class="btn field" type="submit">Continue</button>
+</div>
+<p data-i18n="dropHours" data-mode="dropoff" hidden class="muted" style="margin:12px 0 0;font-size:14px">Both stores take drop-offs <span data-fill="drophours"></span>. Same price, $<span data-price></span> a pound. Drop off before 2pm and it's ready the same day.</p>
 <p class="msg" id="msg1" role="status" aria-live="polite" hidden></p>
 <div id="outzone" hidden>
 <p data-i18n="outzoneMsg" class="msg">We're not picking up in <span id="outzip"></span> yet. Leave a number and we'll text you when we get there.</p>
@@ -235,28 +252,31 @@ footer .wordmark{color:var(--cream)}
 </form>
 
 <form id="step2" novalidate hidden>
-<div class="panel-head"><h2 data-i18n="s2Title">Where should we pick up?</h2><div data-i18n="s2Steps" class="steps">Step 2 of 2 <span><i class="on"></i> <i class="on"></i></span></div></div>
+<div class="panel-head"><h2><span data-i18n="s2Title" data-mode="pickup">Where should we pick up?</span><span data-i18n="s2TitleDrop" data-mode="dropoff" hidden>Almost done</span></h2><div data-i18n="s2Steps" class="steps">Step 2 of 2 <span><i class="on"></i> <i class="on"></i></span></div></div>
 <div class="row">
 <div class="field"><label data-i18n="nameLabel" for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
 <div class="field"><label data-i18n="mobileLabel" for="phone">Mobile</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
-<div class="field wide"><label data-i18n="addrLabel" for="street">Pickup address</label><input data-i18n-attr="placeholder:addrPh" id="street" name="address" type="text" autocomplete="street-address" placeholder="Street and unit number" required></div>
+<div class="field" data-mode="dropoff" hidden><label data-i18n="retLabel" for="ret">How do you want it back?</label><select id="ret"></select></div>
+<div class="field wide" id="addrField"><label for="street"><span data-i18n="addrLabel" data-mode="pickup">Pickup address</span><span data-i18n="addrLabelDrop" data-mode="dropoff" hidden>Delivery address</span></label><input data-i18n-attr="placeholder:addrPh" id="street" name="address" type="text" autocomplete="street-address" placeholder="Street and unit number" required></div>
+<div class="field" id="dzipField" hidden style="flex:0 1 130px"><label data-i18n="zipShort" for="dzip">Zip</label><input id="dzip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5"></div>
 </div>
 <div class="row" style="margin-top:12px">
-<div class="field wide"><label data-i18n="notesLabel" for="notes">Pickup notes (optional)</label><input data-i18n-attr="placeholder:notesPh" id="notes" name="notes" type="text" placeholder="Gate code, where the bag will be"></div>
+<div class="field wide"><label for="notes"><span data-i18n="notesLabel" data-mode="pickup">Pickup notes (optional)</span><span data-i18n="notesLabelDrop" data-mode="dropoff" hidden>Notes (optional)</span></label><input data-i18n-attr="placeholder:notesPh" id="notes" name="notes" type="text" placeholder="Gate code, where the bag will be"></div>
 <div class="field"><label data-i18n="heardLabel" for="heard">How did you hear about us?</label><select id="heard" name="heard"><option value="" data-i18n="heard0">Pick one</option><option value="Google search" data-i18n="heard1">Google search</option><option value="Instagram or Facebook" data-i18n="heard2">Instagram or Facebook</option><option value="TikTok" data-i18n="heard3">TikTok</option><option value="Flyer or door hanger" data-i18n="heard4">Flyer or door hanger</option><option value="Saw your laundromat" data-i18n="heard5">Saw your laundromat</option><option value="A friend" data-i18n="heard6">A friend</option><option value="Nextdoor" data-i18n="heard7">Nextdoor</option><option value="Other" data-i18n="heard8">Other</option></select></div>
 </div>
 <div class="row" style="margin-top:12px">
 <div class="field"><label data-i18n="tempLabel" for="temp">Wash in</label><select id="temp" name="wash_temp" required><option value="" data-i18n="temp0">Hot or cold?</option><option value="Cold" data-i18n="tempCold">Cold water</option><option value="Hot" data-i18n="tempHot">Hot water</option></select></div>
-<div class="field"><label for="dwin"><span data-i18n="dwinLabel">Drop-off time</span> <span id="dwinDay" style="font-weight:400"></span></label><select id="dwin" name="dropoff_window" required><option value="">Choose a time</option></select></div>
+<div class="field" id="dwinField"><label for="dwin"><span data-i18n="dwinLabel" data-mode="pickup">Drop-off time</span><span data-i18n="dwinLabelDrop" data-mode="dropoff" hidden>Delivery time</span> <span id="dwinDay" style="font-weight:400"></span></label><select id="dwin" name="dropoff_window" required><option value="">Choose a time</option></select></div>
 </div>
 <div class="consents">
 <label class="check"><input type="checkbox" id="consentOrder" required><span data-i18n="consentOrder">Text me about this order (confirmation, pickup and delivery updates). Reply STOP anytime. Msg &amp; data rates may apply.</span></label>
 <label class="check"><input type="checkbox" id="consentMarketing"><span data-i18n="consentMkt">Also text me reminders and offers, up to 4 a month. Optional. Reply STOP anytime.</span></label>
 </div>
 <input class="hp" type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-<p data-i18n="noshowLine" class="muted" style="margin:6px 0 8px;font-size:14px"><b>New customers:</b> reply YES to our confirmation text and we'll send a driver. If we arrive and there's no bag and no answer, there's a $<span data-fill="noshow"></span> no-show fee.</p>
-<p data-i18n="legal" class="muted" style="margin:0 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
-<div class="row"><button data-i18n="bookBtn" class="btn" type="submit" id="bookBtn">Pick up my load</button><button data-i18n="back" class="link-btn" type="button" id="back">Back</button></div>
+<p data-i18n="noshowLine" data-mode="pickup" class="muted" style="margin:6px 0 8px;font-size:14px"><b>New customers:</b> reply YES to our confirmation text and we'll send a driver. If we arrive and there's no bag and no answer, there's a $<span data-fill="noshow"></span> no-show fee.</p>
+<p data-i18n="legal" data-mode="pickup" class="muted" style="margin:0 0 16px;font-size:14px">Pickups run <span data-fill="window"></span>. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
+<p data-i18n="legalDrop" data-mode="dropoff" hidden class="muted" style="margin:0 0 16px;font-size:14px">We weigh it dry before washing and text you the total. By booking you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
+<div class="row"><button data-i18n="bookBtn" data-mode="pickup" class="btn" type="submit" id="bookBtn">Pick up my load</button><button data-i18n="bookBtnDrop" data-mode="dropoff" hidden class="btn" type="submit" id="bookBtnDrop">Book my drop-off</button><button data-i18n="back" class="link-btn" type="button" id="back">Back</button></div>
 <p class="msg" id="msg2" role="status" aria-live="polite" hidden></p>
 </form>
 
@@ -448,8 +468,8 @@ footer .wordmark{color:var(--cream)}
 
 <div class="mbar"><div><b>$<span data-price></span>/lb</b><small data-i18n="mbarSmall">All over LA</small></div><a data-i18n="bookShort" href="#book" class="btn">Book a pickup</a></div>
 
-<script src="config.js?v=6"></script>
-<script src="i18n.js?v=10"></script>
+<script src="config.js?v=7"></script>
+<script src="i18n.js?v=11"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -473,7 +493,8 @@ const CONFIG = window.LOADS_CONFIG;
       phone: CONFIG.phoneDisplay, email: CONFIG.email, turnaround: pick('turnaround'),
       window: pick('pickupWindow'), guarantee: pick('guarantee'), bulky: pick('bulkyPrice'), noshow: String(CONFIG.noShowFee || 10),
       rating: CONFIG.googleRating ? t('rating', { r: CONFIG.googleRating }) : '',
-      store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || ''
+      store1: CONFIG.stores[0] || '', store2: CONFIG.stores[1] || '',
+      drophours: CONFIG.dropoff ? ((es && CONFIG.dropoff.hoursEs) || CONFIG.dropoff.hours) : ''
     };
     const missing = new Set();
     $$('[data-fill]').forEach(el => {
@@ -613,30 +634,115 @@ const CONFIG = window.LOADS_CONFIG;
   const WINDOWS = CONFIG.windows || [];
   const winText = w => I18N.lang === 'es' ? (w.es || w.en) : w.en;
   const winLocal = en => { const w = WINDOWS.find(x => x.en === en); return w ? winText(w) : en; };
-  const nextDay = v => { const d = dayOf(v); d.setDate(d.getDate() + 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
-  function fillWindows(sel) {
+  const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const nextDay = v => { const d = dayOf(v); d.setDate(d.getDate() + 1); return ymd(d); };
+  const opt = (sel, value, text) => { const o = document.createElement('option'); o.value = value; o.textContent = text; sel.appendChild(o); return o; };
+  const keepValue = (sel, keep) => { sel.value = keep; if (sel.value !== keep) sel.value = ''; };
+  // from: the earliest window to offer ("5 to 7pm" for a same-day drop-off delivered back)
+  function fillWindows(sel, from) {
     const keep = sel.value;
     sel.innerHTML = '';
-    const first = document.createElement('option'); first.value = ''; first.textContent = t('chooseWin');
-    sel.appendChild(first);
-    WINDOWS.forEach(w => { const o = document.createElement('option'); o.value = w.en; o.textContent = winText(w); sel.appendChild(o); });
-    sel.value = keep;
+    opt(sel, '', t('chooseWin'));
+    const start = from ? Math.max(0, WINDOWS.findIndex(w => w.en === from)) : 0;
+    WINDOWS.slice(start).forEach(w => opt(sel, w.en, winText(w)));
+    keepValue(sel, keep);
   }
   function buildWindows() {
-    fillWindows(winSel); fillWindows(dwinSel);
-    $('#dwinDay').textContent = booking.pickup_date ? '(' + localDay(nextDay(booking.pickup_date)) + ')' : '';
+    fillWindows(winSel);
+    fillWindows(dwinSel, booking.order_type === 'dropoff' && booking.ready_same_day ? DROP.sameDayFrom : null);
+    const back = booking.dropoff_date || (booking.pickup_date ? nextDay(booking.pickup_date) : '');
+    $('#dwinDay').textContent = back ? '(' + localDay(back) + ')' : '';
   }
+
+  /* ---------- drop-off at the store ---------- */
+  const DROP = Object.assign({ stores: [], closeHour: 22, cutoffHour: 14 }, CONFIG.dropoff || {});
+  const storeSel = $('#store'), ddaySel = $('#dday'), dtimeSel = $('#dtime'), retSel = $('#ret');
+  const storeOf = key => DROP.stores.find(x => x.key === key);
+  const storeAddr = st => st ? (CONFIG.stores[st.index] || '') : '';
+  const h12 = h => (h % 12 || 12);
+  const cutEn = () => h12(DROP.cutoffHour) + (DROP.cutoffHour < 12 ? 'am' : 'pm');              // what staff see
+  const cutText = () => I18N.lang === 'es' ? h12(DROP.cutoffHour) + (DROP.cutoffHour < 12 ? ' a.m.' : ' p.m.') : cutEn();
+  function buildDropTimes() {
+    const keep = dtimeSel.value;
+    dtimeSel.innerHTML = '';
+    opt(dtimeSel, '', t('chooseOne'));
+    const late = ddaySel.value === ymd(new Date()) && new Date().getHours() >= DROP.cutoffHour;
+    if (!late) opt(dtimeSel, 'before', t('dtimeBefore', { time: cutText() }));
+    opt(dtimeSel, 'after', t('dtimeAfter', { time: cutText() }));
+    keepValue(dtimeSel, keep);
+  }
+  function buildDrop() {
+    let keep = storeSel.value;
+    storeSel.innerHTML = '';
+    opt(storeSel, '', t('chooseStore'));
+    DROP.stores.forEach(st => opt(storeSel, st.key, st.name));
+    keepValue(storeSel, keep);
+    keep = ddaySel.value;
+    ddaySel.innerHTML = '';
+    opt(ddaySel, '', t('chooseDay'));
+    const now = new Date();
+    for (let i = 0, added = 0; added < CONFIG.daysAhead && i < 14; i++) {
+      if (i === 0 && now.getHours() >= DROP.closeHour) continue;            // stores are closed for the night
+      const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + i);
+      opt(ddaySel, ymd(d), (i === 0 ? t('today') : i === 1 ? t('tomorrow') : '') + localDay(ymd(d)));
+      added++;
+    }
+    keepValue(ddaySel, keep);
+    buildDropTimes();
+    keep = retSel.value;
+    retSel.innerHTML = '';
+    opt(retSel, '', t('chooseOne'));
+    opt(retSel, 'store', t('retStore'));
+    opt(retSel, 'delivery', t('retDeliver', { fee: Number(CONFIG.deliveryFee || 0).toFixed(2) }));
+    keepValue(retSel, keep);
+  }
+  ddaySel.addEventListener('change', buildDropTimes);
+
+  /* ---------- pickup or drop-off ---------- */
+  let mode = 'pickup';
+  const notesPh = $('#notes').getAttribute('placeholder');
+  function syncReturn() {
+    const deliver = mode === 'pickup' || retSel.value === 'delivery';
+    show($('#addrField'), deliver); show($('#dwinField'), deliver); show($('#dzipField'), mode === 'dropoff' && deliver);
+    $('#notes').placeholder = mode === 'dropoff' ? t('notesPhDrop') : t('notesPh', null, notesPh);
+  }
+  function setMode(m) {
+    mode = m === 'dropoff' ? 'dropoff' : 'pickup';
+    $$('[data-mode]').forEach(el => show(el, el.dataset.mode === mode));
+    syncReturn();
+    msg($('#msg1'), ''); show($('#outzone'), false);
+  }
+  $$('input[name="mode"]').forEach(r => r.addEventListener('change', () => { if (r.checked) setMode(r.value); }));
+  retSel.addEventListener('change', () => { syncReturn(); buildWindows(); });
 
   /* ---------- booking flow ---------- */
   const s1 = $('#step1'), s2 = $('#step2'), s3 = $('#step3');
   const booking = {};
   const pageOpened = Date.now();             // bots fill the form in a blink; the server drops anything under 4 seconds
   let lastDone = null;
+  buildDrop();
   buildWindows();
   s1.addEventListener('submit', e => {
     e.preventDefault();
-    const zip = digits($('#zip').value).slice(0, 5);
     show($('#outzone'), false);
+    Object.keys(booking).forEach(k => delete booking[k]);
+    if (mode === 'dropoff') {
+      if (!storeSel.value) return msg($('#msg1'), t('eStore'), true);
+      if (!ddaySel.value) return msg($('#msg1'), t('eDday'), true);
+      if (!dtimeSel.value) return msg($('#msg1'), t('eDtime'), true);
+      msg($('#msg1'), '');
+      const sameDay = dtimeSel.value === 'before', ready = sameDay ? ddaySel.value : nextDay(ddaySel.value);
+      Object.assign(booking, {
+        order_type: 'dropoff', zone: storeSel.value,
+        pickup_date: ddaySel.value, pickup_label: fmtEn.format(dayOf(ddaySel.value)), pickup_window: 'Drop-off ' + (sameDay ? 'before ' : 'after ') + cutEn(),
+        dropoff_date: ready, dropoff_label: fmtEn.format(dayOf(ready)), ready_same_day: sameDay
+      });
+      buildWindows(); syncReturn();
+      track('begin_booking', { zone: booking.zone, mode: 'dropoff' });
+      show(s1, false); show(s2, true); $('#name').focus();
+      return;
+    }
+    const zip = digits($('#zip').value).slice(0, 5);
     if (zip.length !== 5) return msg($('#msg1'), t('eZip'), true);
     if (!daySel.value) return msg($('#msg1'), t('eDay'), true);
     if (WINDOWS.length && !winSel.value) return msg($('#msg1'), t('eWin'), true);
@@ -644,10 +750,10 @@ const CONFIG = window.LOADS_CONFIG;
     if (!zone) { msg($('#msg1'), ''); $('#outzip').textContent = zip; return show($('#outzone'), true); }
     msg($('#msg1'), '');
     const back = nextDay(daySel.value);
-    Object.assign(booking, { zip, zone, pickup_date: daySel.value, pickup_label: fmtEn.format(dayOf(daySel.value)), pickup_window: winSel.value, dropoff_label: fmtEn.format(dayOf(back)) });
-    $('#dwinDay').textContent = '(' + localDay(back) + ')';
+    Object.assign(booking, { order_type: 'pickup', zip, zone, pickup_date: daySel.value, pickup_label: fmtEn.format(dayOf(daySel.value)), pickup_window: winSel.value, dropoff_date: back, dropoff_label: fmtEn.format(dayOf(back)) });
+    buildWindows();
     if (!dwinSel.value) dwinSel.value = winSel.value;     // same time the next day, unless they change it
-    track('begin_booking', { zone });
+    track('begin_booking', { zone, mode: 'pickup' });
     show(s1, false); show(s2, true); $('#name').focus();
   });
   $('#outjoin').addEventListener('click', async () => {
@@ -661,30 +767,41 @@ const CONFIG = window.LOADS_CONFIG;
     e.preventDefault();
     const m = $('#msg2');
     if ($('#company').value) return;
+    const dropoff = booking.order_type === 'dropoff', deliver = !dropoff || retSel.value === 'delivery';
     if (!$('#name').value.trim()) return msg(m, t('eName'), true);
     if (!validPhone($('#phone').value)) return msg(m, t('ePhone'), true);
-    if (!$('#street').value.trim()) return msg(m, t('eAddr'), true);
+    if (dropoff && !retSel.value) return msg(m, t('eRet'), true);
+    if (deliver && !$('#street').value.trim()) return msg(m, t(dropoff ? 'eAddrDrop' : 'eAddr'), true);
+    let dzip = '';
+    if (dropoff && deliver) {
+      dzip = digits($('#dzip').value).slice(0, 5);
+      if (dzip.length !== 5) return msg(m, t('eZip'), true);
+      if (!zipZone(dzip)) return msg(m, t('eDzipOut', { zip: dzip }), true);
+    }
     if (!$('#temp').value) return msg(m, t('eTemp'), true);
-    if (WINDOWS.length && !dwinSel.value) return msg(m, t('eDwin'), true);
+    if (deliver && WINDOWS.length && !dwinSel.value) return msg(m, t(dropoff ? 'eDwinDrop' : 'eDwin'), true);
     if (!$('#consentOrder').checked) return msg(m, t('eConsent'), true);
-    const btn = $('#bookBtn'); btn.disabled = true; msg(m, t('booking'));
+    const btn = dropoff ? $('#bookBtnDrop') : $('#bookBtn'); btn.disabled = true; msg(m, t('booking'));
     const id = 'L' + Date.now().toString(36).toUpperCase();
     const letters = 'abcdefghjkmnpqrstuvwxyz';
     const token = Array.from(crypto.getRandomValues(new Uint8Array(16))).map(n => letters[n % letters.length]).join('');
     const trackUrl = new URL('track.html?id=' + id + '&t=' + token, location.href).href;
+    const sent = Object.assign({}, booking);
+    delete sent.dropoff_date; delete sent.ready_same_day;
     const payload = Object.assign({
       type: 'booking', booking_id: id, submitted_at: new Date().toISOString(),
-      name: $('#name').value.trim(), phone: $('#phone').value.trim(), address: $('#street').value.trim(),
+      name: $('#name').value.trim(), phone: $('#phone').value.trim(), address: deliver ? $('#street').value.trim() : '',
       notes: (I18N.lang === 'es' ? '[Español] ' : '') + $('#notes').value.trim(), heard: $('#heard').value, lang: I18N.lang,
       sms_order_consent: 'yes', sms_marketing_consent: $('#consentMarketing').checked ? 'yes' : 'no',
       first_order_offer: CONFIG.firstOrderOffer ? 'yes' : 'no', user_agent: navigator.userAgent,
       track_token: token, track_url: trackUrl,
-      wash_temp: $('#temp').value, dropoff_window: dwinSel.value, form_ms: Date.now() - pageOpened
-    }, booking, attribution());
+      wash_temp: $('#temp').value, dropoff_window: deliver ? dwinSel.value : 'Pickup at the store', form_ms: Date.now() - pageOpened
+    }, sent, dropoff ? { return_method: retSel.value, zip: dzip } : { return_method: 'delivery' }, attribution());
     try {
       await send(payload);
-      track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone }, id);
-      lastDone = { phone: payload.phone, date: booking.pickup_date, win: booking.pickup_window };
+      track('booking_completed', { value: CONFIG.estOrderValue, currency: 'USD', zone: booking.zone, mode: booking.order_type }, id);
+      lastDone = { phone: payload.phone, date: booking.pickup_date, win: booking.pickup_window,
+        drop: dropoff ? { store: booking.zone, day: booking.pickup_date, sameDay: booking.ready_same_day, deliver, ready: booking.dropoff_date, win: dwinSel.value } : null };
       doneText();
       $('#trackLink').href = trackUrl;
       show(s2, false); show(s3, true); msg(m, '');
@@ -693,10 +810,20 @@ const CONFIG = window.LOADS_CONFIG;
     } finally { btn.disabled = false; }
   });
   function doneText() {
+    if (lastDone.drop) {
+      const d = lastDone.drop, st = storeOf(d.store);
+      $('#doneText').textContent = t(d.deliver ? 'doneDropDel' : 'doneDrop', {
+        store: st ? st.name : d.store, address: storeAddr(st), day: localDay(d.day),
+        time: t(d.sameDay ? 'beforeTime' : 'afterTime', { time: cutText() }),
+        back: d.deliver ? localDay(d.ready) + ', ' + winLocal(d.win) : ''
+      }).replace(/\.\./g, '.');           // "2 p.m.." -> "2 p.m."
+
+      return;
+    }
     const day = localDay(lastDone.date) + (lastDone.win ? ', ' + winLocal(lastDone.win) : '');
     $('#doneText').textContent = t('done', { phone: lastDone.phone, day });
   }
-  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; Object.keys(booking).forEach(k => delete booking[k]); buildWindows(); show(s3, false); show(s1, true); });
+  $('#again').addEventListener('click', () => { s1.reset(); s2.reset(); lastDone = null; Object.keys(booking).forEach(k => delete booking[k]); setMode('pickup'); buildDrop(); buildWindows(); show(s3, false); show(s1, true); });
 
   /* ---------- Loads Weekly sign-up ---------- */
   // Back from Square's checkout: point them at booking their first pickup.
@@ -767,7 +894,7 @@ const CONFIG = window.LOADS_CONFIG;
   /* ---------- language switch ---------- */
   document.addEventListener('loads:lang', () => {
     fillAll(); buildDays(); estimate();
-    buildWindows();
+    buildDrop(); buildWindows(); syncReturn();
     if (lastDone) doneText();
     ['#msg1', '#msg2', '#msgw'].forEach(id => msg($(id), ''));
   });

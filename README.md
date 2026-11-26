@@ -96,6 +96,11 @@ Every booking row also stores UTM tags, Google and Meta click IDs, landing page 
    - **Repeat customer:** tap **Text update**, attach the scale photo, send. In Square (Loads location), open the customer and charge their saved card for the total. No saved card? Send an invoice like a first order.
    - When Square shows it paid, tap **Mark paid** on the staff page. **Out for delivery** stays locked until you do.
 
+8. **Drop-offs.** Customers can also book a drop-off on the site: they bring the bag to the Koreatown or Van Nuys store (5am to 10pm), same price, ready the same day if dropped before 2pm, otherwise the next day. They pick it up at the store, or pay $6.99 to have it delivered back (free on a first order). Their card has a **Drop-off** chip and shows up under **Drop-offs coming in**. There's no YES step and no pickup drive.
+   - When the bag comes in, tap **Dropped off**, then weigh it and carry on with **Washing > Drying > Folding** like any order.
+   - **Picking it up at the store:** after folding, tap **Ready for pickup**. The order moves to **Ready for pickup at the store** and shows **Text (name): ready for pickup**. Send that. Bill them with **Send bill** as usual: if they pay the link it turns Paid by itself; if they pay at the counter, tap **Paid another way? Mark paid**. Then tap **Picked up** when they leave with it. **Picked up** stays locked until it's paid.
+   - **Delivering it back:** it works like a normal order from folding on. Get it paid, tap **Out for delivery**, then **Delivered**.
+
 Square setup: invoices go out from the **Loads** location on Dimitri's Square account (added Nov 2026, $49/month). Install the Square Invoices app on each store phone and sign in with a login that can use the Loads location. Use the Invoices app rather than the register, so the register stays on the store's own location.
 
 Customers get their tracking link on the booking confirmation screen, in the first text, and in the booking email Dimitri receives. Their tracker refreshes every minute on its own.

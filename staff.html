@@ -126,7 +126,7 @@ details.done[open] summary::after{content:'Hide'}
 <p style="text-align:center;margin:16px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
 
-<script src="config.js?v=6"></script>
+<script src="config.js?v=7"></script>
 <script src="app-install.js?v=4" defer></script>
 <script src="preview-nav.js"></script>
 <script>
@@ -242,7 +242,9 @@ details.done[open] summary::after{content:'Hide'}
     { id: 'LDEMO1', name: 'Sam Rivera', phone: '(213) 555-0101', address: '3600 Wilshire Blvd Apt 12', zip: '90010', notes: 'Bag by the mailroom', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '9 to 11am', dropoff_label: 'Tue, Nov 18', dropoff_window: '11am to 1pm', wash_temp: 'Cold', needs_yes: true, confirmed: false, stage: 'booked', weight_lbs: '', order_total: '', first_order_offer: 'yes', first_order: 'yes', paid: false, track_url: 'track.html?id=LDEMO1&t=demo' },
     { id: 'LDEMO2', name: 'Jordan Lee', phone: '(213) 555-0102', address: '880 S Grand Ave #2104', zip: '90015', notes: '', zone: 'Koreatown store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: '1 to 3pm', dropoff_label: 'Tue, Nov 18', dropoff_window: '5 to 7pm', wash_temp: 'Hot', stage: 'folding', weight_lbs: 12.4, order_total: 36.99, first_order_offer: 'yes', first_order: 'no', paid: false, track_url: 'track.html?id=LDEMO2&t=demo' },
     { id: 'LDEMO3', name: 'Priya Shah', phone: '(818) 555-0103', address: '14500 Sylvan St Unit 3', zip: '91411', notes: 'Gate code 2244', zone: 'Van Nuys store', pickup_date: '2026-11-16', pickup_label: 'Sun, Nov 16', pickup_window: '7 to 9pm', dropoff_label: 'Mon, Nov 17', dropoff_window: '9pm to midnight', wash_temp: 'Cold', stage: 'out_for_delivery', weight_lbs: 18, order_total: 47.49, first_order_offer: 'yes', first_order: 'no', paid: true, track_url: 'track.html?id=LDEMO3&t=demo' },
-    { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' }
+    { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' },
+    { id: 'LDEMO5', name: 'Ana Morales', phone: '(213) 555-0175', address: '', zip: '', notes: '', zone: 'Koreatown store', order_type: 'dropoff', return_method: 'store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: 'Drop-off before 2pm', dropoff_label: 'Mon, Nov 17', dropoff_window: 'Pickup at the store', wash_temp: 'Cold', stage: 'booked', weight_lbs: '', order_total: '', first_order: 'yes', paid: false, track_url: '' },
+    { id: 'LDEMO6', name: 'Ben Carter', phone: '(818) 555-0186', address: '13900 Burbank Blvd #8', zip: '91401', notes: 'Buzz 8', zone: 'Van Nuys store', order_type: 'dropoff', return_method: 'delivery', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: 'Drop-off after 2pm', dropoff_label: 'Tue, Nov 18', dropoff_window: '7 to 9pm', wash_temp: 'Hot', stage: 'folding', weight_lbs: 12, order_total: 33.99, first_order: 'no', paid: false, track_url: '' }
   ];
   function demoApi(req) {
     const o = demoOrders.find(x => x.id === req.id);
@@ -256,7 +258,7 @@ details.done[open] summary::after{content:'Hide'}
       return Promise.resolve({ ok: true, orders: copy(), bill: o.first_order === 'no' ? { kind: 'charged', amount: NO_SHOW, card: 'VISA ending 4242' } : { kind: 'link', amount: NO_SHOW, url: 'https://squareup.com/pay-invoice/demo-noshow' } });
     }
     if (o && req.action === 'set_stage') {
-      if (idxOf(req.stage) >= idxOf('out_for_delivery') && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
+      if (idxOf(req.stage) >= idxOf(collects(o) ? 'delivered' : 'out_for_delivery') && !o.paid) return Promise.resolve({ ok: false, error: 'unpaid', orders: copy() });
       o.stage = req.stage;
     }
     if (o && req.action === 'set_weight') { o.weight_lbs = Number(req.weight_lbs) || ''; o.order_total = String(req.order_total).trim() === '' ? '' : Number(req.order_total); }
@@ -278,27 +280,36 @@ details.done[open] summary::after{content:'Hide'}
 
   /* ---------- pricing (same as apps-script/Square.gs) ---------- */
   const isFirst = o => (o.first_order ? o.first_order : o.first_order_offer) === 'yes';
+  // Drop-off at the store: no pickup trip. Delivered back is one trip; collected at the store is none.
+  const isDrop = o => o.order_type === 'dropoff';
+  const collects = o => isDrop(o) && o.return_method === 'store';
+  const tripsFor = o => !isDrop(o) ? 2 : collects(o) ? 0 : 1;
+  const flowOf = o => window.LOADS_FLOW ? window.LOADS_FLOW(o) : STAGES;
+  const DROP = CONFIG.dropoff || { stores: [] };
+  const storeName = o => { const st = (DROP.stores || []).find(x => x.key === o.zone); return st ? st.name : String(o.zone || '').replace(/ store$/, ''); };
+  const storeAddr = o => { const st = (DROP.stores || []).find(x => x.key === o.zone); return st ? (CONFIG.stores[st.index] || '') : ''; };
   const freeDelivery = o => CONFIG.firstOrderOffer && isFirst(o);
   const minOrder = Number(CONFIG.minOrder) || 0;
   const PLAN = CONFIG.plan || {};
-  const orderDelivery = (Number(CONFIG.deliveryFee) || 0) * (Number(CONFIG.tripsPerOrder) || 2);   // $6.99 each way
+  const tripFee = Number(CONFIG.deliveryFee) || 0;          // $6.99 each way
+  const deliveryFor = o => tripFee * tripsFor(o);
   const cents = n => Math.round(n * 100) / 100;
   const totalFor = (o, lbs) => {
     lbs = Math.round(lbs * 10) / 10;
     if (o.subscriber) {                          // Loads Weekly
-      const del = freeDelivery(o) ? 0 : PLAN.deliveryPerOrder;
+      const del = freeDelivery(o) || !tripsFor(o) ? 0 : PLAN.deliveryPerOrder;
       if (o.plan_extra) return cents(lbs * PLAN.extraPickupPerLb) + del;
       return cents(Math.round(Math.max(0, lbs - PLAN.lbsPerWeek) * 10) / 10 * PLAN.overPerLb) + del;
     }
-    return Math.max(lbs * CONFIG.pricePerLb, minOrder) + (freeDelivery(o) ? 0 : orderDelivery);
+    return Math.max(lbs * CONFIG.pricePerLb, minOrder) + (freeDelivery(o) ? 0 : deliveryFor(o));
   };
   const underMin = o => !o.subscriber && minOrder && Number(o.weight_lbs) * CONFIG.pricePerLb < minOrder;
   const hasTotal = o => o.order_total !== '' && o.order_total != null && !isNaN(Number(o.order_total));
   const priceHelp = o => {
-    const del = freeDelivery(o) ? 'delivery free (first order)' : null;
+    const del = !tripsFor(o) ? 'no delivery fee (they pick it up)' : freeDelivery(o) ? 'delivery free (first order)' : null;
     if (o.subscriber && o.plan_extra) return 'Loads Weekly extra pickup: $' + PLAN.extraPickupPerLb.toFixed(2) + '/lb, ' + (del || '+ $' + PLAN.deliveryPerOrder.toFixed(2) + ' delivery');
     if (o.subscriber) return 'Loads Weekly: first ' + PLAN.lbsPerWeek + ' lb included, then $' + PLAN.overPerLb.toFixed(2) + '/lb, ' + (del || '+ $' + PLAN.deliveryPerOrder.toFixed(2) + ' delivery');
-    return '$' + CONFIG.pricePerLb.toFixed(2) + '/lb' + (minOrder ? ' ($' + minOrder + ' minimum)' : '') + ', ' + (del || '+ $' + orderDelivery.toFixed(2) + ' delivery ($' + Number(CONFIG.deliveryFee).toFixed(2) + ' each way)');
+    return '$' + CONFIG.pricePerLb.toFixed(2) + '/lb' + (minOrder ? ' ($' + minOrder + ' minimum)' : '') + ', ' + (del || (tripsFor(o) === 1 ? '+ $' + tripFee.toFixed(2) + ' to deliver it back' : '+ $' + deliveryFor(o).toFixed(2) + ' delivery ($' + tripFee.toFixed(2) + ' each way)'));
   };
 
   /* ---------- texts to the customer ---------- */
@@ -344,6 +355,9 @@ details.done[open] summary::after{content:'Hide'}
         : hi + 'your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached), so your total is ' + money + minNote + '. ';
       if (o.paid) return es ? hi + 'tu ropa pesó ' + o.weight_lbs + ' libras (te mando foto de la báscula). Total ' + money + ', ya pagado. ¡Gracias!' + link
                             : hi + 'your load weighed in at ' + o.weight_lbs + ' lbs (photo of the scale attached). Total ' + money + ', paid. Thanks!' + link;
+      if (o.bill_url && collects(o)) return weighed + (es
+        ? 'Paga aquí: ' + o.bill_url + ' , o cuando la recojas en la tienda.'
+        : 'Pay here: ' + o.bill_url + ' , or when you pick it up at the store.');
       if (o.bill_url) return weighed + (es
         ? 'Paga aquí: ' + o.bill_url + ' . Marca “guardar mi tarjeta” y la próxima vez te cobramos automáticamente. Te la entregamos en cuanto esté pagado.'
         : 'Pay here: ' + o.bill_url + ' . Tick “Save my card on file” and next time we’ll charge it automatically. We’ll deliver as soon as it’s paid.');
@@ -355,6 +369,27 @@ details.done[open] summary::after{content:'Hide'}
     if (eta && stage === 'out_for_delivery') return es
       ? hi + 'tu ropa limpia va de regreso. ' + (who ? who + ' está' : 'Tu chofer está') + ' como a ' + eta.min + ' minutos, llega alrededor de ' + clockEs(eta.at) + '.' + link
       : hi + 'your clean laundry is on the way back. ' + (who ? who + ' is' : 'Your driver is') + ' about ' + eta.min + ' minutes out, arriving around ' + clockEn(eta.at) + '.' + link;
+    if (isDrop(o)) {
+      const sameDay = /before/i.test(o.pickup_window || ''), cut = String(o.pickup_window || '').replace(/^Drop-off (before|after) /i, '');
+      const cutEs = cut.replace(/(\d+)\s*pm$/i, '$1 p.m.').replace(/(\d+)\s*am$/i, '$1 a.m.');
+      const hours = es ? (DROP.hoursEs || DROP.hours || '') : (DROP.hours || '');
+      const back = collects(o)
+        ? (es ? (sameDay ? ' Estará lista el mismo día.' : ' Estará lista al día siguiente.') + ' Te mandamos un texto cuando puedas pasar por ella.'
+              : (sameDay ? ' It’ll be ready the same day.' : ' It’ll be ready the next day.') + ' We’ll text you when it’s ready to pick up.')
+        : (es ? ' Te la entregamos el ' + dayEs(o.dropoff_label) + ', de ' + winEs(o.dropoff_window) + '.' : ' We’ll deliver it back ' + when(o.dropoff_label, o.dropoff_window) + '.');
+      const dropMsgs = es ? {
+        booked: hi + 'somos Loads. Quedaste para dejar tu ropa en nuestra tienda de ' + storeName(o) + ', ' + storeAddr(o) + ', el ' + dayEs(o.pickup_label) + ', ' + (sameDay ? 'antes' : 'después') + ' de las ' + cutEs + '. Abierto de ' + hours + '.' + back + link,
+        at_store: hi + 'ya tenemos tu ropa en nuestra tienda de ' + storeName(o) + '.' + link,
+        out_for_delivery: collects(o) ? hi + '¡tu ropa está lista! Recógela en nuestra tienda de ' + storeName(o) + ', ' + storeAddr(o) + '. Abierto de ' + hours + '.' + link : null,
+        delivered: collects(o) ? hi + '¡gracias por usar Loads! Nos vemos la próxima.' + (CONFIG.googleReviewUrl ? ' Si tienes un momento, una reseña nos ayuda mucho: ' + CONFIG.googleReviewUrl : '') : null
+      } : {
+        booked: hi + "it's Loads. You're booked to drop off at our " + storeName(o) + ' store, ' + storeAddr(o) + ', on ' + o.pickup_label + ', ' + (sameDay ? 'before ' : 'after ') + cut + '. We’re open ' + hours + '.' + back + link,
+        at_store: hi + 'we’ve got your load at our ' + storeName(o) + ' store.' + link,
+        out_for_delivery: collects(o) ? hi + 'your laundry is ready! Pick it up at our ' + storeName(o) + ' store, ' + storeAddr(o) + '. We’re open ' + hours + '.' + link : null,
+        delivered: collects(o) ? hi + 'thanks for using Loads! See you next time.' + (CONFIG.googleReviewUrl ? ' If you have a sec, a quick review helps a lot: ' + CONFIG.googleReviewUrl : '') : null
+      };
+      if (dropMsgs[stage]) return dropMsgs[stage];
+    }
     const msgs = es ? {
       booked: hi + 'somos Loads. Tu recogida está agendada para el ' + dayEs(o.pickup_label) + (o.pickup_window ? ', de ' + winEs(o.pickup_window) : '') + '.' + (askYes(o) ? ' Por favor responde SÍ para confirmar.' : '') + ' Te mandamos un texto cuando tu chofer vaya en camino. Deja tu bolsa en la puerta.' + link,
       on_the_way: hi + 'somos Loads. Tu chofer va en camino y llega en aproximadamente una hora. Por favor ten tu bolsa en la puerta.' + link,
@@ -398,16 +433,17 @@ details.done[open] summary::after{content:'Hide'}
     $('#note').scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
   const canCancel = o => o.stage === 'booked' || o.stage === 'on_the_way';
+  const kindWord = o => isDrop(o) ? 'drop-off' : 'pickup';
   const cancelText = o => isEs(o)
-    ? 'Hola ' + firstName(o) + ', somos Loads. Tu recogida quedó cancelada. Agenda de nuevo cuando quieras en loadspickup.com.'
-    : 'Hi ' + firstName(o) + ", it's Loads. Your pickup is canceled. Book again anytime at loadspickup.com.";
+    ? 'Hola ' + firstName(o) + ', somos Loads. Tu ' + (isDrop(o) ? 'cita para dejar tu ropa' : 'recogida') + ' quedó cancelada. Agenda de nuevo cuando quieras en loadspickup.com.'
+    : 'Hi ' + firstName(o) + ", it's Loads. Your " + kindWord(o) + ' is canceled. Book again anytime at loadspickup.com.';
   async function cancelOrder(id) {
     const o = Object.assign({}, orders.find(x => x.id === id));
     delete cancelAsk[id];
     await new Promise(r => { const go = () => busy ? setTimeout(go, 250) : r(); go(); });
     await run({ action: 'cancel', id });
     if (orders.some(x => x.id === id)) return;           // didn't go through; the error shows at the top
-    $('#note').innerHTML = '<div class="canceled"><b>Canceled ' + esc(o.name) + '’s pickup.</b> Let them know:<div><a class="cbtn" href="sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(cancelText(o)) + '">Text ' + esc(firstName(o)) + '</a><button class="undo" type="button" data-undo-cancel="' + esc(id) + '">Undo</button></div></div>';
+    $('#note').innerHTML = '<div class="canceled"><b>Canceled ' + esc(o.name) + '’s ' + kindWord(o) + '.</b> Let them know:<div><a class="cbtn" href="sms:' + digits(o.phone) + '?&body=' + encodeURIComponent(cancelText(o)) + '">Text ' + esc(firstName(o)) + '</a><button class="undo" type="button" data-undo-cancel="' + esc(id) + '">Undo</button></div></div>';
     $('#note').scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
   const finding = {};                       // order id -> true while the drive time is being worked out
@@ -426,16 +462,24 @@ details.done[open] summary::after{content:'Hide'}
         : '<a class="next" href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text ' + esc(firstName(o)) + ': arriving ' + clockEn(etaHere.at) + '</a>' +
           '<p class="etaline">Wrong time? Pick how far out you are:</p>' + minButtons(o.stage);
     }
+    let readyWaiting = false;
+    if (collects(o) && o.stage === 'out_for_delivery') {
+      const key = o.id + '|ready', done = texted.has(key);
+      readyWaiting = !done;
+      out += done
+        ? '<p class="etaline">✓ Texted ' + esc(firstName(o)) + ' that it’s ready · <a href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text again</a></p>'
+        : '<a class="next" href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text ' + esc(firstName(o)) + ': ready for pickup</a>';
+    }
     if (!nxt) return out;
-    if (needsPay) return out + '<button class="next" type="button" disabled>Waiting on payment</button>';
+    if (needsPay) return out + '<button class="next" type="button" disabled>' + (collects(o) ? 'Mark paid when they pay at the counter' : 'Waiting on payment') + '</button>';
     if (nxt.key === 'on_the_way' && askYes(o)) return out +
       '<div class="yesbox"><b>New customer.</b> Tap <b>Text update</b> to send the confirmation, then wait for their YES before heading out. No reply? Call them.' +
       '<button class="next" type="button" data-act="yes">They replied YES</button></div>';
-    if (TEXT_STEPS[nxt.key]) {
+    if (TEXT_STEPS[nxt.key] && !(collects(o) && nxt.key === 'out_for_delivery')) {
       if (etaAsk[o.id] === nxt.key) return out + '<p class="etaline"><b>Couldn’t get the drive time.</b> How far away are you?</p>' + minButtons(nxt.key);
       return out + '<button class="next" type="button" data-act="omw" data-stage="' + nxt.key + '"' + (finding[o.id] ? ' disabled>Working out your arrival time…' : '>' + TEXT_STEPS[nxt.key]) + '</button>';
     }
-    const waiting = etaHere && !texted.has(o.id + '|' + o.eta_at);
+    const waiting = (etaHere && !texted.has(o.id + '|' + o.eta_at)) || readyWaiting;
     return out + '<button class="next' + (waiting ? ' alt' : '') + '" type="button" data-act="next" data-stage="' + nxt.key + '">Mark: ' + esc(nxt.label) + '</button>';
   }
   const getPos = () => new Promise(res => {
@@ -473,9 +517,11 @@ details.done[open] summary::after{content:'Hide'}
     // Open orders grouped by what happens next; finished ones fold away at the bottom.
     const stageIn = (o, a, b) => idxOf(o.stage) >= idxOf(a) && idxOf(o.stage) <= idxOf(b);
     const groups = [
-      { title: 'To pick up', items: shown.filter(o => stageIn(o, 'booked', 'on_the_way')) },
+      { title: 'To pick up', items: shown.filter(o => !isDrop(o) && stageIn(o, 'booked', 'on_the_way')) },
+      { title: 'Drop-offs coming in', items: shown.filter(o => isDrop(o) && o.stage === 'booked') },
       { title: 'At the store', items: shown.filter(o => stageIn(o, 'picked_up', 'folding')) },
-      { title: 'Out for delivery', items: shown.filter(o => o.stage === 'out_for_delivery') }
+      { title: 'Ready for pickup at the store', items: shown.filter(o => collects(o) && o.stage === 'out_for_delivery') },
+      { title: 'Out for delivery', items: shown.filter(o => !collects(o) && o.stage === 'out_for_delivery') }
     ].filter(g => g.items.length);
     const done = shown.filter(o => o.stage === 'delivered');
     const doneHtml = done.length
@@ -489,13 +535,21 @@ details.done[open] summary::after{content:'Hide'}
 
   function card(o) {
     {
-      const i = idxOf(o.stage), st = STAGES[i], nxt = STAGES[i + 1];
+      const i = idxOf(o.stage), flow = flowOf(o), fi = Math.max(0, flow.findIndex(s => s.key === o.stage));
+      const st = flow[fi], nxt = flow[fi + 1], prev = fi > 0 ? flow[fi - 1] : null;
       const chip = o.stage === 'delivered' ? 'done' : o.stage === 'out_for_delivery' || o.stage === 'on_the_way' ? 'out' : '';
       const weighed = i >= idxOf('at_store');
       const maps = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(o.address + ' ' + o.zip);
       const wash = o.wash_temp ? '<span class="chip ' + (/hot/i.test(o.wash_temp) ? 'hot' : 'cold') + '">' + esc(o.wash_temp) + ' wash</span>' : '';
-      const dropoff = o.dropoff_window ? '<br>Drop-off ' + esc(when(o.dropoff_label, o.dropoff_window)) : '';
-      const needsPay = nxt && idxOf(nxt.key) >= idxOf('out_for_delivery') && !o.paid;
+      const dropoff = collects(o) ? '<br>Ready ' + esc(o.dropoff_label) + ' · they pick it up at the store'
+        : isDrop(o) ? '<br>Deliver back ' + esc(when(o.dropoff_label, o.dropoff_window))
+        : o.dropoff_window ? '<br>Drop-off ' + esc(when(o.dropoff_label, o.dropoff_window)) : '';
+      const needsPay = nxt && idxOf(nxt.key) >= idxOf(collects(o) ? 'delivered' : 'out_for_delivery') && !o.paid;
+      const firstLine = isDrop(o)
+        ? 'Drop-off at ' + esc(storeName(o)) + ' · ' + esc(when(o.pickup_label, String(o.pickup_window || '').replace(/^Drop-off /, '')))
+        : 'Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + ' · ' + esc(o.zone);
+      const where = collects(o) ? (o.notes ? '<p class="meta">Note: ' + esc(o.notes) + '</p>' : '')
+        : '<p class="meta">' + esc(o.address) + ', ' + esc(o.zip) + ' · <a href="' + maps + '" target="_blank" rel="noopener">Directions</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>';
       const money = '$' + Number(o.order_total || 0).toFixed(2);
       const payChip = o.paid ? '<span class="chip paid">✓ Paid</span>' : (weighed && hasTotal(o) ? '<span class="chip unpaid">Not paid</span>' : '');
       const covered = o.subscriber && hasTotal(o) && Number(o.order_total) === 0 && !isTest(o);
@@ -517,13 +571,13 @@ details.done[open] summary::after{content:'Hide'}
             : '<p>Saved card on file? It’s charged right away. First-time customer? You’ll get a payment link to text them.</p>') + otherWay + '</div>';
       }
       return '<article class="order" data-id="' + esc(o.id) + '">' +
-        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + '<p class="meta">Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + ' · ' + esc(o.zone) + (isFirst(o) ? ' · first order' : ' · repeat customer') + dropoff + '</p></div><div class="chips">' + (o.needs_yes && o.confirmed && o.stage === 'booked' ? '<span class="chip">✓ Confirmed</span>' : '') + wash + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
-        '<p class="meta">' + esc(o.address) + ', ' + esc(o.zip) + ' · <a href="' + maps + '" target="_blank" rel="noopener">Directions</a>' + (o.notes ? '<br>Note: ' + esc(o.notes) : '') + '</p>' +
+        '<div class="otop"><div><div class="oname">' + esc(o.name) + '</div>' + (o.subscriber ? '<span class="chip plan">Loads Weekly' + (o.plan_extra ? ' · extra pickup' : '') + '</span>' : '') + (isEs(o) ? '<span class="chip es">Habla español</span>' : '') + (isDrop(o) ? '<span class="chip plan">Drop-off</span>' : '') + '<p class="meta">' + firstLine + (isFirst(o) ? ' · first order' : ' · repeat customer') + dropoff + '</p></div><div class="chips">' + (o.needs_yes && o.confirmed && o.stage === 'booked' ? '<span class="chip">✓ Confirmed</span>' : '') + wash + payChip + '<span class="chip ' + chip + '">' + esc(st.label) + '</span></div></div>' +
+        where +
         '<div class="links"><a href="tel:' + digits(o.phone) + '">Call</a><a href="' + smsHref(o) + '">' + (isEs(o) ? 'Text update (Spanish)' : 'Text update') + '</a>' + (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div>' +
         stepBlock(o, nxt, needsPay) +
-        '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span><span>' + (o.stage === 'on_the_way' ? '<button class="undo" type="button" data-act="noshow">No-show</button> · ' : '') + (canCancel(o) ? '<button class="undo" type="button" data-act="cancel">Cancel order</button>' : '') + (i > 0 ? (canCancel(o) ? ' · ' : '') + '<button class="undo" type="button" data-act="back" data-stage="' + STAGES[i - 1].key + '">Undo to ' + esc(STAGES[i - 1].label.toLowerCase()) + '</button>' : '') + '</span></div>' +
+        '<div class="under"><span class="meta" style="margin:0">' + esc(o.id) + '</span><span>' + (o.stage === 'on_the_way' ? '<button class="undo" type="button" data-act="noshow">No-show</button> · ' : '') + (canCancel(o) ? '<button class="undo" type="button" data-act="cancel">Cancel order</button>' : '') + (prev ? (canCancel(o) ? ' · ' : '') + '<button class="undo" type="button" data-act="back" data-stage="' + prev.key + '">Undo to ' + esc(prev.label.toLowerCase()) + '</button>' : '') + '</span></div>' +
         (noShowAsk[o.id] ? '<div class="cancelask"><b>No bag and no answer?</b> This cancels the pickup and charges the $' + NO_SHOW + ' no-show fee (card on file, or a payment link to text them).<div><button type="button" class="yes" data-act="noshow-yes">Charge $' + NO_SHOW + ' no-show fee</button><button type="button" data-act="noshow-no">Keep it</button></div></div>' : '') +
-        (cancelAsk[o.id] ? '<div class="cancelask"><b>Cancel ' + esc(firstName(o)) + '’s pickup?</b><div><button type="button" class="yes" data-act="cancel-yes">Yes, cancel it</button><button type="button" data-act="cancel-no">Keep it</button></div></div>' : '') +
+        (cancelAsk[o.id] ? '<div class="cancelask"><b>Cancel ' + esc(firstName(o)) + '’s ' + kindWord(o) + '?</b><div><button type="button" class="yes" data-act="cancel-yes">Yes, cancel it</button><button type="button" data-act="cancel-no">Keep it</button></div></div>' : '') +
         (weighed ? '<div class="weigh"><div><label for="w-' + esc(o.id) + '">Weight (lbs)</label><input id="w-' + esc(o.id) + '" type="number" step="0.1" min="0" inputmode="decimal" value="' + esc(o.weight_lbs) + '" data-w></div><div><label for="t-' + esc(o.id) + '">Total ($)</label><input id="t-' + esc(o.id) + '" type="number" step="0.01" min="0" inputmode="decimal" value="' + esc(o.order_total) + '" data-t></div><button type="button" data-act="weight">Save</button><small>Weigh it dry, before washing. Total fills in as ' + priceHelp(o) + '. Edit it if needed.</small></div>' : '') +
         pay +
         '</article>';
@@ -575,7 +629,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-24g';
+  const PAGE_VERSION = '2026-11-25a';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
