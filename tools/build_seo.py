@@ -29,25 +29,25 @@ WORDMARK = re.search(r'<span class="wordmark">.*?<span class="sr-only">Loads</sp
 AREAS = [
   dict(slug='koreatown', name='Koreatown', store='Koreatown store',
        zips=['90004', '90005', '90006', '90010', '90019', '90020'],
-       lead="Our own laundromat is on W 3rd St in Koreatown, so your laundry never leaves the neighborhood.",
+       lead="Koreatown loads are washed at our laundromat right in the neighborhood, so your laundry never travels far.",
        local=["Most of Koreatown lives in apartment buildings, so tell us how to reach your door when you book: a gate code, a buzzer number, or \"leave it with the front desk.\" It goes in the pickup notes and your driver gets it.",
               "Working late or out all day? The last pickup window runs 9pm to midnight, every day of the week."],
        nearby="Mid-Wilshire, Wilshire Center and the blocks around Western, Vermont and Normandie"),
   dict(slug='downtown-la', name='Downtown LA', store='Koreatown store',
        zips=['90012', '90013', '90014', '90015', '90017', '90021', '90071'],
-       lead="Downtown loads are washed at our own laundromat on W 3rd St in Koreatown, a short drive west.",
+       lead="Downtown loads are washed at our laundromat in Koreatown, a short drive west.",
        local=["Lofts and high-rises are easy: leave your bag with the front desk or concierge, or add your building's entry instructions in the pickup notes.",
               "Pickups run from 9am to midnight, so you can hand off a bag before work or after a late night and have it back folded the next day."],
        nearby="the Arts District, Little Tokyo, the Historic Core, South Park, Bunker Hill and the Fashion District"),
   dict(slug='van-nuys', name='Van Nuys', store='Van Nuys store',
        zips=['91401', '91405', '91406', '91411'],
-       lead="Our own laundromat is on Lennox Ave in Van Nuys, so your laundry stays close to home.",
+       lead="Van Nuys loads are washed at our laundromat right in Van Nuys, so your laundry stays close to home.",
        local=["House, apartment or gated complex, leave your bag by the door or tell us where to find it in the pickup notes. You don't need to be home.",
               "Big family loads are no problem. We charge by the pound, weighed dry before washing, and text you a photo of the scale with your total."],
        nearby="the neighborhoods around Van Nuys Blvd, Sepulveda and Sherman Way"),
   dict(slug='sherman-oaks', name='Sherman Oaks', store='Van Nuys store',
        zips=['91403', '91423'],
-       lead="Sherman Oaks loads are washed at our own laundromat on Lennox Ave in Van Nuys, a short drive away.",
+       lead="Sherman Oaks loads are washed at our laundromat in Van Nuys, a short drive away.",
        local=["Apartments along Ventura Blvd, houses in the hills or anywhere in between: leave your bag at your door or tell us where to find it when you book.",
               "Pick a two-hour window for pickup and another for drop-off, any time from 9am to midnight. We text you when the driver is on the way."],
        nearby="Ventura Blvd, the Sherman Oaks Galleria area and the hillside streets south of the boulevard"),
@@ -72,7 +72,7 @@ def page(a):
     faq = [("Do I need to be home?", "Nope. Leave your bag outside your door, or tell us where to find it in the pickup notes when you book."),
            ("When do I get it back?", f"Back {C['turnaround']}. You pick a two-hour window for pickup and another for drop-off, any time from 9am to midnight. We text you when the driver is on the way, with an arrival time."),
            ("How do you charge?", f"No card needed to book. We weigh your laundry dry at the store, before washing, and charge ${PRICE} a pound with a ${MIN} minimum, plus ${FEE} each way for pickup and drop-off. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total."),
-           ("Which laundromat washes my clothes?", f"Our {a['store'].replace(' store', '')} laundromat at {store_addr}. Your load is washed, dried and folded right there, not sent out to someone else.")]
+           ("Which laundromat washes my clothes?", f"Our laundromat in {a['store'].replace(' store', '')}. Your load is washed, dried and folded right there by our team, not sent out to someone else.")]
     if C.get('guarantee'): faq.append(("What if something comes back wrong?", C['guarantee']))
     zips = ' &middot; '.join(a['zips'])
     return f"""<!doctype html>
@@ -143,7 +143,7 @@ def page(a):
 <p class="muted" style="font-size:16px">Not on the list? We cover about 30 miles around our laundromats in Koreatown and Van Nuys. <a href="/#book">Check your zip</a>.</p>
 </div>
 <div class="facts">
-<p><span>Washed at</span><b>Our {e(a['store'].replace(' store', ''))} laundromat<br><small class="muted" style="font-weight:500">{e(store_addr)}</small></b></p>
+<p><span>Washed at</span><b>Our laundromat in {e(a['store'].replace(' store', ''))}</b></p>
 <p><span>Pickup &amp; drop-off</span><b>9am to midnight, every day</b></p>
 <p><span>Back</span><b>{e(C['turnaround']).capitalize()}</b></p>
 <p><span>Wash, dry &amp; fold</span><b>${PRICE} a pound, ${MIN} minimum</b></p>
@@ -186,7 +186,6 @@ def page(a):
 <div style="flex:1 1 320px">{WORDMARK.replace('#183a2e', '#f3ede2')}
 <p style="margin:14px 0 0;max-width:26em">Laundry pickup and delivery all over LA and the Valley, washed and folded at our own laundromats.</p></div>
 <div><h3>Neighborhoods</h3>{''.join(f'<div style="margin-top:6px"><a href="/{o["slug"]}">{e(o["name"])}</a></div>' for o in AREAS)}</div>
-<div><h3>Our laundromats</h3><div>{e(C['stores'][0])}</div><div style="margin-top:6px">{e(C['stores'][1])}</div></div>
 <div><h3>Contact</h3><div><a href="sms:{SMS}">{PHONE}</a></div><div style="margin-top:6px">{e(C['email'])}</div><div style="margin-top:14px"><a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></div></div>
 </div>
 <p style="margin:36px 0 0;font-size:14px;color:#93a89b">&copy; {datetime.date.today().year} Loads Laundry Co. We do loads.</p>
