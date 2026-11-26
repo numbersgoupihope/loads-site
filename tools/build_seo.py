@@ -123,7 +123,7 @@ def page(a):
 <main>
 <section class="wrap">
 <div class="hero-top">
-<h1 class="display"><span class="h1-kw">Laundry pickup &amp; delivery in</span>{e(a['name'])}<span class="serif">.</span></h1>
+<h1 class="display"><span class="h1-kw">Laundry pickup &amp; delivery in</span> {e(a['name'])}<span class="serif">.</span></h1>
 <div class="hero-side">
 <p class="kicker serif">Back {e(C['turnaround'])}.</p>
 <p class="muted" style="margin:0 0 18px;font-size:19px">{e(a['lead'])} Pick a pickup window from 9am to midnight, leave your bag at your door, and it comes back washed, dried and folded.</p>
