@@ -72,7 +72,7 @@ def page(a):
     faq = [("Do I need to be home?", "Nope. Leave your bag outside your door, or tell us where to find it in the pickup notes when you book."),
            ("When do I get it back?", f"Back {C['turnaround']}. You pick a two-hour window for pickup and another for drop-off, any time from 9am to midnight. We text you when the driver is on the way, with an arrival time."),
            ("How do you charge?", f"No card needed to book. We weigh your laundry dry at the store, before washing, and charge ${PRICE} a pound with a ${MIN} minimum, plus ${FEE} each way for pickup and drop-off. A full hamper usually comes in around 10 lbs. We text you the weight, a photo of the scale and your total."),
-           ("Which laundromat washes my clothes?", f"Our {a['store'].replace(' store', '')} laundromat at {store_addr}. We own it, so your load is washed by our own team, not sent out to someone else.")]
+           ("Which laundromat washes my clothes?", f"Our {a['store'].replace(' store', '')} laundromat at {store_addr}. Your load is washed, dried and folded right there, not sent out to someone else.")]
     if C.get('guarantee'): faq.append(("What if something comes back wrong?", C['guarantee']))
     zips = ' &middot; '.join(a['zips'])
     return f"""<!doctype html>
