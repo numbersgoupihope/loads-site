@@ -34,7 +34,8 @@ const BOOKING_HEADERS = [
   'square_customer_id', 'square_order_id', 'square_invoice_id', 'square_bill_url', 'square_bill_total', 'square_payment_id', 'bill_sent_at',
   'subscriber',
   'pickup_window', 'dropoff_label', 'dropoff_window', 'wash_temp', 'on_the_way_at',
-  'eta_at', 'eta_stage', 'canceled_at', 'canceled_from', 'needs_yes', 'confirmed_at', 'form_seconds', 'no_show_at'
+  'eta_at', 'eta_stage', 'canceled_at', 'canceled_from', 'needs_yes', 'confirmed_at', 'form_seconds', 'no_show_at',
+  'order_type', 'return_method'
 ];
 
 // Loads Weekly sign-ups from the website. Square keeps the subscription itself.
@@ -89,7 +90,8 @@ function saveForm_(p) {
     if (!isWaitlist) p.subscriber = planFlag_(p.phone);   // Loads Weekly member? Asks Square by mobile number
     if (!isWaitlist) {
       const seen = phoneHistory_(p.phone);
-      p.needs_yes = seen.delivered ? 'no' : 'yes';         // no finished order yet: they reply YES before a driver goes out
+      // No finished order yet: they reply YES before a driver goes out. Drop-offs bring the bag in themselves.
+      p.needs_yes = seen.delivered || p.order_type === 'dropoff' ? 'no' : 'yes';
       p.open_before = seen.open;                           // other open bookings on this number (flagged in the email)
     }
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
@@ -108,15 +110,18 @@ function saveForm_(p) {
 }
 
 function notify_(p) {
+  const drop = p.order_type === 'dropoff', atStore = drop && p.return_method === 'store';
   const lines = [
-    'New Loads pickup booking',
+    drop ? 'New Loads drop-off booking' : 'New Loads pickup booking',
     '',
-    'Pickup: ' + when_(p.pickup_label || p.pickup_date, p.pickup_window) + '  (' + (p.zone || '') + ')',
-    'Drop-off: ' + (when_(p.dropoff_label, p.dropoff_window) || '-'),
+    drop ? 'Drop-off: ' + (p.zone || '') + ', ' + when_(p.pickup_label || p.pickup_date, String(p.pickup_window || '').replace(/^Drop-off /, ''))
+         : 'Pickup: ' + when_(p.pickup_label || p.pickup_date, p.pickup_window) + '  (' + (p.zone || '') + ')',
+    atStore ? 'Back: they pick it up at the store (ready ' + (p.dropoff_label || '') + ')'
+            : (drop ? 'Deliver back: ' : 'Drop-off: ') + (when_(p.dropoff_label, p.dropoff_window) || '-'),
     'Wash: ' + (p.wash_temp || '-'),
     'Name: ' + (p.name || ''),
     'Mobile: ' + (p.phone || ''),
-    'Address: ' + (p.address || '') + '  ' + (p.zip || ''),
+    atStore ? null : 'Address: ' + (p.address || '') + '  ' + (p.zip || ''),
     'Notes: ' + (p.notes || '-'),
     'Heard about us: ' + (p.heard || '-'),
     'First order: ' + (p.first_order || ''),
@@ -127,14 +132,16 @@ function notify_(p) {
     '',
     'Tracking link for the customer: ' + (p.track_url || ''),
     'Booking ID: ' + (p.booking_id || ''),
-    p.needs_yes === 'yes'
-      ? 'New customer: tap Text update in the staff app to send the confirmation, and wait for their YES before anyone heads out.'
-      : 'Tap Text update in the staff app to send the confirmation.',
-    'When you head out for this pickup, tap "On my way" in the staff app. It texts the customer your arrival time.'
+    drop
+      ? 'When they bring the bag in, tap "Dropped off" in the staff app.'
+      : p.needs_yes === 'yes'
+        ? 'New customer: tap Text update in the staff app to send the confirmation, and wait for their YES before anyone heads out.'
+        : 'Tap Text update in the staff app to send the confirmation.',
+    drop ? null : 'When you head out for this pickup, tap "On my way" in the staff app. It texts the customer your arrival time.'
   ].filter(function (l) { return l !== null; });
   MailApp.sendEmail({
     to: NOTIFY_EMAIL,
-    subject: (p.open_before ? 'Possible duplicate: ' : 'New pickup: ') + (p.name || 'customer') + ', ' + when_(p.pickup_label || p.pickup_date, p.pickup_window),
+    subject: (p.open_before ? 'Possible duplicate: ' : drop ? 'New drop-off: ' : 'New pickup: ') + (p.name || 'customer') + ', ' + when_(p.pickup_label || p.pickup_date, drop ? p.zone : p.pickup_window),
     body: lines.join('\n')
   });
 }
@@ -165,6 +172,7 @@ function track_(id, token) {
       pickup_window: String(r.pickup_window || ''),
       dropoff_label: label_(r.dropoff_label, Session.getScriptTimeZone()),
       dropoff_window: String(r.dropoff_window || ''),
+      order_type: String(r.order_type || 'pickup'), return_method: String(r.return_method || 'delivery'),
       eta_at: r.eta_stage && r.eta_stage === r.stage ? iso_(r.eta_at) : '',
       zone: r.zone || '',
       weight_lbs: r.weight_lbs === '' ? '' : Number(r.weight_lbs),
@@ -375,7 +383,9 @@ function setStage_(id, stage) {
   const t = table_('Bookings');
   const r = t && find_(t, id);
   if (!r) return;
-  if (i >= STAGES.indexOf('out_for_delivery') && !r.paid_at) return 'unpaid';
+  // Paid before it leaves the store. A drop-off they collect can be marked ready first and paid at the counter.
+  const collect = String(r.order_type) === 'dropoff' && String(r.return_method) === 'store';
+  if (i >= STAGES.indexOf(collect ? 'delivered' : 'out_for_delivery') && !r.paid_at) return 'unpaid';
   const now = new Date();
   const updates = { stage: stage, stage_updated_at: now };
   if (i > 0 && !r[stage + '_at']) updates[stage + '_at'] = now;
@@ -446,6 +456,7 @@ function list_() {
         zone: String(r.zone || ''), pickup_date: day_(r.pickup_date, tz), pickup_label: label_(r.pickup_label, tz),
         pickup_window: String(r.pickup_window || ''), dropoff_label: label_(r.dropoff_label, tz),
         dropoff_window: String(r.dropoff_window || ''), wash_temp: String(r.wash_temp || ''),
+        order_type: String(r.order_type || 'pickup'), return_method: String(r.return_method || 'delivery'),
         eta_at: r.eta_stage && r.eta_stage === r.stage ? iso_(r.eta_at) : '',
         needs_yes: String(r.needs_yes) === 'yes', confirmed: !!r.confirmed_at,
         stage: r.stage || 'booked', weight_lbs: r.weight_lbs, order_total: r.order_total,

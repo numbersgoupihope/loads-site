@@ -168,8 +168,16 @@ function freeDelivery_(r) {
   return String(r.first_order || r.first_order_offer) === 'yes';
 }
 
+// Trips we drive: a pickup order is two (pickup and drop-off). A drop-off at the store is one if we
+// deliver it back, none if they collect it.
+function trips_(r) {
+  if (String(r.order_type) !== 'dropoff') return 2;
+  return String(r.return_method) === 'store' ? 0 : 1;
+}
+
 // What an order costs, itemized. kind: 'regular', 'plan' (the week's pickup) or 'plan_extra' (another pickup that week).
-function priceOrder_(lbs, kind, freeDelivery) {
+function priceOrder_(lbs, kind, freeDelivery, trips) {
+  if (trips === undefined) trips = 2;
   lbs = Math.round(Number(lbs) * 10) / 10;
   const money = function (c) { return { amount: c, currency: 'USD' }; };
   const pounds = function (name, qty, cents) {
@@ -186,17 +194,18 @@ function priceOrder_(lbs, kind, freeDelivery) {
       lines.push(pounds('Wash & fold, extra pickup this week (Loads Weekly)', lbs, PLAN_EXTRA_PICKUP_CENTS));
       cents += Math.round(lbs * PLAN_EXTRA_PICKUP_CENTS);
     }
-    if (!freeDelivery) { lines.push({ name: 'Pickup & drop-off (Loads Weekly)', quantity: '1', base_price_money: money(PLAN_DELIVERY_CENTS) }); cents += PLAN_DELIVERY_CENTS; }
+    if (!freeDelivery && trips > 0) { lines.push({ name: trips === 2 ? 'Pickup & drop-off (Loads Weekly)' : 'Delivery (Loads Weekly)', quantity: '1', base_price_money: money(PLAN_DELIVERY_CENTS) }); cents += PLAN_DELIVERY_CENTS; }
     return { lines: lines, cents: cents };
   }
   const laundry = Math.round(lbs * PRICE_PER_LB_CENTS);
   lines.push(pounds('Wash & fold', lbs, PRICE_PER_LB_CENTS));
   if (laundry < MIN_ORDER_CENTS) lines.push({ name: 'Order minimum', quantity: '1', base_price_money: money(MIN_ORDER_CENTS - laundry) });
-  if (!freeDelivery) {
+  if (!freeDelivery && trips === 2) {
     lines.push({ name: 'Pickup', quantity: '1', base_price_money: money(TRIP_FEE_CENTS) });
     lines.push({ name: 'Drop-off', quantity: '1', base_price_money: money(TRIP_FEE_CENTS) });
   }
-  return { lines: lines, cents: Math.max(laundry, MIN_ORDER_CENTS) + (freeDelivery ? 0 : 2 * TRIP_FEE_CENTS) };
+  if (!freeDelivery && trips === 1) lines.push({ name: 'Delivery', quantity: '1', base_price_money: money(TRIP_FEE_CENTS) });
+  return { lines: lines, cents: Math.max(laundry, MIN_ORDER_CENTS) + (freeDelivery ? 0 : trips * TRIP_FEE_CENTS) };
 }
 
 function orderKind_(t, r, isPlan) {
@@ -212,7 +221,7 @@ function sqOrder_(t, r, customerId, totalCents, isPlan) {
   if (totalCents === 100 && /^test\b/i.test(String(r.name || '').trim())) {
     lines = [{ name: 'Test charge', quantity: '1', base_price_money: money(100) }];
   } else {
-    const priced = priceOrder_(lbs, orderKind_(t, r, isPlan), freeDelivery_(r));
+    const priced = priceOrder_(lbs, orderKind_(t, r, isPlan), freeDelivery_(r), trips_(r));
     lines = priced.lines;
     if (Math.abs(priced.cents - totalCents) > 1) {
       lines = [{ name: 'Wash & fold, ' + lbs.toFixed(1) + ' lbs', quantity: '1', base_price_money: money(totalCents) }];
