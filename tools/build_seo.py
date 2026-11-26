@@ -60,7 +60,7 @@ def page(a):
     e = html.escape
     store_addr = STORES[a['store']]
     url = f"{SITE}/{a['slug']}"
-    title = f"Laundry Pickup & Delivery in {a['name']} | Loads"
+    title = f"{a['name']} Laundry Pickup & Delivery | ${PRICE}/lb | Loads"
     desc = f"Laundry pickup and delivery in {a['name']}. Washed, dried and folded at our own laundromat, back {C['turnaround']}. ${PRICE} a pound, pickups 9am to midnight every day."
     others = [o for o in AREAS if o is not a]
     ld = [{"@context": "https://schema.org", "@type": "Service", "serviceType": "Laundry pickup and delivery", "name": f"Laundry pickup and delivery in {a['name']}",
