@@ -87,6 +87,17 @@ details.done[open] summary::after{content:'Hide'}
 .mini{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 16px;margin-bottom:8px;font-size:15px}
 .mini b{font-weight:650}
 .mini span{color:var(--muted);font-size:14px;white-space:nowrap}
+details.donecard{margin-bottom:8px}
+details.donecard>summary.mini{cursor:pointer;list-style:none;margin-bottom:0}
+details.donecard>summary.mini::-webkit-details-marker{display:none}
+details.donecard>summary.mini span::after{content:' ›';display:inline-block;margin-left:4px;transition:transform .15s}
+details.donecard[open]>summary.mini{border-radius:14px 14px 0 0}
+details.donecard[open]>summary.mini span::after{transform:rotate(90deg)}
+details.donecard[open]>.order{border-radius:0 0 14px 14px;margin-top:0;border-top:1px solid #eef0ec}
+#past{margin-top:22px}
+.pastbtn{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--line,#d9ddd6);background:#fff;font:inherit;font-size:15px;font-weight:650;color:var(--ink,#183a2e);cursor:pointer}
+.pastq{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line,#d9ddd6);padding:0 14px;font:inherit;font-size:16px;margin:0 0 12px;background:#fff}
+.pastday{margin:16px 4px 8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
 .chip.paid{background:#cfeccf;color:#14532d}
 .chip.unpaid{background:#fde2b0;color:#7a4b00}
@@ -122,6 +133,7 @@ details.done[open] summary::after{content:'Hide'}
 <p class="err" id="err" role="alert"></p>
 <p class="okmsg" id="note" role="status"></p>
 <div id="list"></div>
+<div id="past"></div>
 <label class="driver">Your first name for texts <input id="driver" type="text" autocomplete="given-name" placeholder="Carlos"></label>
 <p style="text-align:center;margin:16px 0 0"><button class="undo" type="button" id="signout">Sign out of this phone</button></p>
 </main>
@@ -177,7 +189,11 @@ details.done[open] summary::after{content:'Hide'}
       lastRun = data;
       if (data.bill && req.action !== 'no_show') billNote(req.id, data.bill);
     } catch (e) {
-      $('#err').textContent = "Couldn't reach the Sheet. Check the connection and tap Refresh.";
+      // A slow or dropped connection: try once more quietly before showing anything.
+      if (req.action === 'list' && !req._retry) { busy = false; await new Promise(r => setTimeout(r, 3000)); return await run(Object.assign({}, req, { _retry: true })); }
+      $('#err').textContent = orders.length
+        ? "Couldn't update just now (the orders below may be a minute old). It'll try again on its own, or tap Refresh."
+        : "Couldn't reach the Sheet. Check the connection and tap Refresh.";
     } finally { busy = false; }
   }
 
@@ -245,6 +261,10 @@ details.done[open] summary::after{content:'Hide'}
     { id: 'LDEMO4', name: 'Rosa Diaz', phone: '(818) 555-0163', address: '6720 Woodman Ave #12', zip: '91401', notes: '', zone: 'Van Nuys store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', stage: 'washing', weight_lbs: 34.5, order_total: 17.12, first_order_offer: 'yes', first_order: 'no', paid: false, subscriber: true, plan_extra: false, track_url: 'track.html?id=LDEMO4&t=demo' },
     { id: 'LDEMO5', name: 'Ana Morales', phone: '(213) 555-0175', address: '', zip: '', notes: '', zone: 'Koreatown store', order_type: 'dropoff', return_method: 'store', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: 'Drop-off before 2pm', dropoff_label: 'Mon, Nov 17', dropoff_window: 'Pickup at the store', wash_temp: 'Cold', stage: 'booked', weight_lbs: '', order_total: '', first_order: 'yes', paid: false, track_url: '' },
     { id: 'LDEMO6', name: 'Ben Carter', phone: '(818) 555-0186', address: '13900 Burbank Blvd #8', zip: '91401', notes: 'Buzz 8', zone: 'Van Nuys store', order_type: 'dropoff', return_method: 'delivery', pickup_date: '2026-11-17', pickup_label: 'Mon, Nov 17', pickup_window: 'Drop-off after 2pm', dropoff_label: 'Tue, Nov 18', dropoff_window: '7 to 9pm', wash_temp: 'Hot', stage: 'folding', weight_lbs: 12, order_total: 33.99, first_order: 'no', paid: false, track_url: '' }
+  ];
+  const demoPast = () => [
+    { id: 'LPAST1', name: 'Tala Nguyen', phone: '(818) 555-0144', address: '6400 Van Nuys Blvd #3', zip: '91401', notes: 'Gate code 1122', zone: 'Van Nuys store', pickup_label: 'Wed, Nov 25', pickup_window: '9 to 11am', dropoff_label: 'Thu, Nov 26', dropoff_window: '5 to 7pm', wash_temp: 'Cold', stage: 'delivered', weight_lbs: 12.4, order_total: 30, paid: true, first_order: 'yes', track_url: 'track.html?id=LPAST1&t=demo', booked_at: '2026-11-24T19:02:00Z', delivered_at: '2026-11-27T01:40:00Z' },
+    { id: 'LPAST2', name: 'Marco Diaz', phone: '(213) 555-0177', address: '3700 W 6th St Apt 8', zip: '90020', notes: '', zone: 'Koreatown store', pickup_label: 'Tue, Nov 24', pickup_window: '5 to 7pm', stage: 'canceled', no_show: true, weight_lbs: '', order_total: '', paid: false, first_order: 'no', booked_at: '2026-11-23T22:10:00Z', canceled_at: '2026-11-25T01:15:00Z' }
   ];
   function demoApi(req) {
     const o = demoOrders.find(x => x.id === req.id);
@@ -470,6 +490,14 @@ details.done[open] summary::after{content:'Hide'}
         ? '<p class="etaline">✓ Texted ' + esc(firstName(o)) + ' that it’s ready · <a href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text again</a></p>'
         : '<a class="next" href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text ' + esc(firstName(o)) + ': ready for pickup</a>';
     }
+    // Delivered / picked up: the last text (it's back, thanks, review link) before it files away.
+    if (o.stage === 'delivered') {
+      const key = o.id + '|delivered', done = texted.has(key), what = collects(o) ? 'thanks for picking up' : 'delivered';
+      out += done
+        ? '<p class="etaline">✓ Texted ' + esc(firstName(o)) + ': ' + what + ' · <a href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text again</a></p>'
+        : '<a class="next" href="' + smsHref(o) + '" data-act="texted" data-key="' + esc(key) + '">Text ' + esc(firstName(o)) + ': ' + what + '</a>' +
+          '<p class="etaline"><button class="undo" type="button" data-act="texted" data-key="' + esc(key) + '">Already texted them</button></p>';
+    }
     if (!nxt) return out;
     if (needsPay) return out + '<button class="next" type="button" disabled>' + (collects(o) ? 'Mark paid when they pay at the counter' : 'Waiting on payment') + '</button>';
     if (nxt.key === 'on_the_way' && askYes(o)) return out +
@@ -504,6 +532,71 @@ details.done[open] summary::after{content:'Hide'}
   function showPin(err) { $('#app').hidden = true; $('#pinForm').hidden = false; $('#pinErr').textContent = err || ''; $('#pin').focus(); }
   function showApp() { $('#pinForm').hidden = true; $('#app').hidden = false; $('#demo').hidden = !PREVIEW; }
 
+  // Folded sections stay open or shut across the 30-second refresh.
+  const openFold = new Set();
+  document.addEventListener('toggle', e => {
+    const d = e.target; if (!d.dataset || !d.dataset.fold) return;
+    d.open ? openFold.add(d.dataset.fold) : openFold.delete(d.dataset.fold);
+  }, true);
+  const money2 = o => hasTotal(o) ? '$' + Number(o.bill_total || o.order_total).toFixed(2) : '';
+  const shortDay = iso => iso ? new Date(iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' }) : '';
+  const shortTime = iso => iso ? clockEn(new Date(iso)) : '';
+  function miniRow(o) {
+    const status = o.stage === 'canceled' ? (o.no_show ? 'No-show' : 'Canceled') : [money2(o), o.paid ? '✓ Paid' : 'Not paid'].filter(Boolean).join(' · ');
+    return '<summary class="mini"><b>' + esc(o.name) + '</b><span>' + esc(status) + '</span></summary>';
+  }
+
+  /* ---------- past orders (read-only) ---------- */
+  let past = null, pastQuery = '', pastLoading = false, pastErr = '';
+  function pastDetail(o) {
+    const lines = [];
+    lines.push(isDrop(o) ? 'Drop-off at ' + esc(storeName(o)) + ' · ' + esc(when(o.pickup_label, String(o.pickup_window || '').replace(/^Drop-off /, '')))
+                         : 'Pickup ' + esc(when(o.pickup_label, o.pickup_window)) + (o.zone ? ' · ' + esc(o.zone) : ''));
+    if (o.stage === 'canceled') lines.push((o.no_show ? 'No-show' : 'Canceled') + (o.canceled_at ? ' ' + esc(shortDay(o.canceled_at)) + ', ' + esc(shortTime(o.canceled_at)) : ''));
+    else if (o.delivered_at) lines.push((collects(o) ? 'Picked up ' : 'Delivered ') + esc(shortDay(o.delivered_at)) + ', ' + esc(shortTime(o.delivered_at)));
+    if (o.weight_lbs) lines.push(esc(o.weight_lbs) + ' lbs' + (money2(o) ? ' · ' + money2(o) : '') + ' · ' + (o.paid ? '✓ Paid' : 'Not paid'));
+    if (o.wash_temp) lines.push(esc(o.wash_temp) + ' wash');
+    if (!collects(o) && o.address) lines.push(esc(o.address) + (o.zip ? ', ' + esc(o.zip) : ''));
+    if (o.notes) lines.push('Note: ' + esc(o.notes));
+    lines.push((o.subscriber ? 'Loads Weekly · ' : '') + (o.first_order === 'yes' ? 'First order' : 'Repeat customer') + ' · ' + esc(o.id) + (o.booked_at ? ' · booked ' + esc(shortDay(o.booked_at)) : ''));
+    return '<div class="order past"><p class="meta">' + lines.join('<br>') + '</p>' +
+      '<div class="links"><a href="tel:' + digits(o.phone) + '">Call ' + esc(o.phone) + '</a><a href="sms:' + digits(o.phone) + '">Text</a>' +
+      (o.track_url ? '<a href="' + esc(o.track_url) + '" target="_blank" rel="noopener">Tracker</a>' : '') + '</div></div>';
+  }
+  function renderPast() {
+    const box = $('#past'); if (!box) return;
+    if (!past) {
+      box.innerHTML = '<button class="pastbtn" type="button" data-past="load"' + (pastLoading ? ' disabled>Loading past orders…' : '>Past orders') + '</button>' +
+        (pastErr ? '<p class="err" style="margin-top:8px">' + esc(pastErr) + '</p>' : '');
+      return;
+    }
+    if (!box.querySelector('.pastq')) box.innerHTML = '<h2 class="group">Past orders <span>' + past.length + '</span></h2>' +
+      '<input class="pastq" type="search" placeholder="Search name, phone, address or order #" value="' + esc(pastQuery) + '">' +
+      '<div id="pastrows"></div><p class="meta" style="margin:6px 4px 0">Last 6 months. Everything is also saved in the Google Sheet.</p>';
+    const q = pastQuery.trim().toLowerCase(), qd = q.replace(/\D/g, '');
+    const hits = past.filter(o => !q || (o.name || '').toLowerCase().includes(q) || (o.id || '').toLowerCase().includes(q) ||
+      (o.address || '').toLowerCase().includes(q) || (qd.length >= 3 && digits(o.phone).includes(qd)));
+    let lastDay = '', rows = '';
+    hits.slice(0, 150).forEach(o => {
+      const day = shortDay(o.delivered_at || o.canceled_at || o.updated || o.booked_at);
+      if (day !== lastDay) { rows += '<h3 class="pastday">' + esc(day) + '</h3>'; lastDay = day; }
+      rows += '<details class="donecard" data-fold="past-' + esc(o.id) + '"' + (openFold.has('past-' + o.id) ? ' open' : '') + '>' + miniRow(o) + pastDetail(o) + '</details>';
+    });
+    $('#pastrows').innerHTML = (rows || '<p class="empty">No past orders match.</p>') +
+      (hits.length > 150 ? '<p class="meta">Showing the newest 150. Search to narrow it down.</p>' : '');
+  }
+  async function loadPast() {
+    pastLoading = true; pastErr = ''; renderPast();
+    try {
+      const data = PREVIEW ? { ok: true, history: demoPast() } : await api({ action: 'history' });
+      if (!data.ok && data.error === 'pin') { forgetPin(); return showPin('That PIN didn’t work.'); }
+      if (!data.history) throw new Error('no history');
+      past = data.history;
+    } catch (e) {
+      pastErr = 'Couldn’t load past orders. Try again in a moment.';
+    } finally { pastLoading = false; renderPast(); }
+  }
+
   function render() {
     const zones = Array.from(new Set(orders.map(o => o.zone).filter(Boolean)));
     $('#filters').innerHTML = ['all'].concat(zones).map(z => '<button type="button" data-z="' + esc(z) + '" class="' + (z === filter ? 'on' : '') + '">' + (z === 'all' ? 'All zones' : esc(z)) + '</button>').join('');
@@ -513,7 +606,7 @@ details.done[open] summary::after{content:'Hide'}
     const stamp = 'Updated ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     $('#summary').textContent = (orders.length ? parts.join(' · ') : 'No open orders') + ' · ' + stamp;
     const shown = orders.filter(o => filter === 'all' || o.zone === filter);
-    if (!shown.length) { $('#list').innerHTML = '<p class="empty">Nothing here right now.</p>'; return; }
+    if (!shown.length) { $('#list').innerHTML = '<p class="empty">Nothing here right now.</p>'; if (!past) renderPast(); return; }
     // Open orders grouped by what happens next; finished ones fold away at the bottom.
     const stageIn = (o, a, b) => idxOf(o.stage) >= idxOf(a) && idxOf(o.stage) <= idxOf(b);
     const groups = [
@@ -521,16 +614,19 @@ details.done[open] summary::after{content:'Hide'}
       { title: 'Drop-offs coming in', items: shown.filter(o => isDrop(o) && o.stage === 'booked') },
       { title: 'At the store', items: shown.filter(o => stageIn(o, 'picked_up', 'folding')) },
       { title: 'Ready for pickup at the store', items: shown.filter(o => collects(o) && o.stage === 'out_for_delivery') },
-      { title: 'Out for delivery', items: shown.filter(o => !collects(o) && o.stage === 'out_for_delivery') }
+      { title: 'Out for delivery', items: shown.filter(o => !collects(o) && o.stage === 'out_for_delivery') },
+      // Finished, but the last text hasn't gone out yet: keep it in view until it does.
+      { title: 'Delivered: send the last text', items: shown.filter(o => o.stage === 'delivered' && !texted.has(o.id + '|delivered')) }
     ].filter(g => g.items.length);
-    const done = shown.filter(o => o.stage === 'delivered');
+    const done = shown.filter(o => o.stage === 'delivered' && texted.has(o.id + '|delivered'));
     const doneHtml = done.length
-      ? '<details class="done"><summary>Completed today (' + done.length + ')</summary>' + done.map(o =>
-          '<div class="mini"><b>' + esc(o.name) + '</b><span>' + (hasTotal(o) ? '$' + Number(o.bill_total || o.order_total).toFixed(2) + ' · ' : '') + (o.paid ? '✓ Paid' : 'Not paid') + '</span></div>').join('') +
-        '<p class="meta" style="margin:6px 4px 0">Older orders are in the Google Sheet.</p></details>'
+      ? '<details class="done" data-fold="today"' + (openFold.has('today') ? ' open' : '') + '><summary>Completed today (' + done.length + ')</summary>' + done.map(o =>
+          '<details class="donecard" data-fold="' + esc(o.id) + '"' + (openFold.has(o.id) ? ' open' : '') + '>' + miniRow(o) + card(o) + '</details>').join('') +
+        '</details>'
       : '';
     $('#list').innerHTML = (groups.length ? '' : '<p class="empty">No open orders right now.</p>') + groups.map(g =>
       '<h2 class="group">' + g.title + ' <span>' + g.items.length + '</span></h2>' + g.items.map(card).join('')).join('') + doneHtml;
+    if (!past) renderPast();
   }
 
   function card(o) {
@@ -591,6 +687,8 @@ details.done[open] summary::after{content:'Hide'}
     const card = e.target.closest('.order'), o = orders.find(x => x.id === card.dataset.id), w = Number(e.target.value);
     if (o && w > 0) card.querySelector('[data-t]').value = totalFor(o, w).toFixed(2);
   });
+  $('#past').addEventListener('click', e => { if (e.target.closest('[data-past="load"]')) loadPast(); });
+  $('#past').addEventListener('input', e => { if (e.target.matches('.pastq')) { pastQuery = e.target.value; renderPast(); } });
   $('#list').addEventListener('click', e => {
     const b = e.target.closest('[data-act]'); if (!b) return;
     const card = b.closest('.order'), id = card.dataset.id;
@@ -629,7 +727,7 @@ details.done[open] summary::after{content:'Hide'}
     run({ action: 'list' });
   });
   // When a new version of this page goes live, reload so every phone is on the latest.
-  const PAGE_VERSION = '2026-11-25a';
+  const PAGE_VERSION = '2026-11-27a';
   async function checkVersion() {
     try {
       const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
