@@ -223,6 +223,7 @@ function staff_(req) {
       }
     }
     const out = { ok: !error, orders: list_() };
+    if (req.action === 'history') out.history = history_();
     if (error) out.error = error;
     if (message) out.message = message;
     if (bill) out.bill = bill;
@@ -449,7 +450,32 @@ function list_() {
       if (r.stage !== 'delivered') return true;
       return r.delivered_at instanceof Date && Utilities.formatDate(r.delivered_at, tz, 'yyyy-MM-dd') === today;
     })
-    .map(function (r) {
+    .map(function (r) { return staffRow_(t, r, tz); })
+    .sort(function (a, b) { return a.pickup_date < b.pickup_date ? -1 : a.pickup_date > b.pickup_date ? 1 : 0; });
+}
+
+// Finished and canceled orders from before today, newest first, for the staff page's "Past orders".
+function history_() {
+  const t = table_('Bookings');
+  if (!t) return [];
+  const tz = Session.getScriptTimeZone();
+  const today = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd');
+  const cutoff = Date.now() - 180 * 864e5;
+  const when = function (r) { return r.delivered_at || r.canceled_at || r.stage_updated_at || r.received_at; };
+  return t.rows
+    .filter(function (r) {
+      if (!r.booking_id) return false;
+      if (r.stage !== 'delivered' && r.stage !== 'canceled') return false;
+      const d = when(r);
+      if (!(d instanceof Date) || d.getTime() < cutoff) return false;
+      return !(r.stage === 'delivered' && Utilities.formatDate(d, tz, 'yyyy-MM-dd') === today);
+    })
+    .sort(function (a, b) { return when(b).getTime() - when(a).getTime(); })
+    .slice(0, 400)
+    .map(function (r) { return staffRow_(t, r, tz); });
+}
+
+function staffRow_(t, r, tz) {
       return {
         id: String(r.booking_id), name: String(r.name || ''), phone: String(r.phone || ''),
         address: String(r.address || ''), zip: String(r.zip || ''), notes: String(r.notes || ''),
@@ -465,10 +491,10 @@ function list_() {
         bill_url: String(r.square_bill_url || ''), bill_total: r.square_bill_total === '' ? '' : Number(r.square_bill_total) || '',
         bill_sent: !!r.bill_sent_at, lang: String(r.lang || ''),
         subscriber: String(r.subscriber) === 'yes', plan_extra: String(r.subscriber) === 'yes' && extraPickup_(t, r),
-        updated: iso_(r.stage_updated_at)
+        updated: iso_(r.stage_updated_at),
+        booked_at: iso_(r.received_at), delivered_at: iso_(r.delivered_at), canceled_at: iso_(r.canceled_at),
+        no_show: !!r.no_show_at
       };
-    })
-    .sort(function (a, b) { return a.pickup_date < b.pickup_date ? -1 : a.pickup_date > b.pickup_date ? 1 : 0; });
 }
 
 /* ---------------- sheet helpers ---------------- */
